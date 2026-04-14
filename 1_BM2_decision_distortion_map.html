@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Section 1 · Bonus Material 2 — Decision Distortion Map</title>
+<style>
+  :root {
+    --teal-dark: #085041;
+    --teal-mid: #0F6E56;
+    --teal: #1D9E75;
+    --teal-light: #5DCAA5;
+    --teal-pale: #E1F5EE;
+    --teal-faint: #F0FAF6;
+    --purple: #534AB7;
+    --purple-pale: #EEEDFE;
+    --purple-mid: #3C3489;
+    --coral: #D85A30;
+    --coral-pale: #FAECE7;
+    --amber: #BA7517;
+    --amber-pale: #FAEEDA;
+    --blue: #185FA5;
+    --blue-pale: #E6F1FB;
+    --pink: #993556;
+    --pink-pale: #FBEAF0;
+    --green: #3B6D11;
+    --green-pale: #EAF3DE;
+    --text: #1a1a1a;
+    --text-mid: #444;
+    --text-muted: #6b6b6b;
+    --border: #e2e2e2;
+    --border-light: #f0f0f0;
+    --bg: #ffffff;
+    --bg-soft: #f8f9fa;
+    --radius: 10px;
+    --radius-sm: 6px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    color: var(--text); background: var(--bg); font-size: 15px; line-height: 1.65;
+  }
+  .page { max-width: 740px; margin: 0 auto; padding: 48px 24px 80px; }
+
+  .bm-label {
+    display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: .09em;
+    text-transform: uppercase; color: var(--teal-mid); background: var(--teal-pale);
+    padding: 5px 14px; border-radius: 20px; margin-bottom: 18px;
+  }
+  .bm-title { font-size: 28px; font-weight: 700; color: var(--text); line-height: 1.25; margin-bottom: 10px; letter-spacing: -.3px; }
+  .bm-sub { font-size: 14px; color: var(--text-muted); line-height: 1.65; max-width: 560px; margin-bottom: 32px; }
+
+  /* Tab navigation */
+  .tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 28px; }
+  .tab {
+    background: var(--bg-soft); border: 1px solid var(--border);
+    border-radius: 20px; padding: 7px 16px;
+    font-size: 13px; font-weight: 500; color: var(--text-muted);
+    cursor: pointer; transition: all .15s; outline: none;
+  }
+  .tab:hover { background: var(--bg); color: var(--text); border-color: #ccc; }
+  .tab.active-t0 { background: var(--pink-pale); color: var(--pink); border-color: #ED93B1; font-weight: 600; }
+  .tab.active-t1 { background: var(--amber-pale); color: var(--amber); border-color: #EF9F27; font-weight: 600; }
+  .tab.active-t2 { background: var(--blue-pale); color: var(--blue); border-color: #85B7EB; font-weight: 600; }
+  .tab.active-t3 { background: var(--green-pale); color: var(--green); border-color: #97C459; font-weight: 600; }
+  .tab.active-t4 { background: var(--purple-pale); color: var(--purple); border-color: #AFA9EC; font-weight: 600; }
+
+  /* Panels */
+  .panel { display: none; }
+  .panel.visible { display: block; }
+
+  /* Panel header */
+  .panel-header { border-left: 4px solid #ccc; padding-left: 18px; margin-bottom: 24px; }
+  .ph-t0 { border-left-color: var(--pink); }
+  .ph-t1 { border-left-color: var(--amber); }
+  .ph-t2 { border-left-color: var(--blue); }
+  .ph-t3 { border-left-color: var(--green); }
+  .ph-t4 { border-left-color: var(--purple); }
+  .ph-name { font-size: 20px; font-weight: 700; color: var(--text); margin-bottom: 3px; }
+  .ph-type { font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px; }
+  .ph-desc { font-size: 14px; color: var(--text-mid); line-height: 1.7; }
+
+  /* Section label */
+  .sec-label {
+    font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+    color: var(--text-muted); margin: 24px 0 14px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .sec-label::after { content: ''; flex: 1; height: 1px; background: var(--border-light); }
+
+  /* Decision distortion cards */
+  .d-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px; }
+  .d-card {
+    background: var(--bg); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 16px;
+  }
+  .d-type { font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 5px; }
+  .d-title { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 7px; line-height: 1.4; }
+  .d-what { font-size: 13px; color: var(--text-mid); line-height: 1.65; margin-bottom: 10px; }
+  .d-signal {
+    display: inline-block; font-size: 11px; font-weight: 600;
+    padding: 3px 10px; border-radius: 12px;
+  }
+  .sig-t0 { background: var(--pink-pale); color: var(--pink); }
+  .sig-t1 { background: var(--amber-pale); color: var(--amber); }
+  .sig-t2 { background: var(--blue-pale); color: var(--blue); }
+  .sig-t3 { background: var(--green-pale); color: var(--green); }
+  .sig-t4 { background: var(--purple-pale); color: var(--purple); }
+
+  /* Counter-moves */
+  .moves { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 24px; }
+  .move-card { background: var(--bg-soft); border-radius: var(--radius-sm); padding: 14px; }
+  .move-num { font-size: 10px; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 6px; }
+  .move-text { font-size: 13px; color: var(--text); line-height: 1.6; }
+
+  /* Diagnostic question */
+  .diag-q {
+    border-radius: var(--radius); padding: 20px 24px;
+    margin-top: 4px;
+  }
+  .dq-t0 { background: var(--pink-pale); }
+  .dq-t1 { background: var(--amber-pale); }
+  .dq-t2 { background: var(--blue-pale); }
+  .dq-t3 { background: var(--green-pale); }
+  .dq-t4 { background: var(--purple-pale); }
+  .dq-label { font-size: 10px; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; margin-bottom: 8px; }
+  .dq-t0 .dq-label { color: var(--pink); }
+  .dq-t1 .dq-label { color: var(--amber); }
+  .dq-t2 .dq-label { color: var(--blue); }
+  .dq-t3 .dq-label { color: var(--green); }
+  .dq-t4 .dq-label { color: var(--purple); }
+  .dq-text { font-size: 15px; font-weight: 600; line-height: 1.55; color: var(--text); }
+
+  @media (max-width: 560px) {
+    .d-grid, .moves { grid-template-columns: 1fr; }
+    .bm-title { font-size: 22px; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="bm-label">Section 1 · Bonus Material 2</div>
+  <h1 class="bm-title">How failure modes distort decisions</h1>
+  <p class="bm-sub">Select a failure mode to see how it distorts specific types of urban and policy decisions — and what you can do about it. Use this before entering a meeting, reviewing a policy, or assessing a data system.</p>
+
+  <div class="tabs" id="tabs">
+    <button class="tab active-t0" onclick="show(0)">Fragmentation</button>
+    <button class="tab" onclick="show(1)">Over-measurement</button>
+    <button class="tab" onclick="show(2)">Translation gap</button>
+    <button class="tab" onclick="show(3)">Misaligned incentives</button>
+    <button class="tab" onclick="show(4)">Short-termism</button>
+  </div>
+
+  <!-- PANEL 0: FRAGMENTATION -->
+  <div class="panel visible" id="p0">
+    <div class="panel-header ph-t0">
+      <p class="ph-type">Structural failure mode</p>
+      <p class="ph-name">Fragmentation</p>
+      <p class="ph-desc">Data exists across departments, sectors, and systems that don't communicate. The city is measured in silos — and decisions are made as if each silo is the whole picture.</p>
+    </div>
+    <p class="sec-label">How it distorts each decision type</p>
+    <div class="d-grid">
+      <div class="d-card">
+        <p class="d-type">Resource allocation</p>
+        <p class="d-title">Spending based on incomplete information</p>
+        <p class="d-what">Each department bids for budget using its own data, creating duplication or competing claims that no one can reconcile at a systems level.</p>
+        <span class="d-signal sig-t0">Warning: "We don't have that number"</span>
+      </div>
+      <div class="d-card">
+        <p class="d-type">Policy design</p>
+        <p class="d-title">Solutions that solve one problem, create another</p>
+        <p class="d-what">A housing policy designed without mobility data — the policy looks coherent within its domain, but breaks the system across domains.</p>
+        <span class="d-signal sig-t0">Warning: "That's not our mandate"</span>
+      </div>
+      <div class="d-card">
+        <p class="d-type">Accountability</p>
+        <p class="d-title">No one is responsible for the outcome</p>
+        <p class="d-what">When systems are fragmented, the outcome of an intervention belongs to no single actor. Success and failure both become ungovernable.</p>
+        <span class="d-signal sig-t0">Warning: "That falls between departments"</span>
+      </div>
+      <div class="d-card">
+        <p class="d-type">Crisis response</p>
+        <p class="d-title">Slow coordination, conflicting data</p>
+        <p class="d-what">In emergencies, fragmentation becomes visible: different agencies report different numbers, incompatible systems slow action, trust erodes between institutions.</p>
+        <span class="d-signal sig-t0">Warning: "Our figures show something different"</span>
+      </div>
+    </div>
+    <p class="sec-label">Three counter-moves</p>
+    <div class="moves">
+      <div class="move-card"><p class="move-num">Move 01</p><p class="move-text">Map which datasets you need but don't have access to — before any decision, not after.</p></div>
+      <div class="move-card"><p class="move-num">Move 02</p><p class="move-text">Name at least one adjacent department whose data would change the recommendation.</p></div>
+      <div class="move-card"><p class="move-num">Move 03</p><p class="move-text">Ask: what would a connected view of this problem reveal that our silo cannot see?</p></div>
+    </div>
+    <div class="diag-q dq-t0">
+      <p class="dq-label">Diagnostic question for your context</p>
+      <p class="dq-text">In the last major decision your institution made — what data did you use? Whose data wasn't in the room?</p>
+    </div>
+  </div>
+
+  <!-- PANEL 1: OVER-MEASUREMENT -->
+  <div class="panel" id="p1">
+    <div class="panel-header ph-t1">
+      <p class="ph-type">Cognitive failure mode</p>
+      <p class="ph-name">Over-measurement</p>
+      <p class="ph-desc">Too many indicators, too many dashboards — but no clear prioritisation. Decision-makers are overwhelmed or anchored to whichever metric is most visible, not most meaningful.</p>
+    </div>
+    <p class="sec-label">How it distorts each decision type</p>
+    <div class="d-grid">
+      <div class="d-card">
+        <p class="d-type">Priority-setting</p>
+        <p class="d-title">The urgent crowds out the important</p>
+        <p class="d-what">When every indicator carries equal weight, attention flows to what's loudest or most recently measured — not what most affects long-term outcomes.</p>
+        <span class="d-signal sig-t1">Warning: "We track 47 KPIs"</span>
+      </div>
+      <div class="d-card">
+        <p class="d-type">Communication</p>
+        <p class="d-title">Too much data, no clear message</p>
+        <p class="d-what">Reports that list every indicator available create the appearance of transparency without the substance of clarity. Signal cannot be extracted from noise.</p>
+        <span class="d-signal sig-t1">Warning: "It's all in the appendix"</span>
+      </div>
+      <div class="d-card">
+        <p class="d-type">Evaluation</p>
+        <p class="d-title">Success becomes whatever moved</p>
+        <p class="d-what">With no pre-defined priority, success is retrospectively defined by whichever indicator improved — even if the most important ones remained flat.</p>
+        <span class="d-signal sig-t1">Warning: "We saw improvement across several metrics"</span>
+      </div>
+      <div class="d-card">
+        <p class="d-type">Strategic planning</p>
+        <p class="d-title">Plans that say everything, commit to nothing</p>
+        <p class="d-what">Strategies built on exhaustive indicator lists lack the prioritisation logic that would make them actionable. Every goal is listed; none is ranked.</p>
+        <span class="d-signal sig-t1">Warning: "All of this is important"</span>
+      </div>
+    </div>
+    <p class="sec-label">Three counter-moves</p>
+    <div class="moves">
+      <div class="move-card"><p class="move-num">Move 01</p><p class="move-text">Force a ranking: if you could track only 3 indicators this year, which would they be — and why?</p></div>
+      <div class="move-card"><p class="move-num">Move 02</p><p class="move-text">Link every indicator to a specific decision it enables. If it doesn't change a decision, question whether it needs to be tracked.</p></div>
+      <div class="move-card"><p class="move-num">Move 03</p><p class="move-text">Separate lagging indicators (what happened) from leading indicators (what is happening) — they serve different decision purposes.</p></div>
+    </div>
+    <div class="diag-q dq-t1">
+      <p class="dq-label">Diagnostic question for your context</p>
+      <p class="dq-text">Which 3 indicators in your current reporting system most directly affect the decisions you make? Do your reports lead with those?</p>
+    </div>
+  </div>
+
+  <!-- PANEL 2: TRANSLATION GAP -->
+  <div class="panel" id="p2">
+    <div class="panel-header ph-t2">
+      <p class="ph-type">Institutional failure mode</p>
+      <p class="ph-name">Translation gap</p>
+      <p class="ph-desc">Insights are produced — often at high quality — but never reach the people with a mandate to act on them. Evidence and implementation remain separate worlds.</p>
+    </div>
+    <p class="sec-label">How it distorts each decision type</p>
+    <div class="d-grid">
+      <div class="d-card">
+        <p class="d-type">Policy adoption</p>
+        <p class="d-title">Evidence-based policy that ignores the evidence</p>
+        <p class="d-what">Research exists, recommendations have been made — but the research never entered the decision-making room in a form the decision-maker could act on.</p>
+        <span class="d-signal sig-t2">Warning: "There's a report on this somewhere"</span>
+      </div>
+      <div class="d-card">
+        <p class="d-type">Institutional learning</p>
+        <p class="d-title">Repeated mistakes across administrations</p>
+        <p class="d-what">When insights are not translated into institutional memory, lessons learned in one administration are lost in the next. The system re-discovers the same failures every cycle.</p>
+        <span class="d-signal sig-t2">Warning: "We tried this before, but…"</span>
+      </div>
+      <div class="d-card">
+        <p class="d-type">Research commissioning</p>
+        <p class="d-title">Studies designed for publication, not for use</p>
+        <p class="d-what">When researchers and policymakers don't share a common question, the research answers the wrong thing — in the wrong language at the wrong time.</p>
+        <span class="d-signal sig-t2">Warning: "The research came too late"</span>
+      </div>
+      <div class="d-card">
+        <p class="d-type">Cross-sector collaboration</p>
+        <p class="d-title">Partners who report upward, not across</p>
+        <p class="d-what">Data flows up to each institution's hierarchy but never across to partners who could use it. Collaboration is announced but not enabled by information architecture.</p>
+        <span class="d-signal sig-t2">Warning: "We share our reports, but…"</span>
+      </div>
+    </div>
+    <p class="sec-label">Three counter-moves</p>
+    <div class="moves">
+      <div class="move-card"><p class="move-num">Move 01</p><p class="move-text">For every insight you produce, identify the specific decision-maker who could act on it — and the format that would reach them.</p></div>
+      <div class="move-card"><p class="move-num">Move 02</p><p class="move-text">Ask: if this finding arrived on a decision-maker's desk today, what would they need to act? Write that instead.</p></div>
+      <div class="move-card"><p class="move-num">Move 03</p><p class="move-text">Build a "decision-to-evidence" map: for each major upcoming decision, identify what evidence should be present — and whether it exists.</p></div>
+    </div>
+    <div class="diag-q dq-t2">
+      <p class="dq-label">Diagnostic question for your context</p>
+      <p class="dq-text">Think of the last piece of research your team produced. Who received it? What did they do with it? Was that the intended outcome?</p>
+    </div>
+  </div>
+
+  <!-- PANEL 3: MISALIGNED INCENTIVES -->
+  <div class="panel" id="p3">
+    <div class="panel-header ph-t3">
+      <p class="ph-type">Political failure mode</p>
+      <p class="ph-name">Misaligned incentives</p>
+      <p class="ph-desc">Decisions are shaped by political cycles, institutional constraints, or short-term pressures rather than the evidence of what produces long-term urban outcomes.</p>
+    </div>
+    <p class="sec-label">How it distorts each decision type</p>
+    <div class="d-grid">
+      <div class="d-card">
+        <p class="d-type">Investment decisions</p>
+        <p class="d-title">Visible projects over systemic needs</p>
+        <p class="d-what">Investment flows to what is visible or associated with a leader's legacy — rather than to the infrastructure gaps that most affect outcomes but attract least attention.</p>
+        <span class="d-signal sig-t3">Warning: "This will transform our city's image"</span>
+      </div>
+      <div class="d-card">
+        <p class="d-type">Data collection</p>
+        <p class="d-title">Measuring what flatters, not what informs</p>
+        <p class="d-what">Institutions invest in measuring areas where performance is already strong, and underinvest in measuring the dimensions where gaps are real but politically inconvenient.</p>
+        <span class="d-signal sig-t3">Warning: "We don't have reliable data on that"</span>
+      </div>
+      <div class="d-card">
+        <p class="d-type">Cross-mandate collaboration</p>
+        <p class="d-title">Cooperation blocked by competitive accountability</p>
+        <p class="d-what">When institutions are evaluated separately, cooperation requires each to give up the data or visibility that protects their own performance narrative.</p>
+        <span class="d-signal sig-t3">Warning: "That would complicate our reporting"</span>
+      </div>
+      <div class="d-card">
+        <p class="d-type">Long-term planning</p>
+        <p class="d-title">Plans designed for mandate, not for impact</p>
+        <p class="d-what">Strategic plans are structured around the length of a political mandate — not the timescales at which urban systems actually change. The plan ends when the leader does.</p>
+        <span class="d-signal sig-t3">Warning: "That's beyond our current mandate"</span>
+      </div>
+    </div>
+    <p class="sec-label">Three counter-moves</p>
+    <div class="moves">
+      <div class="move-card"><p class="move-num">Move 01</p><p class="move-text">Name the incentive structure explicitly: what is the institution currently rewarded for? How does that shape the decision on the table?</p></div>
+      <div class="move-card"><p class="move-num">Move 02</p><p class="move-text">Separate the decision from the announcement: what would the evidence recommend if no one were watching? Start there.</p></div>
+      <div class="move-card"><p class="move-num">Move 03</p><p class="move-text">Build a long-term cost case: what is the 10-year cost of not acting on the evidence? Make the incentive calculus explicit.</p></div>
+    </div>
+    <div class="diag-q dq-t3">
+      <p class="dq-label">Diagnostic question for your context</p>
+      <p class="dq-text">What types of outcomes are most visible and rewarded in your institution? What types of outcomes are real but invisible to the incentive system?</p>
+    </div>
+  </div>
+
+  <!-- PANEL 4: SHORT-TERMISM -->
+  <div class="panel" id="p4">
+    <div class="panel-header ph-t4">
+      <p class="ph-type">Temporal failure mode</p>
+      <p class="ph-name">Short-termism</p>
+      <p class="ph-desc">Systems react to immediate pressures instead of building long-term resilience. The most costly urban failures are often invisible in the short run — and catastrophic over time.</p>
+    </div>
+    <p class="sec-label">How it distorts each decision type</p>
+    <div class="d-grid">
+      <div class="d-card">
+        <p class="d-type">Infrastructure investment</p>
+        <p class="d-title">Repair over prevention</p>
+        <p class="d-what">Maintenance is chronically underfunded because its benefits are diffuse and future-dated. Crisis repairs, by contrast, are visible and generate political credit — so systems run to failure.</p>
+        <span class="d-signal sig-t4">Warning: "We'll address that when it's a problem"</span>
+      </div>
+      <div class="d-card">
+        <p class="d-type">Public health</p>
+        <p class="d-title">Treatment over prevention</p>
+        <p class="d-what">Prevention generates savings over decades but struggles to attract investment because the outcome is a non-event: the disease that didn't happen.</p>
+        <span class="d-signal sig-t4">Warning: "Prevention is hard to measure"</span>
+      </div>
+      <div class="d-card">
+        <p class="d-type">Climate adaptation</p>
+        <p class="d-title">Mitigation that arrives too late</p>
+        <p class="d-what">Urban climate decisions routinely discount future risk in favour of present cost, resulting in systematic underinvestment in adaptation.</p>
+        <span class="d-signal sig-t4">Warning: "That's beyond our planning horizon"</span>
+      </div>
+      <div class="d-card">
+        <p class="d-type">Social cohesion</p>
+        <p class="d-title">Fragmentation that builds slowly, breaks suddenly</p>
+        <p class="d-what">Social trust erodes slowly and is rarely measured in real time. By the time the data shows the problem, the system has already been weakened for years.</p>
+        <span class="d-signal sig-t4">Warning: "We didn't see this coming"</span>
+      </div>
+    </div>
+    <p class="sec-label">Three counter-moves</p>
+    <div class="moves">
+      <div class="move-card"><p class="move-num">Move 01</p><p class="move-text">For every major decision, ask: what is the 10-year and 25-year cost of inaction? Build this into the decision memo.</p></div>
+      <div class="move-card"><p class="move-num">Move 02</p><p class="move-text">Identify one leading indicator — something measurable today — that predicts the long-term outcome you care about. Start tracking it.</p></div>
+      <div class="move-card"><p class="move-num">Move 03</p><p class="move-text">Run a "pre-mortem": assume the city faces this problem in 15 years. What decision made today contributed to it? Act on that decision now.</p></div>
+    </div>
+    <div class="diag-q dq-t4">
+      <p class="dq-label">Diagnostic question for your context</p>
+      <p class="dq-text">Which current policy is being shaped primarily by what's urgent this year? What would a 15-year lens reveal about that decision?</p>
+    </div>
+  </div>
+
+</div>
+<script>
+function show(idx) {
+  for (var i = 0; i < 5; i++) {
+    document.getElementById('p' + i).classList.remove('visible');
+  }
+  document.getElementById('p' + idx).classList.add('visible');
+  var tabs = document.getElementById('tabs').querySelectorAll('.tab');
+  tabs.forEach(function(t) {
+    t.className = 'tab';
+  });
+  tabs[idx].classList.add('tab', 'active-t' + idx);
+}
+</script>
+</body>
+</html>
