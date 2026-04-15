@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Section 2 · Bonus Material 1 — City Intelligence Concept Map</title>
+<style>
+  :root {
+    --teal-dark: #085041; --teal-mid: #0F6E56; --teal: #1D9E75;
+    --teal-light: #5DCAA5; --teal-pale: #E1F5EE; --teal-faint: #F0FAF6;
+    --purple: #534AB7; --purple-pale: #EEEDFE;
+    --amber: #BA7517; --amber-pale: #FAEEDA;
+    --blue: #185FA5; --blue-pale: #E6F1FB;
+    --coral: #D85A30; --coral-pale: #FAECE7;
+    --text: #1a1a1a; --text-mid: #444; --text-muted: #6b6b6b;
+    --border: #e2e2e2; --border-light: #f0f0f0;
+    --bg: #ffffff; --bg-soft: #f8f9fa;
+    --radius: 10px; --radius-sm: 6px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Helvetica Neue', Arial, sans-serif; color: var(--text); background: var(--bg); font-size: 15px; line-height: 1.65; }
+  .page { max-width: 760px; margin: 0 auto; padding: 48px 24px 80px; }
+  .bm-label { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; color: var(--teal-mid); background: var(--teal-pale); padding: 5px 14px; border-radius: 20px; margin-bottom: 18px; }
+  .bm-title { font-size: 28px; font-weight: 700; color: var(--text); line-height: 1.25; margin-bottom: 10px; letter-spacing: -.3px; font-family: 'Georgia', serif; }
+  .bm-sub { font-size: 14px; color: var(--text-muted); line-height: 1.65; max-width: 580px; margin-bottom: 32px; }
+  .sec-label { font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--text-muted); margin: 32px 0 14px; display: flex; align-items: center; gap: 10px; }
+  .sec-label::after { content: ''; flex: 1; height: 1px; background: var(--border-light); }
+  .divider { border: none; border-top: 1px solid var(--border-light); margin: 36px 0; }
+
+  /* THE MAP */
+  .map-wrap { background: var(--bg-soft); border: 1px solid var(--border); border-radius: var(--radius); padding: 32px 24px; margin-bottom: 8px; }
+  .map-intro { font-size: 13px; color: var(--text-muted); line-height: 1.65; margin-bottom: 28px; text-align: center; }
+  .map-grid { display: grid; grid-template-columns: 1fr 60px 1fr; grid-template-rows: auto 60px auto; gap: 0; align-items: center; justify-items: center; }
+  .map-node { border-radius: var(--radius); padding: 18px 16px; width: 100%; cursor: pointer; transition: all .2s; border: 2px solid transparent; }
+  .map-node:hover { transform: translateY(-2px); }
+  .map-node.active { border-width: 2px; }
+  .node-num { font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; margin-bottom: 4px; }
+  .node-title { font-size: 15px; font-weight: 700; margin-bottom: 5px; }
+  .node-sub { font-size: 12px; line-height: 1.5; }
+
+  .node-data { background: var(--blue-pale); }
+  .node-data .node-num { color: var(--blue); }
+  .node-data .node-title { color: #0C447C; }
+  .node-data .node-sub { color: var(--blue); }
+  .node-data.active { border-color: var(--blue); }
+
+  .node-gov { background: var(--purple-pale); }
+  .node-gov .node-num { color: var(--purple); }
+  .node-gov .node-title { color: #3C3489; }
+  .node-gov .node-sub { color: var(--purple); }
+  .node-gov.active { border-color: var(--purple); }
+
+  .node-decision { background: var(--amber-pale); }
+  .node-decision .node-num { color: var(--amber); }
+  .node-decision .node-title { color: #633806; }
+  .node-decision .node-sub { color: var(--amber); }
+  .node-decision.active { border-color: var(--amber); }
+
+  .node-outcome { background: var(--teal-pale); }
+  .node-outcome .node-num { color: var(--teal-mid); }
+  .node-outcome .node-title { color: var(--teal-dark); }
+  .node-outcome .node-sub { color: var(--teal-mid); }
+  .node-outcome.active { border-color: var(--teal); }
+
+  .node-intel { background: var(--coral-pale); border: 2px dashed #F0997B; }
+  .node-intel .node-num { color: var(--coral); }
+  .node-intel .node-title { color: #712B13; font-size: 14px; }
+  .node-intel .node-sub { color: var(--coral); }
+  .node-intel.active { border-style: solid; border-color: var(--coral); }
+
+  .arrow-h { display: flex; align-items: center; justify-content: center; color: var(--text-muted); font-size: 20px; }
+  .arrow-v { display: flex; align-items: center; justify-content: center; color: var(--text-muted); font-size: 20px; writing-mode: vertical-lr; height: 60px; }
+  .center-cell { grid-column: 2; grid-row: 2; display: flex; align-items: center; justify-content: center; }
+
+  /* Detail panel */
+  .detail-panel { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; min-height: 120px; margin-top: 16px; transition: all .2s; }
+  .dp-empty { text-align: center; color: var(--text-muted); font-size: 14px; padding: 16px 0; font-style: italic; }
+  .dp-label { font-size: 10px; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; margin-bottom: 8px; }
+  .dp-title { font-size: 18px; font-weight: 700; margin-bottom: 10px; font-family: 'Georgia', serif; }
+  .dp-desc { font-size: 14px; color: var(--text-mid); line-height: 1.75; margin-bottom: 16px; }
+  .dp-audiences { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 16px; }
+  .dp-aud { border-radius: var(--radius-sm); padding: 14px; }
+  .dp-aud.pm { background: var(--teal-faint); border: 1px solid var(--teal-pale); }
+  .dp-aud.rs { background: #F5F0FF; border: 1px solid #D8D4F8; }
+  .dp-aud-label { font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; margin-bottom: 5px; }
+  .dp-aud.pm .dp-aud-label { color: var(--teal-mid); }
+  .dp-aud.rs .dp-aud-label { color: var(--purple); }
+  .dp-aud-text { font-size: 13px; line-height: 1.6; color: var(--text-mid); }
+  .dp-question { margin-top: 16px; background: var(--bg-soft); border-radius: var(--radius-sm); padding: 14px 16px; }
+  .dp-q-label { font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 5px; }
+  .dp-q-text { font-size: 14px; font-weight: 600; color: var(--text); line-height: 1.5; font-family: 'Georgia', serif; }
+
+  /* Connections section */
+  .conn-intro { font-size: 14px; color: var(--text-muted); line-height: 1.65; margin-bottom: 20px; }
+  .conn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .conn-card { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; }
+  .conn-from-to { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .conn-tag { font-size: 11px; font-weight: 700; padding: 2px 9px; border-radius: 10px; }
+  .conn-tag.blue { background: var(--blue-pale); color: var(--blue); }
+  .conn-tag.purple { background: var(--purple-pale); color: var(--purple); }
+  .conn-tag.amber { background: var(--amber-pale); color: var(--amber); }
+  .conn-tag.teal { background: var(--teal-pale); color: var(--teal-mid); }
+  .conn-tag.coral { background: var(--coral-pale); color: var(--coral); }
+  .conn-arrow { color: var(--text-muted); font-size: 13px; }
+  .conn-title { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+  .conn-desc { font-size: 12px; color: var(--text-muted); line-height: 1.55; }
+  .conn-break { background: #FFF5F5; border-color: #FECACA; }
+  .conn-break .conn-title { color: #991B1B; }
+
+  /* Key insight box */
+  .insight-box { background: var(--teal-pale); border-radius: var(--radius); padding: 24px 28px; margin: 32px 0; border-left: 4px solid var(--teal); }
+  .insight-label { font-size: 10px; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; color: var(--teal-mid); margin-bottom: 8px; }
+  .insight-text { font-size: 16px; font-style: italic; color: var(--teal-dark); line-height: 1.65; font-family: 'Georgia', serif; }
+
+  @media(max-width:560px) {
+    .dp-audiences, .conn-grid { grid-template-columns: 1fr; }
+    .map-grid { grid-template-columns: 1fr; grid-template-rows: auto; gap: 12px; }
+    .arrow-h, .arrow-v, .center-cell { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="bm-label">Section 2 · Bonus Material 1</div>
+  <h1 class="bm-title">City intelligence concept map</h1>
+  <p class="bm-sub">An interactive framework showing how data, governance, decision-making, and outcomes connect — and where intelligence emerges or breaks down. Click each node to explore its role in the system.</p>
+
+  <div class="sec-label">The map — click any node to explore</div>
+
+  <div class="map-wrap">
+    <p class="map-intro">City intelligence is not found in any single component. It lives in the connections between them.</p>
+    <div class="map-grid">
+      <div class="map-node node-data" id="n-data" onclick="showNode('data')">
+        <p class="node-num">Layer 01</p>
+        <p class="node-title">Data & information</p>
+        <p class="node-sub">What the system knows</p>
+      </div>
+      <div class="arrow-h">→</div>
+      <div class="map-node node-gov" id="n-gov" onclick="showNode('gov')">
+        <p class="node-num">Layer 02</p>
+        <p class="node-title">Governance & institutions</p>
+        <p class="node-sub">Who interprets & decides</p>
+      </div>
+      <div class="arrow-v">↓</div>
+      <div class="center-cell">
+        <div class="map-node node-intel" id="n-intel" onclick="showNode('intel')" style="width:120px;text-align:center;">
+          <p class="node-num">Emerges</p>
+          <p class="node-title">City intelligence</p>
+        </div>
+      </div>
+      <div class="arrow-v">↓</div>
+      <div class="map-node node-outcome" id="n-outcome" onclick="showNode('outcome')">
+        <p class="node-num">Layer 04</p>
+        <p class="node-title">Outcomes & impact</p>
+        <p class="node-sub">What changes in people's lives</p>
+      </div>
+      <div class="arrow-h" style="transform:rotate(180deg)">→</div>
+      <div class="map-node node-decision" id="n-decision" onclick="showNode('decision')">
+        <p class="node-num">Layer 03</p>
+        <p class="node-title">Decision & action</p>
+        <p class="node-sub">What the system does</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="detail-panel" id="detail-panel">
+    <p class="dp-empty">Select any node above to explore its role in the city intelligence system.</p>
+  </div>
+
+  <div class="insight-box">
+    <p class="insight-label">The core insight</p>
+    <p class="insight-text">"Intelligence does not live in any single layer. It emerges — or fails to emerge — from the quality of the connections between them. A city can be data-rich, well-governed, decisive, and still produce poor outcomes if these layers are not genuinely connected."</p>
+  </div>
+
+  <div class="sec-label">Where connections break</div>
+  <p class="conn-intro">Intelligence breaks down at the transitions between layers — not usually inside them. Here are the four most common break points, and what they produce.</p>
+
+  <div class="conn-grid">
+    <div class="conn-card conn-break">
+      <div class="conn-from-to">
+        <span class="conn-tag blue">Data</span>
+        <span class="conn-arrow">→ ✕ →</span>
+        <span class="conn-tag purple">Governance</span>
+      </div>
+      <p class="conn-title">Data that is never interpreted</p>
+      <p class="conn-desc">Information is produced but never reaches the institutions that could use it. The result: evidence-free decisions made by people who don't know what the system knows.</p>
+    </div>
+    <div class="conn-card conn-break">
+      <div class="conn-from-to">
+        <span class="conn-tag purple">Governance</span>
+        <span class="conn-arrow">→ ✕ →</span>
+        <span class="conn-tag amber">Decision</span>
+      </div>
+      <p class="conn-title">Interpretation that never becomes action</p>
+      <p class="conn-desc">Institutions understand the problem — committees, reports, consultations — but cannot translate understanding into coordinated action. Analysis paralysis at scale.</p>
+    </div>
+    <div class="conn-card conn-break">
+      <div class="conn-from-to">
+        <span class="conn-tag amber">Decision</span>
+        <span class="conn-arrow">→ ✕ →</span>
+        <span class="conn-tag teal">Outcome</span>
+      </div>
+      <p class="conn-title">Action without measurable impact</p>
+      <p class="conn-desc">Decisions are implemented but outcomes are never tracked. Without measurement, the system cannot learn whether the action worked — and cannot course-correct.</p>
+    </div>
+    <div class="conn-card conn-break">
+      <div class="conn-from-to">
+        <span class="conn-tag teal">Outcome</span>
+        <span class="conn-arrow">→ ✕ →</span>
+        <span class="conn-tag blue">Data</span>
+      </div>
+      <p class="conn-title">The broken feedback loop</p>
+      <p class="conn-desc">Outcomes are visible but the system doesn't feed them back into data collection. The next cycle starts from the same baseline, repeating the same patterns. Learning stops.</p>
+    </div>
+  </div>
+
+</div>
+
+<script>
+var nodes = {
+  data: {
+    color: 'var(--blue)', labelColor: 'var(--blue)', bgLabel: 'var(--blue-pale)',
+    label: 'Layer 01 — Data & information',
+    title: 'What the system knows',
+    desc: 'Data and information are the raw material of city intelligence — but they are only the starting point. This layer includes quantitative indicators, research evidence, citizen feedback, operational data, and the "weak signals" that precede visible change. The critical question at this layer is not how much data exists, but whether it is accessible, integrated, and connected to the institutions that need it.',
+    pm: 'Ask which data in your institution is trapped in silos — never seen by the people whose decisions it should inform. The most important data is often the data that never moves.',
+    rs: 'Consider whether your research outputs are entering the system as usable information — or whether they exist in a form that the governance layer cannot access or interpret.',
+    q: 'In your context: which piece of data or evidence, if it were genuinely circulating, would change the most important decision currently being made?'
+  },
+  gov: {
+    color: 'var(--purple)', labelColor: 'var(--purple)', bgLabel: 'var(--purple-pale)',
+    label: 'Layer 02 — Governance & institutions',
+    title: 'Who interprets and decides',
+    desc: 'Governance is the interpretive layer — it is where data becomes meaning, and meaning becomes intention. This layer includes formal institutions, policy processes, political mandates, inter-departmental coordination, and the informal structures of power that shape what gets prioritised. A governance layer can be well-resourced and still fail at this function — if it lacks the mechanisms to integrate evidence, coordinate across departments, or translate understanding into direction.',
+    pm: 'Where in your governance structure does interpretation actually happen? Is there a formal mechanism for translating evidence into decision-ready framing — or does this happen informally, inconsistently, or not at all?',
+    rs: 'Governance is not just the formal institutional architecture. It includes the informal relationships, cultures of evidence use, and political incentive structures that determine whether your findings enter the interpretive layer or bypass it entirely.',
+    q: 'In your context: where does evidence arrive in your governance structure — and at what point does the interpretation process break down or get distorted?'
+  },
+  decision: {
+    color: 'var(--amber)', labelColor: 'var(--amber)', bgLabel: 'var(--amber-pale)',
+    label: 'Layer 03 — Decision & action',
+    title: 'What the system does',
+    desc: 'Decision and action is where intention becomes intervention. This layer includes policy design, resource allocation, implementation, coordination across actors, and the moment where political will either materialises or dissolves. It is the most visible layer — and the most politically loaded. The failure mode at this layer is not usually a lack of will but a structural disconnection: decisions made without the evidence from Layer 01, or without the coordination mechanisms from Layer 02.',
+    pm: 'Think about the last significant decision your institution made. Was it genuinely connected to the interpretive layer — or did it run ahead of the evidence, driven by urgency, visibility, or political timing?',
+    rs: 'Decision and action is the layer where your research either matters or doesn\'t. The question is not whether the decision-makers had access to the evidence — it is whether the decision process was designed to integrate it.',
+    q: 'In your context: what structural barrier most commonly prevents well-informed governance from producing well-designed decisions?'
+  },
+  outcome: {
+    color: 'var(--teal-mid)', labelColor: 'var(--teal-mid)', bgLabel: 'var(--teal-pale)',
+    label: 'Layer 04 — Outcomes & impact',
+    title: 'What changes in people\'s lives',
+    desc: 'Outcomes are not outputs. An output is what a system produces — a policy, a report, a service. An outcome is what changes in the lives of the people the system serves. This distinction is foundational to city intelligence. Intelligent systems measure outcomes — health, resilience, trust, social cohesion, life chances — not just the activities that are supposed to produce them. And crucially: they feed those outcomes back into Layer 01, closing the loop.',
+    pm: 'In your reporting and evaluation culture: are you measuring outputs (what was delivered) or outcomes (what changed)? The answer determines whether your system can learn.',
+    rs: 'The most important research contribution at this layer is not producing outcome data — it is designing the measurement frameworks that make outcome tracking possible, sustained, and connected to the decision cycle.',
+    q: 'In your context: name one outcome that is genuinely felt by the communities your institution serves — but that is currently not measured, tracked, or fed back into the system.'
+  },
+  intel: {
+    color: 'var(--coral)', labelColor: 'var(--coral)', bgLabel: 'var(--coral-pale)',
+    label: 'City intelligence — the emergent property',
+    title: 'Intelligence is what emerges from connection',
+    desc: 'City intelligence is not a layer — it is what happens when the four layers are genuinely connected. It is the emergent property of a system in which data flows into governance, governance shapes decision, decision produces measurable outcomes, and outcomes feed back into data. No single layer, however strong, produces intelligence on its own. A city with excellent data but weak governance is not intelligent. A city with decisive action but no outcome measurement is not intelligent. Intelligence requires the whole circuit to be live.',
+    pm: 'The practical implication: you cannot build city intelligence by investing in one layer alone. Improving data without improving the interpretive capacity of governance will not produce better decisions. Improving governance without closing the feedback loop from outcomes will not produce learning.',
+    rs: 'For researchers, city intelligence is both a subject of study and a condition for your research to have impact. Understanding which layer is strongest and which is weakest in your study context is as important as the quality of your methodology.',
+    q: 'In your context: which connection in the circuit is currently the weakest — and what is the most realistic first step to strengthen it?'
+  }
+};
+
+function showNode(id) {
+  var n = nodes[id];
+  var nodeIds = ['data','gov','decision','outcome','intel'];
+  nodeIds.forEach(function(nid) {
+    document.getElementById('n-' + nid).classList.remove('active');
+  });
+  document.getElementById('n-' + id).classList.add('active');
+  var panel = document.getElementById('detail-panel');
+  panel.innerHTML =
+    '<p class="dp-label" style="color:' + n.labelColor + '">' + n.label + '</p>' +
+    '<p class="dp-title">' + n.title + '</p>' +
+    '<p class="dp-desc">' + n.desc + '</p>' +
+    '<div class="dp-audiences">' +
+      '<div class="dp-aud pm"><p class="dp-aud-label">For policymakers</p><p class="dp-aud-text">' + n.pm + '</p></div>' +
+      '<div class="dp-aud rs"><p class="dp-aud-label">For researchers</p><p class="dp-aud-text">' + n.rs + '</p></div>' +
+    '</div>' +
+    '<div class="dp-question"><p class="dp-q-label">Diagnostic question</p><p class="dp-q-text">' + n.q + '</p></div>';
+}
+</script>
+</body>
+</html>
