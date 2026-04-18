@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Section 3 · Bonus Material 2 — Reading a CII Profile</title>
+<style>
+  :root{
+    --teal-dark:#085041;--teal-mid:#0F6E56;--teal:#1D9E75;--teal-light:#5DCAA5;--teal-pale:#E1F5EE;--teal-faint:#F0FAF6;
+    --p1:#185FA5;--p1-pale:#E6F1FB;--p2:#534AB7;--p2-pale:#EEEDFE;
+    --p3:#3B6D11;--p3-pale:#EAF3DE;--p4:#D85A30;--p4-pale:#FAECE7;
+    --p5:#BA7517;--p5-pale:#FAEEDA;--p6:#993556;--p6-pale:#FBEAF0;
+    --text:#1a1a1a;--text-mid:#444;--text-muted:#6b6b6b;
+    --border:#e2e2e2;--border-light:#f0f0f0;--bg:#fff;--bg-soft:#f8f9fa;
+    --radius:10px;--radius-sm:6px;
+    --warn:#B91C1C;--warn-pale:#FEF2F2;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Helvetica Neue',Arial,sans-serif;color:var(--text);background:var(--bg);font-size:15px;line-height:1.65}
+  .page{max-width:780px;margin:0 auto;padding:48px 24px 80px}
+  .bm-label{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--teal-mid);background:var(--teal-pale);padding:5px 14px;border-radius:20px;margin-bottom:18px}
+  .bm-title{font-size:28px;font-weight:700;color:var(--text);line-height:1.25;margin-bottom:10px;letter-spacing:-.3px;font-family:'Georgia',serif}
+  .bm-sub{font-size:14px;color:var(--text-muted);line-height:1.65;max-width:600px;margin-bottom:32px}
+  .sec-label{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin:28px 0 14px;display:flex;align-items:center;gap:10px}
+  .sec-label::after{content:'';flex:1;height:1px;background:var(--border-light)}
+  .divider{border:none;border-top:1px solid var(--border-light);margin:32px 0}
+  .intro-note{background:var(--bg-soft);border:1px solid var(--border-light);border-radius:var(--radius);padding:16px 20px;font-size:13px;color:var(--text-muted);line-height:1.65;margin-bottom:28px}
+
+  /* Profile display */
+  .profile-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+  .prof-tab{border:1px solid var(--border);border-radius:20px;padding:6px 16px;font-size:13px;font-weight:500;cursor:pointer;background:var(--bg-soft);color:var(--text-muted);transition:all .15s}
+  .prof-tab.active{background:var(--teal-pale);color:var(--teal-dark);border-color:var(--teal-light);font-weight:600}
+  .profile-panel{display:none}
+  .profile-panel.visible{display:block}
+
+  .city-header{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:20px;flex-wrap:wrap}
+  .city-name{font-size:22px;font-weight:700;font-family:'Georgia',serif;color:var(--text)}
+  .city-tag{display:inline-block;font-size:11px;font-weight:700;padding:3px 10px;border-radius:12px;background:var(--teal-pale);color:var(--teal-dark);margin-top:4px}
+  .composite-score{text-align:right}
+  .cs-label{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);margin-bottom:2px}
+  .cs-num{font-size:32px;font-weight:700;color:var(--teal)}
+  .cs-sub{font-size:12px;color:var(--text-muted)}
+
+  /* Bar chart */
+  .pillar-bars{margin-bottom:24px}
+  .bar-row{display:grid;grid-template-columns:140px 1fr 50px;align-items:center;gap:10px;margin-bottom:10px}
+  .bar-name{font-size:12px;font-weight:600;color:var(--text)}
+  .bar-outer{height:12px;background:var(--border-light);border-radius:6px;overflow:hidden;position:relative}
+  .bar-fill{height:100%;border-radius:6px;transition:width .8s ease}
+  .bar-val{font-size:12px;font-weight:700;text-align:right}
+
+  /* Interpretation blocks */
+  .interp-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px}
+  .interp-card{border-radius:var(--radius);padding:16px}
+  .interp-card.strength{background:var(--teal-faint);border:1px solid var(--teal-pale)}
+  .interp-card.tension{background:var(--warn-pale);border:1px solid #FECACA}
+  .interp-card.hidden{background:var(--p5-pale);border:1px solid #EF9F27}
+  .interp-card.question{background:var(--p2-pale);border:1px solid #AFA9EC}
+  .ic-label{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px}
+  .interp-card.strength .ic-label{color:var(--teal-mid)}
+  .interp-card.tension .ic-label{color:var(--warn)}
+  .interp-card.hidden .ic-label{color:var(--p5)}
+  .interp-card.question .ic-label{color:var(--p2)}
+  .ic-text{font-size:13px;line-height:1.6;color:var(--text-mid)}
+
+  /* Reading rules */
+  .rule-list{margin-bottom:28px}
+  .rule-item{border:1px solid var(--border);border-radius:var(--radius);padding:18px;margin-bottom:12px}
+  .rule-header{display:flex;align-items:flex-start;gap:12px;margin-bottom:8px}
+  .rule-num{display:flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;font-size:12px;font-weight:700;flex-shrink:0;margin-top:1px}
+  .r-teal{background:var(--teal-pale);color:var(--teal-dark)}
+  .r-warn{background:var(--warn-pale);color:var(--warn)}
+  .rule-title{font-size:14px;font-weight:600;color:var(--text)}
+  .rule-text{font-size:13px;color:var(--text-muted);line-height:1.65;padding-left:40px}
+
+  /* Misreadings */
+  .misread-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:28px}
+  .mr-card{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:16px}
+  .mr-wrong{font-size:13px;color:var(--warn);margin-bottom:8px;padding:8px 12px;background:var(--warn-pale);border-radius:var(--radius-sm);font-style:italic}
+  .mr-right{font-size:13px;color:var(--teal-dark);padding:8px 12px;background:var(--teal-faint);border-radius:var(--radius-sm)}
+  .mr-label{font-size:9px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;margin-bottom:3px}
+  .mr-wrong .mr-label{color:var(--warn)}
+  .mr-right .mr-label{color:var(--teal-mid)}
+
+  @media(max-width:560px){
+    .interp-grid,.misread-grid{grid-template-columns:1fr}
+    .bar-row{grid-template-columns:100px 1fr 44px}
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="bm-label">Section 3 · Bonus Material 2</div>
+  <h1 class="bm-title">Reading a CII profile: what the numbers reveal — and conceal</h1>
+  <p class="bm-sub">An index score is a signal, not an explanation. This material teaches you how to read a CII profile intelligently — including what to look for beyond the composite score, how to identify hidden tensions, and how to avoid the most common misreadings.</p>
+  <div class="intro-note">These profiles are illustrative — designed to demonstrate the analytical logic of the CII, not to represent any city's actual scores. In Section 4, you will work with real data. Here, focus on the method of reading, not the numbers themselves.</div>
+
+  <div class="sec-label">Three illustrative city profiles — select to explore</div>
+
+  <div class="profile-tabs">
+    <button class="prof-tab active" onclick="showProfile(0)">City A — The apparent leader</button>
+    <button class="prof-tab" onclick="showProfile(1)">City B — The hidden vulnerability</button>
+    <button class="prof-tab" onclick="showProfile(2)">City C — The underestimated city</button>
+  </div>
+
+  <!-- PROFILE A -->
+  <div class="profile-panel visible" id="prof0">
+    <div class="city-header">
+      <div><p class="city-name">City A</p><span class="city-tag">The apparent leader</span></div>
+      <div class="composite-score"><p class="cs-label">CII composite</p><p class="cs-num">0.74</p><p class="cs-sub">Highest in the comparison group</p></div>
+    </div>
+    <div class="pillar-bars">
+      <div class="bar-row"><span class="bar-name">Foundational</span><div class="bar-outer"><div class="bar-fill" style="width:82%;background:var(--p1)"></div></div><span class="bar-val" style="color:var(--p1)">0.82</span></div>
+      <div class="bar-row"><span class="bar-name">Innovator</span><div class="bar-outer"><div class="bar-fill" style="width:88%;background:var(--p2)"></div></div><span class="bar-val" style="color:var(--p2)">0.88</span></div>
+      <div class="bar-row"><span class="bar-name">Integrator</span><div class="bar-outer"><div class="bar-fill" style="width:76%;background:var(--p3)"></div></div><span class="bar-val" style="color:var(--p3)">0.76</span></div>
+      <div class="bar-row"><span class="bar-name">Regenerative</span><div class="bar-outer"><div class="bar-fill" style="width:71%;background:var(--p4)"></div></div><span class="bar-val" style="color:var(--p4)">0.71</span></div>
+      <div class="bar-row"><span class="bar-name">Connected</span><div class="bar-outer"><div class="bar-fill" style="width:85%;background:var(--p5)"></div></div><span class="bar-val" style="color:var(--p5)">0.85</span></div>
+      <div class="bar-row"><span class="bar-name">Healthy Society</span><div class="bar-outer"><div class="bar-fill" style="width:44%;background:var(--p6)"></div></div><span class="bar-val" style="color:var(--p6)">0.44</span></div>
+    </div>
+    <div class="interp-grid">
+      <div class="interp-card strength"><p class="ic-label">What the profile reveals</p><p class="ic-text">City A leads on innovation, connectivity, and foundational capacity. It has the infrastructure for a high-performing knowledge economy. A composite score of 0.74 would make it appear the strongest city in most traditional rankings.</p></div>
+      <div class="interp-card tension"><p class="ic-label">The critical tension</p><p class="ic-text">A Healthy Society score of 0.44 — by far the lowest pillar — in a city that leads on innovation and connectivity signals a profound structural disconnect. Economic and knowledge performance is not translating into population health and wellbeing.</p></div>
+      <div class="interp-card hidden"><p class="ic-label">What the composite score hides</p><p class="ic-text">The composite of 0.74 is mathematically propped up by strong scores in five pillars. A traditional ranking would celebrate this city. The CII reveals that its residents are not living well — despite the headline performance.</p></div>
+      <div class="interp-card question"><p class="ic-label">The question this profile opens</p><p class="ic-text">Why is strong innovation and connectivity producing poor health outcomes? Is it inequality — strong performance concentrated in elite populations? Is it environmental — high innovation activity generating health externalities? The CII opens the question. It does not answer it.</p></div>
+    </div>
+    <p style="font-size:13px;color:var(--text-muted);line-height:1.65;background:var(--bg-soft);border-radius:var(--radius-sm);padding:14px 16px"><strong style="color:var(--text)">The reading rule this profile teaches:</strong> Never read the composite score before reading the pillar profile. A high composite can mask a critical pillar failure. Always ask: which pillar is furthest from the average — and why?</p>
+  </div>
+
+  <!-- PROFILE B -->
+  <div class="profile-panel" id="prof1">
+    <div class="city-header">
+      <div><p class="city-name">City B</p><span class="city-tag">The hidden vulnerability</span></div>
+      <div class="composite-score"><p class="cs-label">CII composite</p><p class="cs-num">0.61</p><p class="cs-sub">Middle of the comparison group</p></div>
+    </div>
+    <div class="pillar-bars">
+      <div class="bar-row"><span class="bar-name">Foundational</span><div class="bar-outer"><div class="bar-fill" style="width:63%;background:var(--p1)"></div></div><span class="bar-val" style="color:var(--p1)">0.63</span></div>
+      <div class="bar-row"><span class="bar-name">Innovator</span><div class="bar-outer"><div class="bar-fill" style="width:72%;background:var(--p2)"></div></div><span class="bar-val" style="color:var(--p2)">0.72</span></div>
+      <div class="bar-row"><span class="bar-name">Integrator</span><div class="bar-outer"><div class="bar-fill" style="width:68%;background:var(--p3)"></div></div><span class="bar-val" style="color:var(--p3)">0.68</span></div>
+      <div class="bar-row"><span class="bar-name">Regenerative</span><div class="bar-outer"><div class="bar-fill" style="width:65%;background:var(--p4)"></div></div><span class="bar-val" style="color:var(--p4)">0.65</span></div>
+      <div class="bar-row"><span class="bar-name">Connected</span><div class="bar-outer"><div class="bar-fill" style="width:61%;background:var(--p5)"></div></div><span class="bar-val" style="color:var(--p5)">0.61</span></div>
+      <div class="bar-row"><span class="bar-name">Healthy Society</span><div class="bar-outer"><div class="bar-fill" style="width:38%;background:var(--p6)"></div></div><span class="bar-val" style="color:var(--p6)">0.38</span></div>
+    </div>
+    <div class="interp-grid">
+      <div class="interp-card strength"><p class="ic-label">What the profile reveals</p><p class="ic-text">City B looks balanced at first glance — all pillars except Healthy Society are in the 0.61–0.72 range. A composite of 0.61 places it competently in the middle. There are no dramatic high performers creating obvious questions.</p></div>
+      <div class="interp-card tension"><p class="ic-label">The critical tension</p><p class="ic-text">The Healthy Society score of 0.38 is not just a low number — it is a structural warning. In a city where every other dimension is performing moderately well, a Healthy Society score this low suggests that urban outputs are systematically failing to translate into population wellbeing.</p></div>
+      <div class="interp-card hidden"><p class="ic-label">What the composite score hides</p><p class="ic-text">The apparent balance of City B's profile is misleading. Moderate performance across five pillars does not compensate for critically low Healthy Society performance. The question this city must answer is not "how do we improve on average?" but "why is our Healthy Society pillar structurally decoupled from the rest?"</p></div>
+      <div class="interp-card question"><p class="ic-label">The question this profile opens</p><p class="ic-text">City B's Foundational score of 0.63 suggests that the population has basic capabilities. But Healthy Society is critically low. This combination asks: are the health system, the urban environment, and the social infrastructure failing to convert foundational capabilities into actual health outcomes?</p></div>
+    </div>
+    <p style="font-size:13px;color:var(--text-muted);line-height:1.65;background:var(--bg-soft);border-radius:var(--radius-sm);padding:14px 16px"><strong style="color:var(--text)">The reading rule this profile teaches:</strong> Moderate composite scores can be the most dangerous — because they create complacency. City B's profile contains a health crisis masked by average performance. Always read the outlier pillar first, not the composite.</p>
+  </div>
+
+  <!-- PROFILE C -->
+  <div class="profile-panel" id="prof2">
+    <div class="city-header">
+      <div><p class="city-name">City C</p><span class="city-tag">The underestimated city</span></div>
+      <div class="composite-score"><p class="cs-label">CII composite</p><p class="cs-num">0.58</p><p class="cs-sub">Near the bottom of the comparison group</p></div>
+    </div>
+    <div class="pillar-bars">
+      <div class="bar-row"><span class="bar-name">Foundational</span><div class="bar-outer"><div class="bar-fill" style="width:72%;background:var(--p1)"></div></div><span class="bar-val" style="color:var(--p1)">0.72</span></div>
+      <div class="bar-row"><span class="bar-name">Innovator</span><div class="bar-outer"><div class="bar-fill" style="width:41%;background:var(--p2)"></div></div><span class="bar-val" style="color:var(--p2)">0.41</span></div>
+      <div class="bar-row"><span class="bar-name">Integrator</span><div class="bar-outer"><div class="bar-fill" style="width:69%;background:var(--p3)"></div></div><span class="bar-val" style="color:var(--p3)">0.69</span></div>
+      <div class="bar-row"><span class="bar-name">Regenerative</span><div class="bar-outer"><div class="bar-fill" style="width:74%;background:var(--p4)"></div></div><span class="bar-val" style="color:var(--p4)">0.74</span></div>
+      <div class="bar-row"><span class="bar-name">Connected</span><div class="bar-outer"><div class="bar-fill" style="width:45%;background:var(--p5)"></div></div><span class="bar-val" style="color:var(--p5)">0.45</span></div>
+      <div class="bar-row"><span class="bar-name">Healthy Society</span><div class="bar-outer"><div class="bar-fill" style="width:68%;background:var(--p6)"></div></div><span class="bar-val" style="color:var(--p6)">0.68</span></div>
+    </div>
+    <div class="interp-grid">
+      <div class="interp-card strength"><p class="ic-label">What the profile reveals</p><p class="ic-text">City C has a strong Foundational base, strong Regenerative performance, solid Integrator capacity, and a healthy Healthy Society score. Its residents have good capabilities, live in a healthy environment, and receive coherent public services. For its population, this is a liveable, functioning city.</p></div>
+      <div class="interp-card tension"><p class="ic-label">The critical tension</p><p class="ic-text">Low Innovator (0.41) and Connected (0.45) scores mean the city is not generating new knowledge or linking effectively to the world. Its current strengths — foundational, regenerative, integrator — are stable but not dynamic. The city is well-run but not positioned to shape its own future.</p></div>
+      <div class="interp-card hidden"><p class="ic-label">What the composite score hides</p><p class="ic-text">A composite of 0.58 places City C near the bottom of conventional rankings. A traditional index would rank it as underperforming. The CII reveals a more nuanced picture: for its residents' daily lives, it outperforms City A on the dimensions that matter most — health, environment, governance quality.</p></div>
+      <div class="interp-card question"><p class="ic-label">The question this profile opens</p><p class="ic-text">City C has the social and institutional foundations for innovation — but the knowledge engine hasn't been built yet. Is this a path-dependent gap (historical underinvestment in R&D) or a structural one (no university-industry linkage)? The CII identifies the gap; the policy question is whether it is closable and at what cost.</p></div>
+    </div>
+    <p style="font-size:13px;color:var(--text-muted);line-height:1.65;background:var(--bg-soft);border-radius:var(--radius-sm);padding:14px 16px"><strong style="color:var(--text)">The reading rule this profile teaches:</strong> Composite rankings systematically undervalue cities that invest in people over performance metrics. City C's residents live better lives than City A's — but City A "wins" on the composite. Always ask: which composite are you reading, and for whom?</p>
+  </div>
+
+  <div class="sec-label">Five rules for reading any CII profile</div>
+
+  <div class="rule-list">
+    <div class="rule-item"><div class="rule-header"><span class="rule-num r-teal">1</span><p class="rule-title">Read the outlier pillar first, not the composite</p></div><p class="rule-text">The composite score averages across pillars and conceals the most important information. The pillar furthest from the average — either high or low — is where the city's most important structural story lives. Always start there.</p></div>
+    <div class="rule-item"><div class="rule-header"><span class="rule-num r-teal">2</span><p class="rule-title">Look for contradictions between connected pillars</p></div><p class="rule-text">Some pillars should move together: Foundational and Healthy Society, Innovator and Connected, Integrator and Regenerative. When they diverge sharply, something structural is interrupting the expected relationship. That interruption is a diagnostic signal worth investigating.</p></div>
+    <div class="rule-item"><div class="rule-header"><span class="rule-num r-teal">3</span><p class="rule-title">The score tells you where to look — not what you will find</p></div><p class="rule-text">A low Integrator score does not tell you whether the failure is in governance structure, administrative capacity, political will, or coordination architecture. It tells you the system is failing to coordinate. The explanation requires additional investigation.</p></div>
+    <div class="rule-item"><div class="rule-header"><span class="rule-num r-warn">4</span><p class="rule-title">Never use the CII to rank cities — use it to understand them</p></div><p class="rule-text">The CII is designed as a diagnostic instrument, not a competition. Using composite scores to rank cities misrepresents the tool's purpose and produces the same distortions as every other ranking system. The question is not "which city is best?" but "what does each city's profile reveal about its structural capacity?"</p></div>
+    <div class="rule-item"><div class="rule-header"><span class="rule-num r-warn">5</span><p class="rule-title">Ask whose experience the score reflects</p></div><p class="rule-text">A city-level composite can mask profound within-city inequality. A Healthy Society score of 0.70 may reflect average health outcomes that conceal a 10-year life expectancy gap between wealthy and peripheral districts. Always ask: who in the city does this score represent — and who does it not?</p></div>
+  </div>
+
+  <div class="sec-label">Common misreadings — and what to say instead</div>
+  <div class="misread-grid">
+    <div class="mr-card">
+      <div class="mr-wrong"><p class="mr-label">Misreading</p>"City X has a higher CII score, so it's a better city."</div>
+      <div class="mr-right"><p class="mr-label">Accurate reading</p>"City X has a higher composite score. The pillar breakdown tells us which structural capacities are driving that score — and whether it is translating into residents' quality of life."</div>
+    </div>
+    <div class="mr-card">
+      <div class="mr-wrong"><p class="mr-label">Misreading</p>"Our low Innovator score means we need to invest more in R&D."</div>
+      <div class="mr-right"><p class="mr-label">Accurate reading</p>"Our low Innovator score signals that our knowledge creation and/or translation capacity is weak. Understanding which indicators drive the score tells us whether the problem is in generation, translation, or both."</div>
+    </div>
+    <div class="mr-card">
+      <div class="mr-wrong"><p class="mr-label">Misreading</p>"Our Healthy Society score improved — our health policies are working."</div>
+      <div class="mr-right"><p class="mr-label">Accurate reading</p>"Our Healthy Society score improved. Healthy Society outcomes are shaped by decisions in every domain — transport, housing, education, environmental policy. Attribution requires additional analysis beyond the CII score."</div>
+    </div>
+    <div class="mr-card">
+      <div class="mr-wrong"><p class="mr-label">Misreading</p>"We score similarly to Copenhagen, so we face similar challenges."</div>
+      <div class="mr-right"><p class="mr-label">Accurate reading</p>"Similar composite scores can reflect entirely different pillar profiles. The diagnostic value of the CII is in understanding how each city's structural configuration produces its outcomes — not in assuming similar scores mean similar situations."</div>
+    </div>
+  </div>
+
+</div>
+<script>
+function showProfile(n){
+  document.querySelectorAll('.profile-panel').forEach(function(p){p.classList.remove('visible')});
+  document.querySelectorAll('.prof-tab').forEach(function(t){t.classList.remove('active')});
+  document.getElementById('prof'+n).classList.add('visible');
+  document.querySelectorAll('.prof-tab')[n].classList.add('active');
+}
+</script>
+</body>
+</html>
