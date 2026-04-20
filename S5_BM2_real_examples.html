@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Section 5 · Real Examples — High-Intelligence Interventions</title>
+<style>
+  :root{
+    --teal-dark:#085041;--teal-mid:#0F6E56;--teal:#1D9E75;--teal-light:#5DCAA5;--teal-pale:#E1F5EE;--teal-faint:#F0FAF6;
+    --purple:#534AB7;--purple-pale:#EEEDFE;--purple-mid:#3C3489;
+    --amber:#BA7517;--amber-pale:#FAEEDA;--blue:#185FA5;--blue-pale:#E6F1FB;
+    --coral:#D85A30;--coral-pale:#FAECE7;--green:#3B6D11;--green-pale:#EAF3DE;
+    --pink:#993556;--pink-pale:#FBEAF0;
+    --text:#1a1a1a;--text-mid:#444;--text-muted:#6b6b6b;
+    --border:#e2e2e2;--border-light:#f0f0f0;--bg:#fff;--bg-soft:#f8f9fa;
+    --radius:10px;--radius-sm:6px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Helvetica Neue',Arial,sans-serif;color:var(--text);background:var(--bg);font-size:15px;line-height:1.65}
+  .page{max-width:760px;margin:0 auto;padding:48px 24px 80px}
+  .bm-label{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--teal-mid);background:var(--teal-pale);padding:5px 14px;border-radius:20px;margin-bottom:18px}
+  .bm-title{font-size:28px;font-weight:700;color:var(--text);line-height:1.25;margin-bottom:10px;letter-spacing:-.3px;font-family:'Georgia',serif}
+  .bm-sub{font-size:14px;color:var(--text-muted);line-height:1.65;max-width:580px;margin-bottom:24px}
+  .divider{border:none;border-top:1px solid var(--border-light);margin:24px 0}
+  .sec-label{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin:20px 0 12px;display:flex;align-items:center;gap:10px}
+  .sec-label::after{content:'';flex:1;height:1px;background:var(--border-light)}
+
+  /* Pillar nav */
+  .pillar-nav{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-bottom:24px}
+  .pnav{border:1.5px solid var(--border);border-radius:var(--radius);padding:10px 6px;text-align:center;cursor:pointer;transition:all .15s;background:var(--bg-soft)}
+  .pnav:hover{transform:translateY(-1px)}
+  .pnav-num{font-size:9px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;margin-bottom:2px;color:var(--text-muted)}
+  .pnav-name{font-size:11px;font-weight:600;line-height:1.3;color:var(--text)}
+  .pnav.p1.active{background:var(--blue-pale);border-color:var(--blue)} .pnav.p1.active .pnav-num{color:var(--blue)} .pnav.p1.active .pnav-name{color:#0C447C}
+  .pnav.p2.active{background:var(--purple-pale);border-color:var(--purple)} .pnav.p2.active .pnav-num{color:var(--purple)} .pnav.p2.active .pnav-name{color:var(--purple-mid)}
+  .pnav.p3.active{background:var(--green-pale);border-color:var(--green)} .pnav.p3.active .pnav-num{color:var(--green)} .pnav.p3.active .pnav-name{color:#27500A}
+  .pnav.p4.active{background:var(--coral-pale);border-color:var(--coral)} .pnav.p4.active .pnav-num{color:var(--coral)} .pnav.p4.active .pnav-name{color:#712B13}
+  .pnav.p5.active{background:var(--amber-pale);border-color:var(--amber)} .pnav.p5.active .pnav-num{color:var(--amber)} .pnav.p5.active .pnav-name{color:#633806}
+  .pnav.p6.active{background:var(--pink-pale);border-color:var(--pink)} .pnav.p6.active .pnav-num{color:var(--pink)} .pnav.p6.active .pnav-name{color:#72243E}
+
+  /* Panel */
+  .panel{display:none}
+  .panel.visible{display:block}
+  .p-header{border-radius:var(--radius);padding:18px 20px;margin-bottom:20px}
+  .ph-num{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:3px}
+  .ph-name{font-size:20px;font-weight:700;font-family:'Georgia',serif;margin-bottom:6px}
+  .ph-q{font-size:14px;font-weight:600;font-style:italic;margin-bottom:8px}
+  .ph-context{font-size:13px;line-height:1.7}
+
+  /* Example cards */
+  .examples-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px}
+  .ex-card{border-radius:var(--radius);padding:18px;border:1px solid var(--border)}
+  .ex-card.symptom{background:#FFF8F7;border-color:#F5C4B3}
+  .ex-card.structural{background:var(--teal-faint);border-color:var(--teal-pale)}
+  .ex-type{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px}
+  .ex-card.symptom .ex-type{color:var(--coral)}
+  .ex-card.structural .ex-type{color:var(--teal-mid)}
+  .ex-title{font-size:14px;font-weight:700;margin-bottom:8px;line-height:1.4}
+  .ex-card.symptom .ex-title{color:#712B13}
+  .ex-card.structural .ex-title{color:var(--teal-dark)}
+  .ex-text{font-size:13px;line-height:1.65;color:var(--text-mid);margin-bottom:10px}
+  .ex-why{font-size:12px;padding:8px 10px;border-radius:var(--radius-sm);line-height:1.55}
+  .ex-card.symptom .ex-why{background:#FAECE7;color:#993C1D}
+  .ex-card.structural .ex-why{background:var(--teal-pale);color:var(--teal-dark)}
+
+  /* Audience analysis */
+  .aud-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px}
+  .aud-card{border-radius:var(--radius-sm);padding:14px}
+  .aud-card.pm{background:var(--teal-faint);border:1px solid var(--teal-pale)}
+  .aud-card.rs{background:#F5F0FF;border:1px solid #D8D4F8}
+  .aud-label{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:5px}
+  .aud-card.pm .aud-label{color:var(--teal-mid)}
+  .aud-card.rs .aud-label{color:var(--purple)}
+  .aud-text{font-size:13px;line-height:1.6;color:var(--text-mid)}
+
+  /* Spillover and traps */
+  .intel-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+  .intel-tag{font-size:11px;font-weight:600;padding:4px 11px;border-radius:12px}
+  .it-met{background:var(--green-pale);color:var(--green)}
+  .it-risk{background:var(--coral-pale);color:var(--coral)}
+
+  .diagnostic-q{background:var(--bg-soft);border-radius:var(--radius-sm);padding:14px 16px;margin-top:4px}
+  .dq-label{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);margin-bottom:5px}
+  .dq-text{font-size:14px;font-weight:600;color:var(--text);line-height:1.5;font-family:'Georgia',serif}
+
+  .ph-p1{background:var(--blue-pale)} .ph-p1 .ph-num,.ph-p1 .ph-q{color:var(--blue)} .ph-p1 .ph-name,.ph-p1 .ph-context{color:#0C447C}
+  .ph-p2{background:var(--purple-pale)} .ph-p2 .ph-num,.ph-p2 .ph-q{color:var(--purple)} .ph-p2 .ph-name,.ph-p2 .ph-context{color:var(--purple-mid)}
+  .ph-p3{background:var(--green-pale)} .ph-p3 .ph-num,.ph-p3 .ph-q{color:var(--green)} .ph-p3 .ph-name,.ph-p3 .ph-context{color:#27500A}
+  .ph-p4{background:var(--coral-pale)} .ph-p4 .ph-num,.ph-p4 .ph-q{color:var(--coral)} .ph-p4 .ph-name,.ph-p4 .ph-context{color:#712B13}
+  .ph-p5{background:var(--amber-pale)} .ph-p5 .ph-num,.ph-p5 .ph-q{color:var(--amber)} .ph-p5 .ph-name,.ph-p5 .ph-context{color:#633806}
+  .ph-p6{background:var(--pink-pale)} .ph-p6 .ph-num,.ph-p6 .ph-q{color:var(--pink)} .ph-p6 .ph-name,.ph-p6 .ph-context{color:#72243E}
+
+  @media(max-width:560px){.pillar-nav{grid-template-columns:repeat(3,1fr)}.examples-grid,.aud-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="bm-label">Section 5 · Real examples</div>
+  <h1 class="bm-title">High-intelligence interventions — what they look like across the six pillars</h1>
+  <p class="bm-sub">For each CII pillar: a symptom response, a structural intervention, what makes the difference, and the intelligence criteria each approach satisfies — or doesn't. Select a pillar to explore.</p>
+
+  <div class="pillar-nav">
+    <div class="pnav p1 active" onclick="show(1)"><p class="pnav-num">01</p><p class="pnav-name">Foundational</p></div>
+    <div class="pnav p2" onclick="show(2)"><p class="pnav-num">02</p><p class="pnav-name">Innovator</p></div>
+    <div class="pnav p3" onclick="show(3)"><p class="pnav-num">03</p><p class="pnav-name">Integrator</p></div>
+    <div class="pnav p4" onclick="show(4)"><p class="pnav-num">04</p><p class="pnav-name">Regenerative</p></div>
+    <div class="pnav p5" onclick="show(5)"><p class="pnav-num">05</p><p class="pnav-name">Connected</p></div>
+    <div class="pnav p6" onclick="show(6)"><p class="pnav-num">06</p><p class="pnav-name">Healthy Society</p></div>
+  </div>
+
+  <!-- PANEL 1: FOUNDATIONAL -->
+  <div class="panel visible" id="pan1">
+    <div class="p-header ph-p1"><p class="ph-num">Pillar 01 — Foundational</p><p class="ph-name">Building the floor, not the ceiling</p><p class="ph-q">Problem: digital exclusion is concentrating in specific population groups despite city-wide broadband investment.</p><p class="ph-context">A city has invested heavily in broadband infrastructure. Coverage is near-universal. But digital skill levels among adults over 50 and recent migrants remain critically low, and online public service adoption in these groups is minimal. The city's Foundational score looks reasonable at the aggregate — but the distribution hides a structural gap.</p></div>
+    <div class="examples-grid">
+      <div class="ex-card symptom"><p class="ex-type">Symptom response</p><p class="ex-title">Launch a digital literacy campaign</p><p class="ex-text">The city funds an awareness campaign about digital services, produces multilingual leaflets, and creates a website explaining how to access public services online. Uptake remains flat. The populations targeted do not change their behaviour.</p><p class="ex-why">Why it fails: The campaign assumes the barrier is awareness. The structural barrier is skill, trust, and access — none of which a campaign addresses.</p></div>
+      <div class="ex-card structural"><p class="ex-type">Structural intervention</p><p class="ex-title">Redesign the access pathway — not the infrastructure</p><p class="ex-text">The city partners with existing trusted institutions — libraries, community centres, faith organisations, migrant support networks — to embed digital skill-building at the point of existing community contact. The pathway to digital participation is redesigned around where the excluded populations already are, not where the city expects them to go.</p><p class="ex-why">Why it works: It closes the gap between the infrastructure that exists and the populations who are not yet reaching it — which is the structural problem.</p></div>
+    </div>
+    <p class="sec-label">Intelligence criteria</p>
+    <div class="intel-row">
+      <span class="intel-tag it-met">Addresses structural gap ✓</span>
+      <span class="intel-tag it-met">Spillover into Healthy Society ✓</span>
+      <span class="intel-tag it-met">Feedback mechanism: uptake tracking ✓</span>
+      <span class="intel-tag it-risk">System delay risk: behaviour change is slow</span>
+    </div>
+    <div class="aud-grid">
+      <div class="aud-card pm"><p class="aud-label">For policymakers</p><p class="aud-text">The structural lesson here is about distribution, not investment. The question to ask before any infrastructure investment is: who will this not reach, and why? Redesigning the access pathway is usually cheaper and more effective than adding more infrastructure to a system that is already bypassing specific populations.</p></div>
+      <div class="aud-card rs"><p class="aud-label">For researchers</p><p class="aud-text">This example illustrates the difference between input indicators (broadband coverage) and outcome indicators (actual digital participation). For researchers, it raises the methodological question: at what level of disaggregation does the Foundational score need to be read to reveal this gap? City-level aggregates will not show it.</p></div>
+    </div>
+    <div class="diagnostic-q"><p class="dq-label">Diagnostic question</p><p class="dq-text">In your context: which Foundational investment currently exists but is not reaching the populations who most need it? What is the structural barrier between the investment and those populations?</p></div>
+  </div>
+
+  <!-- PANEL 2: INNOVATOR -->
+  <div class="panel" id="pan2">
+    <div class="p-header ph-p2"><p class="ph-num">Pillar 02 — Innovator</p><p class="ph-name">From knowledge generation to knowledge translation</p><p class="ph-q">Problem: strong R&D investment is producing patents but not jobs or social value in the city that funded it.</p><p class="ph-context">A city has a world-class university, strong Horizon Europe participation, and rising patent output. Its Innovator score is high on generation indicators. But knowledge-intensive employment is not growing. Start-up survival rates are low. The innovation is happening — and leaving.</p></div>
+    <div class="examples-grid">
+      <div class="ex-card symptom"><p class="ex-type">Symptom response</p><p class="ex-title">Increase the R&D budget</p><p class="ex-text">The city allocates additional funding to university research programmes and announces a new innovation district. Research output continues to rise. Knowledge-intensive employment remains flat. The talent that generates the patents relocates to cities with better translation infrastructure.</p><p class="ex-why">Why it fails: More investment in the same direction amplifies the generation capacity without addressing the translation gap — the structural failure between knowledge creation and application.</p></div>
+      <div class="ex-card structural"><p class="ex-type">Structural intervention</p><p class="ex-title">Build the translation infrastructure</p><p class="ex-text">The city redesigns the pathway between university output and local economic application: technology transfer offices with commercial mandates, procurement policies that favour local start-ups, mentorship structures that connect researchers to entrepreneurs, and residency schemes that keep innovating talent in the city during the critical translation phase.</p><p class="ex-why">Why it works: It addresses the structural gap between generation and translation — which is where the city's Innovator performance is actually breaking down.</p></div>
+    </div>
+    <p class="sec-label">Intelligence criteria</p>
+    <div class="intel-row">
+      <span class="intel-tag it-met">Addresses translation gap ✓</span>
+      <span class="intel-tag it-met">Spillover into Foundational (employment) ✓</span>
+      <span class="intel-tag it-risk">Long system delay: 5–8 years for labour market effect</span>
+      <span class="intel-tag it-risk">Visibility trap: translation infrastructure is unglamorous</span>
+    </div>
+    <div class="aud-grid">
+      <div class="aud-card pm"><p class="aud-label">For policymakers</p><p class="aud-text">The political economy of innovation policy systematically favours visible inputs — laboratories, campuses, announcement events — over structural translation infrastructure. The diagnosis test: if your city's Innovator score is high but knowledge-intensive employment is not growing, the problem is translation, not generation. The intervention should be in the pathway between them.</p></div>
+      <div class="aud-card rs"><p class="aud-label">For researchers</p><p class="aud-text">This example illustrates the generation-translation distinction that most innovation indices collapse. For researchers, the CII's separation of input indicators from output indicators within the Innovator pillar is analytically important — it allows you to distinguish cities that are generating knowledge from cities that are converting it into social and economic value.</p></div>
+    </div>
+    <div class="diagnostic-q"><p class="dq-label">Diagnostic question</p><p class="dq-text">In your context: is your city's innovation performance concentrated in generation or translation? What is the structural mechanism that is blocking the conversion of knowledge into local economic and social value?</p></div>
+  </div>
+
+  <!-- PANEL 3: INTEGRATOR -->
+  <div class="panel" id="pan3">
+    <div class="p-header ph-p3"><p class="ph-num">Pillar 03 — Integrator</p><p class="ph-name">When coordination architecture is the intervention</p><p class="ph-q">Problem: health, transport, and housing departments are each performing their mandates well — but the intersections between them are producing outcomes none of them is responsible for.</p><p class="ph-context">A city's departments each report positive output metrics. The transport department is meeting mobility targets. The housing department is meeting construction targets. The health department is meeting care access targets. But chronic disease rates in peripheral areas are rising, and the data shows the cause is a combination of poor transport access, inadequate housing quality, and food environment — all of which fall between departmental mandates.</p></div>
+    <div class="examples-grid">
+      <div class="ex-card symptom"><p class="ex-type">Symptom response</p><p class="ex-title">Create an inter-departmental working group</p><p class="ex-text">A working group is formed, meets quarterly, and produces a joint report. Departments continue to operate to their existing mandates and metrics. The working group has no authority over resource allocation, no shared accountability for cross-domain outcomes, and no mandate to change the structural conditions that produced the problem.</p><p class="ex-why">Why it fails: A working group changes the communication without changing the architecture. It is a coordination gesture, not a coordination mechanism.</p></div>
+      <div class="ex-card structural"><p class="ex-type">Structural intervention</p><p class="ex-title">Redesign the accountability architecture</p><p class="ex-text">The city creates a shared accountability framework for the cross-domain outcome — chronic disease in peripheral areas — with joint metrics that cut across departmental boundaries. Resource allocation for transport, housing, and food environment is tied to movement on the shared metric. Departments retain their mandates but gain a shared accountability layer they cannot individually satisfy alone.</p><p class="ex-why">Why it works: It changes what departments are accountable for — not just who they talk to. Shared outcomes require shared accountability architecture, not just shared communication.</p></div>
+    </div>
+    <p class="sec-label">Intelligence criteria</p>
+    <div class="intel-row">
+      <span class="intel-tag it-met">Addresses structural gap in coordination ✓</span>
+      <span class="intel-tag it-met">Spillover into Healthy Society ✓</span>
+      <span class="intel-tag it-met">Feedback: shared metric creates built-in loop ✓</span>
+      <span class="intel-tag it-risk">High political resistance: shared accountability is threatening</span>
+    </div>
+    <div class="aud-grid">
+      <div class="aud-card pm"><p class="aud-label">For policymakers</p><p class="aud-text">The Integrator trap is that coordination is treated as a communication problem rather than an accountability design problem. If your departments are talking more but outcomes at the intersections are not improving, the missing element is not communication — it is shared accountability for the cross-domain outcome.</p></div>
+      <div class="aud-card rs"><p class="aud-label">For researchers</p><p class="aud-text">This example is a natural experiment in institutional design. For researchers, the CII's Integrator indicators — particularly government effectiveness, open data maturity, and cross-departmental planning — can serve as proxies for accountability architecture quality. Cities with high coordination scores should show better outcomes at pillar intersections.</p></div>
+    </div>
+    <div class="diagnostic-q"><p class="dq-label">Diagnostic question</p><p class="dq-text">In your context: where are the most costly outcomes being produced at the intersections between departmental mandates? Who is currently accountable for those outcomes — and who should be?</p></div>
+  </div>
+
+  <!-- PANEL 4: REGENERATIVE -->
+  <div class="panel" id="pan4">
+    <div class="p-header ph-p4"><p class="ph-num">Pillar 04 — Regenerative</p><p class="ph-name">Beyond mitigation — designing for restoration</p><p class="ph-q">Problem: the city is reducing its carbon emissions but not addressing the environmental health burden concentrated in specific districts.</p><p class="ph-context">A city is on track to meet its carbon reduction targets. Its aggregate Regenerative score is improving. But air quality in industrial-adjacent districts is significantly worse than the city average. The populations in these districts have higher rates of respiratory disease, lower life expectancy, and lower Foundational scores. The environmental investment is distributed equally — but the environmental burden is not.</p></div>
+    <div class="examples-grid">
+      <div class="ex-card symptom"><p class="ex-type">Symptom response</p><p class="ex-title">Expand the city-wide green transition programme</p><p class="ex-text">The city accelerates its renewable energy programme and expands its urban greening initiative across all districts equally. The aggregate Regenerative score improves. Air quality in the affected districts improves marginally. The health gap between districts does not close.</p><p class="ex-why">Why it fails: Equal distribution of investment in a context of unequal environmental burden is not a structural response — it is a symmetrical response to an asymmetrical problem.</p></div>
+      <div class="ex-card structural"><p class="ex-type">Structural intervention</p><p class="ex-title">Target environmental investment by burden, not by geography</p><p class="ex-text">The city maps environmental health burden at district level and redesigns investment allocation to be proportional to burden rather than equal by area. Industrial buffer zones, green infrastructure, transport electrification, and air quality monitoring are concentrated in the highest-burden districts. Progress is measured by the gap between districts, not the aggregate.</p><p class="ex-why">Why it works: It addresses the structural distribution of environmental burden rather than the aggregate environmental performance — which is where the health gap is actually produced.</p></div>
+    </div>
+    <p class="sec-label">Intelligence criteria</p>
+    <div class="intel-row">
+      <span class="intel-tag it-met">Addresses structural gap (distribution) ✓</span>
+      <span class="intel-tag it-met">Spillover into Healthy Society and Foundational ✓</span>
+      <span class="intel-tag it-risk">Long system delay: environmental health takes years to respond</span>
+      <span class="intel-tag it-risk">Political resistance: reallocation away from other districts</span>
+    </div>
+    <div class="aud-grid">
+      <div class="aud-card pm"><p class="aud-label">For policymakers</p><p class="aud-text">The key diagnostic question for Regenerative intervention design is not "how much are we investing in the green transition?" but "where is the environmental burden concentrated — and is our investment proportional to that burden?" City-level aggregates mask district-level inequity that can persist for decades even as aggregate scores improve.</p></div>
+      <div class="aud-card rs"><p class="aud-label">For researchers</p><p class="aud-text">The methodological challenge in Regenerative research is the unit of analysis. At city level, environmental performance looks good. At district level, the distribution reveals structural inequity. For researchers, this is an argument for within-city, disaggregated analysis — the CII's city-level scores are a starting point, not an endpoint.</p></div>
+    </div>
+    <div class="diagnostic-q"><p class="dq-label">Diagnostic question</p><p class="dq-text">In your context: is your city's environmental investment proportional to its environmental burden — or is it distributed equally in a context where the burden is highly unequal?</p></div>
+  </div>
+
+  <!-- PANEL 5: CONNECTED -->
+  <div class="panel" id="pan5">
+    <div class="p-header ph-p5"><p class="ph-num">Pillar 05 — Connected</p><p class="ph-name">When connectivity produces exclusion</p><p class="ph-q">Problem: the city's connectivity infrastructure is world-class — but its benefits are concentrated in central districts and high-income populations.</p><p class="ph-context">A city scores highly on Connected indicators — broadband speed, air connectivity, international networks. It is a genuine hub in European knowledge and economic networks. But mobility access for peripheral residents is poor, data infrastructure is not open, and the city's international connectivity benefits primarily its already-advantaged population. Connection without inclusion is the structural problem.</p></div>
+    <div class="examples-grid">
+      <div class="ex-card symptom"><p class="ex-type">Symptom response</p><p class="ex-title">Market the city's connectivity assets to attract international talent</p><p class="ex-text">The city invests in attracting international talent and remote workers, marketing its connectivity infrastructure. New residents arrive. Housing costs in connected areas rise. The gap between well-connected and poorly-connected districts widens. The city's aggregate Connected score improves further.</p><p class="ex-why">Why it fails: Intensifying use of high-connectivity areas without extending connectivity to excluded populations and districts amplifies the structural gap rather than closing it.</p></div>
+      <div class="ex-card structural"><p class="ex-type">Structural intervention</p><p class="ex-title">Extend the connectivity benefit — not just the infrastructure</p><p class="ex-text">The city redesigns its connected infrastructure strategy around inclusion: transport connections to peripheral districts linked to employment and education hubs, open data governance that makes city data accessible to local organisations and researchers, and international partnership benefits directed at communities rather than only at institutions. The metric shifts from connectivity assets to connectivity access.</p><p class="ex-why">Why it works: It distinguishes between connectivity infrastructure and connectivity benefit — and addresses the structural barrier between them.</p></div>
+    </div>
+    <p class="sec-label">Intelligence criteria</p>
+    <div class="intel-row">
+      <span class="intel-tag it-met">Addresses structural gap (inclusion) ✓</span>
+      <span class="intel-tag it-met">Spillover into Foundational ✓</span>
+      <span class="intel-tag it-met">Feedback: district-level access metrics ✓</span>
+      <span class="intel-tag it-risk">Visibility trap: open data governance is not photogenic</span>
+    </div>
+    <div class="aud-grid">
+      <div class="aud-card pm"><p class="aud-label">For policymakers</p><p class="aud-text">The diagnostic question for Connected interventions is: who is the connectivity for? High aggregate connectivity scores can coexist with structural exclusion at the district or demographic level. The structural intervention targets the access pathway — not the infrastructure — for the populations currently not reaching the connectivity benefit.</p></div>
+      <div class="aud-card rs"><p class="aud-label">For researchers</p><p class="aud-text">For researchers, this panel illustrates the Connected-Foundational relationship that the CII is designed to surface. High Connected performance with low Foundational performance signals a city where connectivity infrastructure exists but is not universally accessible. This is one of the most analytically rich pillar divergences in the framework.</p></div>
+    </div>
+    <div class="diagnostic-q"><p class="dq-label">Diagnostic question</p><p class="dq-text">In your context: who is benefiting from your city's connectivity infrastructure — and who is structurally excluded from that benefit? What is the pathway from the infrastructure to the excluded population?</p></div>
+  </div>
+
+  <!-- PANEL 6: HEALTHY SOCIETY -->
+  <div class="panel" id="pan6">
+    <div class="p-header ph-p6"><p class="ph-num">Pillar 06 — Healthy Society</p><p class="ph-name">Health as the accountability outcome — not the target sector</p><p class="ph-q">Problem: avoidable mortality is rising among working-age adults in specific districts, despite the health system meeting access targets.</p><p class="ph-context">A city's health system is performing to target on access indicators — GP coverage, hospital beds, preventive care uptake. Avoidable mortality among working-age adults in two peripheral districts is rising. The health department has investigated and concluded the health system is not the cause. The cause is the intersection of poor housing quality, food insecurity, transport barriers to employment, and social isolation — none of which is within the health mandate.</p></div>
+    <div class="examples-grid">
+      <div class="ex-card symptom"><p class="ex-type">Symptom response</p><p class="ex-title">Expand health system capacity in the affected districts</p><p class="ex-text">The city funds additional GP surgeries and a mobile health unit for the affected districts. Care access improves. Avoidable mortality continues to rise. The health system is treating the consequences of conditions it did not create and cannot structurally address.</p><p class="ex-why">Why it fails: Expanding health system capacity in areas where the health burden is produced by housing, food, transport, and social isolation addresses the wrong lever entirely.</p></div>
+      <div class="ex-card structural"><p class="ex-type">Structural intervention</p><p class="ex-title">Redesign accountability for the cross-domain health determinants</p><p class="ex-text">The city establishes a shared outcome framework for the affected districts — tracking avoidable mortality alongside housing quality, food environment, transport access, and social isolation indicators. Departments responsible for each domain are accountable for movement on the shared metric. The health system shifts from sole accountability to one member of a coordinated accountability network.</p><p class="ex-why">Why it works: It treats health as the accountability outcome — the result — and restructures cross-domain responsibility for the conditions that produce it. This is health as invisible infrastructure made structurally explicit.</p></div>
+    </div>
+    <p class="sec-label">Intelligence criteria</p>
+    <div class="intel-row">
+      <span class="intel-tag it-met">Addresses structural gap (cross-domain accountability) ✓</span>
+      <span class="intel-tag it-met">Spillover into Integrator ✓</span>
+      <span class="intel-tag it-met">Feedback: avoidable mortality as shared metric ✓</span>
+      <span class="intel-tag it-risk">Long delay: social determinant effects take 5–10 years</span>
+    </div>
+    <div class="aud-grid">
+      <div class="aud-card pm"><p class="aud-label">For policymakers</p><p class="aud-text">This is the full realisation of the Section 4 argument. When health outcomes are driven by decisions made outside the health sector, expanding the health system is not a structural response. The structural response redesigns who is accountable for the conditions that produce the health outcome — which requires cross-domain governance architecture, not health investment.</p></div>
+      <div class="aud-card rs"><p class="aud-label">For researchers</p><p class="aud-text">For researchers, this example is a test case for the CII's cross-pillar diagnostic logic. The Healthy Society outcome is driven by Integrator failure — not by health system underperformance. Research that evaluates this intervention only through health indicators will miss the structural mechanism. Multi-pillar, longitudinal evaluation is required.</p></div>
+    </div>
+    <div class="diagnostic-q"><p class="dq-label">Diagnostic question</p><p class="dq-text">In your context: which health outcomes are being produced by decisions made outside the health sector — and who is currently accountable for those decisions? What structural change would make them accountable for the health consequence?</p></div>
+  </div>
+
+</div>
+<script>
+function show(n){
+  for(var i=1;i<=6;i++){
+    document.getElementById('pan'+i).classList.remove('visible');
+    document.querySelectorAll('.pnav')[i-1].classList.remove('active');
+  }
+  document.getElementById('pan'+n).classList.add('visible');
+  document.querySelectorAll('.pnav')[n-1].classList.add('active');
+}
+</script>
+</body>
+</html>

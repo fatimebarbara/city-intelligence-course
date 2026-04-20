@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Section 5 · The Intervention Design Canvas</title>
+<style>
+  :root{
+    --teal-dark:#085041;--teal-mid:#0F6E56;--teal:#1D9E75;--teal-light:#5DCAA5;--teal-pale:#E1F5EE;--teal-faint:#F0FAF6;
+    --purple:#534AB7;--purple-pale:#EEEDFE;--purple-mid:#3C3489;
+    --amber:#BA7517;--amber-pale:#FAEEDA;--blue:#185FA5;--blue-pale:#E6F1FB;
+    --coral:#D85A30;--coral-pale:#FAECE7;--green:#3B6D11;--green-pale:#EAF3DE;
+    --warn:#B91C1C;--warn-pale:#FEF2F2;
+    --text:#1a1a1a;--text-mid:#444;--text-muted:#6b6b6b;
+    --border:#e2e2e2;--border-light:#f0f0f0;--bg:#fff;--bg-soft:#f8f9fa;
+    --radius:10px;--radius-sm:6px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Helvetica Neue',Arial,sans-serif;color:var(--text);background:var(--bg);font-size:15px;line-height:1.65}
+  .page{max-width:760px;margin:0 auto;padding:48px 24px 80px}
+  .bm-label{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--teal-mid);background:var(--teal-pale);padding:5px 14px;border-radius:20px;margin-bottom:18px}
+  .bm-title{font-size:28px;font-weight:700;color:var(--text);line-height:1.25;margin-bottom:10px;letter-spacing:-.3px;font-family:'Georgia',serif}
+  .bm-sub{font-size:14px;color:var(--text-muted);line-height:1.65;max-width:580px;margin-bottom:20px}
+  .intro-note{background:var(--bg-soft);border:1px solid var(--border-light);border-radius:var(--radius);padding:16px 20px;font-size:13px;color:var(--text-muted);line-height:1.65;margin-bottom:28px}
+  .divider{border:none;border-top:1px solid var(--border-light);margin:28px 0}
+  .sec-label{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin:24px 0 12px;display:flex;align-items:center;gap:10px}
+  .sec-label::after{content:'';flex:1;height:1px;background:var(--border-light)}
+  textarea,input[type=text]{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 12px;font-family:'Helvetica Neue',Arial,sans-serif;font-size:14px;color:var(--text);line-height:1.6;resize:vertical;outline:none;transition:border-color .15s;min-height:64px}
+  textarea:focus,input[type=text]:focus{border-color:var(--teal-light)}
+  textarea::placeholder,input::placeholder{color:#b0b0b0}
+  .field-group{margin-bottom:18px}
+  .field-label{font-size:12px;font-weight:600;color:var(--text-mid);margin-bottom:5px;display:block}
+  .field-sub{font-size:12px;color:var(--text-muted);margin-bottom:7px;line-height:1.55}
+
+  /* Canvas sections */
+  .canvas-section{border:1px solid var(--border);border-radius:var(--radius);padding:22px;margin-bottom:16px}
+  .cs-header{display:flex;align-items:flex-start;gap:12px;margin-bottom:14px}
+  .cs-num{display:flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;font-size:12px;font-weight:700;flex-shrink:0;background:var(--teal-pale);color:var(--teal-dark);border:1px solid var(--teal-light)}
+  .cs-title{font-size:15px;font-weight:700;color:var(--text);flex:1}
+  .cs-why{font-size:12px;color:var(--text-muted);line-height:1.55;font-style:italic;margin-top:2px}
+
+  /* Intelligence test */
+  .intel-test{margin-top:20px}
+  .it-title{font-size:13px;font-weight:700;color:var(--teal-mid);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+  .it-title::after{content:'';flex:1;height:1px;background:var(--teal-pale)}
+  .it-row{display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid var(--border-light)}
+  .it-row:last-child{border-bottom:none}
+  .it-check{flex-shrink:0;margin-top:2px}
+  .it-check input{width:16px;height:16px;cursor:pointer;accent-color:var(--teal)}
+  .it-label{font-size:13px;color:var(--text);line-height:1.55;flex:1}
+  .it-label span{color:var(--text-muted);font-size:12px;display:block;margin-top:2px}
+
+  /* Score display */
+  .score-wrap{background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius);padding:18px 22px;margin-top:20px;display:none}
+  .score-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+  .score-title{font-size:13px;font-weight:700;color:var(--text)}
+  .score-num{font-size:24px;font-weight:700;color:var(--teal)}
+  .score-bars{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .sbar-row{display:flex;align-items:center;gap:8px}
+  .sbar-label{font-size:12px;color:var(--text-muted);min-width:90px}
+  .sbar-outer{flex:1;height:6px;background:var(--border-light);border-radius:3px;overflow:hidden}
+  .sbar-inner{height:100%;border-radius:3px;background:var(--teal);transition:width .4s}
+  .sbar-val{font-size:12px;font-weight:700;color:var(--teal);min-width:24px;text-align:right}
+
+  /* Trap checker */
+  .trap-card{border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:10px;transition:border-color .2s}
+  .trap-card.flagged{border-color:#F09595;background:var(--warn-pale)}
+  .trap-card.cleared{border-color:#97C459;background:var(--green-pale)}
+  .trap-header{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+  .trap-num{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted)}
+  .trap-name{font-size:14px;font-weight:700;color:var(--text);flex:1}
+  .trap-status{font-size:11px;font-weight:700;padding:2px 10px;border-radius:12px}
+  .trap-card.flagged .trap-status{background:#F7C1C1;color:var(--warn)}
+  .trap-card.cleared .trap-status{background:var(--green-pale);color:var(--green)}
+  .trap-q{font-size:13px;color:var(--text-muted);line-height:1.6;margin-bottom:10px}
+  .trap-btns{display:flex;gap:8px}
+  .trap-btn{border:1px solid var(--border);border-radius:16px;padding:5px 14px;font-size:12px;font-weight:600;cursor:pointer;background:var(--bg-soft);color:var(--text-muted);transition:all .15s;font-family:'Helvetica Neue',Arial,sans-serif}
+  .trap-btn:hover{background:var(--bg)}
+  .trap-btn.yes-sel{background:var(--warn-pale);border-color:#F09595;color:var(--warn)}
+  .trap-btn.no-sel{background:var(--green-pale);border-color:#97C459;color:var(--green)}
+  .trap-note{margin-top:8px;display:none}
+  .trap-note textarea{min-height:48px;font-size:13px}
+
+  /* Canvas summary */
+  .canvas-summary{background:var(--teal-faint);border:1px solid var(--teal-pale);border-radius:var(--radius);padding:22px;margin-top:20px}
+  .csum-title{font-size:15px;font-weight:700;font-family:'Georgia',serif;color:var(--teal-dark);margin-bottom:14px}
+  .csum-row{margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid var(--teal-pale)}
+  .csum-row:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+  .csum-label{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--teal-mid);margin-bottom:3px}
+  .csum-val{font-size:14px;color:var(--teal-dark);line-height:1.6;font-family:'Georgia',serif;font-style:italic}
+  .csum-empty{color:var(--text-muted);font-style:normal;font-family:'Helvetica Neue',Arial,sans-serif;font-size:12px}
+  .progress-row{display:flex;align-items:center;gap:12px;margin-bottom:24px}
+  .progress-label{font-size:12px;color:var(--text-muted);white-space:nowrap}
+  .progress-outer{flex:1;height:5px;background:var(--border-light);border-radius:3px;overflow:hidden}
+  .progress-inner{height:100%;background:var(--teal);border-radius:3px;transition:width .4s ease;width:0%}
+  .progress-pct{font-size:12px;font-weight:700;color:var(--teal);min-width:36px;text-align:right}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="bm-label">Section 5 · Intervention design canvas</div>
+  <h1 class="bm-title">Designing your intelligent intervention</h1>
+  <p class="bm-sub">A structured design canvas — from the diagnosis you built in Section 4 to a fully tested intervention design. Works through the four criteria for city intelligence and stress-tests against the five policy traps.</p>
+  <div class="intro-note">Start from your Section 4 diagnosis. If you completed the diagnostic template or the 20-minute exercise, bring those outputs here. The canvas builds on that work — it does not restart from scratch.</div>
+
+  <div class="progress-row">
+    <span class="progress-label">Canvas completion</span>
+    <div class="progress-outer"><div class="progress-inner" id="pbar"></div></div>
+    <span class="progress-pct" id="pct">0%</span>
+  </div>
+
+  <!-- BLOCK 1: THE DIAGNOSIS FOUNDATION -->
+  <div class="canvas-section" id="b1">
+    <div class="cs-header">
+      <div class="cs-num">1</div>
+      <div><p class="cs-title">The diagnosis foundation</p><p class="cs-why">Your intervention must be anchored in your Section 4 diagnosis. Name the structural gap and attribution question before designing anything.</p></div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">The structural gap your intervention addresses</label>
+      <p class="field-sub">Two pillars and the missing connection between them — from your Section 4 diagnosis.</p>
+      <input type="text" id="f-gap" placeholder="The gap between [pillar] and [pillar] — in my context, this manifests as..." oninput="updateCanvas()">
+    </div>
+    <div class="field-group">
+      <label class="field-label">Your attribution question</label>
+      <p class="field-sub">Which decisions, in which domains, are most likely producing the pattern you see?</p>
+      <textarea id="f-attr" placeholder="The pattern I see is most likely produced by decisions in [domain] — specifically [mechanism]..." oninput="updateCanvas()"></textarea>
+    </div>
+  </div>
+
+  <!-- BLOCK 2: THE INTERVENTION -->
+  <div class="canvas-section" id="b2">
+    <div class="cs-header">
+      <div class="cs-num">2</div>
+      <div><p class="cs-title">The intervention design</p><p class="cs-why">Describe what you will actually do — at the level of structural change, not policy announcement.</p></div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">The symptom response (what you are NOT doing)</label>
+      <p class="field-sub">Name the obvious, surface-level response to the problem — the one that would treat the symptom.</p>
+      <textarea id="f-symptom" placeholder="The surface response would be to [action] — but this addresses only [symptom], not [structural cause]..." oninput="updateCanvas()" style="min-height:52px"></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">The structural intervention (what you ARE doing)</label>
+      <p class="field-sub">Name the structural change — what connection are you building, what loop are you closing, what pathway are you redesigning?</p>
+      <textarea id="f-structural" placeholder="The structural intervention is [specific change] — it addresses the gap by [mechanism], rather than addressing only the symptom..." oninput="updateCanvas()"></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">The first move</label>
+      <p class="field-sub">The smallest, most testable action that begins the structural change. Not the whole intervention — the first step that allows the system to respond.</p>
+      <textarea id="f-firstmove" placeholder="The first move is [specific, bounded, measurable action] — it tests the hypothesis that [mechanism] by [how it tests it]..." oninput="updateCanvas()" style="min-height:52px"></textarea>
+    </div>
+  </div>
+
+  <!-- BLOCK 3: FOUR INTELLIGENCE CRITERIA -->
+  <div class="canvas-section" id="b3">
+    <div class="cs-header">
+      <div class="cs-num">3</div>
+      <div><p class="cs-title">The four intelligence criteria</p><p class="cs-why">Test your intervention against the four questions that determine whether it has the hallmarks of city intelligence.</p></div>
+    </div>
+    <div class="intel-test">
+      <p class="it-title">Check each criterion your intervention satisfies</p>
+      <div class="it-row"><div class="it-check"><input type="checkbox" id="ic1" onchange="updateScore();updateCanvas()"></div><label class="it-label" for="ic1">It addresses the structural gap — not just the symptom<span>The intervention targets the broken connection, not only the outcome the broken connection produces</span></label></div>
+      <div class="it-row"><div class="it-check"><input type="checkbox" id="ic2" onchange="updateScore();updateCanvas()"></div><label class="it-label" for="ic2">It accounts for system time delays<span>The design acknowledges how long this type of change takes in this type of system — and does not set expectations that will trigger premature abandonment</span></label></div>
+      <div class="it-row"><div class="it-check"><input type="checkbox" id="ic3" onchange="updateScore();updateCanvas()"></div><label class="it-label" for="ic3">It creates spillover effects in at least one adjacent pillar<span>Strengthening the target pillar will measurably improve performance in at least one connected pillar</span></label></div>
+      <div class="it-row"><div class="it-check"><input type="checkbox" id="ic4" onchange="updateScore();updateCanvas()"></div><label class="it-label" for="ic4">It includes a built-in feedback mechanism<span>A feedback loop is designed into the intervention from the start — not added as a post-hoc evaluation</span></label></div>
+    </div>
+    <div class="score-wrap" id="score-wrap">
+      <div class="score-header">
+        <span class="score-title">Intelligence score</span>
+        <span class="score-num" id="score-num">0 / 4</span>
+      </div>
+      <p id="score-text" style="font-size:13px;color:var(--text-mid);line-height:1.6;margin-bottom:12px"></p>
+    </div>
+    <div class="field-group" style="margin-top:14px">
+      <label class="field-label">For any criterion not yet satisfied — what would it take to satisfy it?</label>
+      <textarea id="f-gaps-intel" placeholder="The criteria I have not yet satisfied are [criteria]. To satisfy them, the design would need to [changes]..." oninput="updateCanvas()" style="min-height:52px"></textarea>
+    </div>
+  </div>
+
+  <!-- BLOCK 4: SPILLOVER EFFECTS -->
+  <div class="canvas-section" id="b4">
+    <div class="cs-header">
+      <div class="cs-num">4</div>
+      <div><p class="cs-title">Spillover effects across pillars</p><p class="cs-why">Map how strengthening your target pillar will affect the others. An intervention that only affects one pillar is rarely structural enough.</p></div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Target pillar and predicted improvement</label>
+      <textarea id="f-target" placeholder="If [target pillar] strengthens through this intervention, the most likely improvement is [specific outcome]..." oninput="updateCanvas()" style="min-height:52px"></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Spillover into adjacent pillars</label>
+      <p class="field-sub">Name at least one pillar that would benefit — and what the mechanism is.</p>
+      <textarea id="f-spillover" placeholder="The most significant spillover effect is into [pillar], because [mechanism connecting the two]..." oninput="updateCanvas()"></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Risk of negative spillover</label>
+      <p class="field-sub">In complex systems, every intervention has unintended consequences. Which pillar could be negatively affected — and how would you monitor for it?</p>
+      <textarea id="f-risk" placeholder="The pillar most at risk of negative spillover is [pillar], because [mechanism]. I would monitor this by [indicator or signal]..." oninput="updateCanvas()" style="min-height:52px"></textarea>
+    </div>
+  </div>
+
+  <!-- BLOCK 5: POLICY TRAP CHECK -->
+  <div class="canvas-section" id="b5">
+    <div class="cs-header">
+      <div class="cs-num">5</div>
+      <div><p class="cs-title">Policy trap check</p><p class="cs-why">Run your intervention through the five traps. Flag any that apply and describe how you will address them.</p></div>
+    </div>
+
+    <div class="trap-card" id="t1">
+      <div class="trap-header"><span class="trap-num">Trap 01</span><span class="trap-name">Scaling too fast</span><span class="trap-status" id="ts1">Not checked</span></div>
+      <p class="trap-q">Does your design assume the first move will be replicated at scale before results are confirmed? Is there political pressure to scale immediately?</p>
+      <div class="trap-btns"><button class="trap-btn" onclick="setTrap('t1','ts1',true,this)">Yes — this is a risk</button><button class="trap-btn" onclick="setTrap('t1','ts1',false,this)">No — design accounts for this</button></div>
+      <div class="trap-note" id="tn1"><textarea placeholder="How will you protect against premature scaling?..." oninput="updateCanvas()"></textarea></div>
+    </div>
+
+    <div class="trap-card" id="t2">
+      <div class="trap-header"><span class="trap-num">Trap 02</span><span class="trap-name">Optimising for visibility</span><span class="trap-status" id="ts2">Not checked</span></div>
+      <p class="trap-q">Is the structural element of your intervention the most visible part — or is it invisible while a more photogenic surface component gets the attention and resources?</p>
+      <div class="trap-btns"><button class="trap-btn" onclick="setTrap('t2','ts2',true,this)">Yes — this is a risk</button><button class="trap-btn" onclick="setTrap('t2','ts2',false,this)">No — design accounts for this</button></div>
+      <div class="trap-note" id="tn2"><textarea placeholder="How will you ensure structural work is resourced even when invisible?..." oninput="updateCanvas()"></textarea></div>
+    </div>
+
+    <div class="trap-card" id="t3">
+      <div class="trap-header"><span class="trap-num">Trap 03</span><span class="trap-name">Ignoring system delays</span><span class="trap-status" id="ts3">Not checked</span></div>
+      <p class="trap-q">Have you specified how long this type of structural change takes in this system — and communicated that timeline to stakeholders who control the intervention's continuity?</p>
+      <div class="trap-btns"><button class="trap-btn" onclick="setTrap('t3','ts3',true,this)">Yes — this is a risk</button><button class="trap-btn" onclick="setTrap('t3','ts3',false,this)">No — design accounts for this</button></div>
+      <div class="trap-note" id="tn3"><textarea placeholder="What is the realistic timeline — and who needs to understand it before the intervention begins?..." oninput="updateCanvas()"></textarea></div>
+    </div>
+
+    <div class="trap-card" id="t4">
+      <div class="trap-header"><span class="trap-num">Trap 04</span><span class="trap-name">The single-pillar fix</span><span class="trap-status" id="ts4">Not checked</span></div>
+      <p class="trap-q">Does your intervention depend on performance in adjacent pillars that are currently weak? Have you accounted for the ceiling those adjacent weaknesses will impose?</p>
+      <div class="trap-btns"><button class="trap-btn" onclick="setTrap('t4','ts4',true,this)">Yes — this is a risk</button><button class="trap-btn" onclick="setTrap('t4','ts4',false,this)">No — design accounts for this</button></div>
+      <div class="trap-note" id="tn4"><textarea placeholder="Which adjacent pillar weakness is most likely to limit your intervention — and how have you designed around it?..." oninput="updateCanvas()"></textarea></div>
+    </div>
+
+    <div class="trap-card" id="t5">
+      <div class="trap-header"><span class="trap-num">Trap 05</span><span class="trap-name">No feedback mechanism</span><span class="trap-status" id="ts5">Not checked</span></div>
+      <p class="trap-q">Is there a specific, designed feedback mechanism built into the intervention from the start — not added later as an evaluation?</p>
+      <div class="trap-btns"><button class="trap-btn" onclick="setTrap('t5','ts5',true,this)">Yes — this is a risk</button><button class="trap-btn" onclick="setTrap('t5','ts5',false,this)">No — design accounts for this</button></div>
+      <div class="trap-note" id="tn5"><textarea placeholder="Describe the feedback mechanism — what signal will tell you the intervention is working or not?..." oninput="updateCanvas()"></textarea></div>
+    </div>
+  </div>
+
+  <!-- CANVAS SUMMARY -->
+  <div class="canvas-summary" id="canvas-summary">
+    <p class="csum-title">Your intervention design — summary</p>
+    <div class="csum-row"><p class="csum-label">Structural gap addressed</p><p class="csum-val" id="sum-gap"><span class="csum-empty">Complete Block 1</span></p></div>
+    <div class="csum-row"><p class="csum-label">The structural intervention</p><p class="csum-val" id="sum-structural"><span class="csum-empty">—</span></p></div>
+    <div class="csum-row"><p class="csum-label">First move</p><p class="csum-val" id="sum-firstmove"><span class="csum-empty">—</span></p></div>
+    <div class="csum-row"><p class="csum-label">Intelligence criteria met</p><p class="csum-val" id="sum-intel"><span class="csum-empty">—</span></p></div>
+    <div class="csum-row"><p class="csum-label">Primary spillover effect</p><p class="csum-val" id="sum-spillover"><span class="csum-empty">—</span></p></div>
+    <div class="csum-row" style="border-bottom:none;padding-bottom:0;margin-bottom:0"><p class="csum-label">Traps flagged</p><p class="csum-val" id="sum-traps"><span class="csum-empty">—</span></p></div>
+  </div>
+</div>
+<script>
+var trapStates={t1:null,t2:null,t3:null,t4:null,t5:null};
+
+function setTrap(cardId,statusId,isRisk,btn){
+  var card=document.getElementById(cardId);
+  var status=document.getElementById(statusId);
+  var note=document.getElementById('t'+cardId.slice(-1)+'n'.replace('tn',''));
+  var noteId='tn'+cardId.slice(-1);
+  var noteEl=document.getElementById(noteId);
+
+  card.querySelectorAll('.trap-btn').forEach(function(b){b.classList.remove('yes-sel','no-sel')});
+  if(isRisk){
+    btn.classList.add('yes-sel');
+    card.className='trap-card flagged';
+    status.textContent='Flagged';
+    noteEl.style.display='block';
+    trapStates[cardId]=true;
+  } else {
+    btn.classList.add('no-sel');
+    card.className='trap-card cleared';
+    status.textContent='Cleared';
+    noteEl.style.display='none';
+    trapStates[cardId]=false;
+  }
+  updateCanvas();
+}
+
+function updateScore(){
+  var checks=['ic1','ic2','ic3','ic4'];
+  var score=checks.filter(function(id){return document.getElementById(id).checked}).length;
+  var wrap=document.getElementById('score-wrap');
+  wrap.style.display='block';
+  document.getElementById('score-num').textContent=score+' / 4';
+  var texts=['Your intervention currently meets none of the four intelligence criteria. Revisit the design before moving forward — a well-diagnosed problem deserves a structurally intelligent response.',
+    'Your intervention meets one criterion. The design is beginning to take structural shape, but three of the four hallmarks of city intelligence are still missing.',
+    'Your intervention meets two criteria. You are halfway to a fully intelligent design. Focus on the two unchecked criteria — they are likely the ones that distinguish a structural intervention from a sector-level response.',
+    'Your intervention meets three of the four criteria. One criterion is missing — and that one is likely the most politically difficult. It is worth naming why it is missing and what it would take to address it.',
+    'Your intervention meets all four criteria. It has the hallmarks of a high-intelligence intervention. The next test is the five policy traps.'];
+  document.getElementById('score-text').textContent=texts[score];
+}
+
+function updateCanvas(){
+  function val(id){return document.getElementById(id)?document.getElementById(id).value.trim():'';}
+  function set(id,v){var el=document.getElementById(id);if(el)el.innerHTML=v?v:'<span class="csum-empty">—</span>';}
+
+  set('sum-gap',val('f-gap'));
+  set('sum-structural',val('f-structural'));
+  set('sum-firstmove',val('f-firstmove'));
+
+  var checks=['ic1','ic2','ic3','ic4'],labels=['Structural gap','System delays','Spillover effects','Feedback mechanism'];
+  var met=checks.map(function(id,i){return document.getElementById(id).checked?labels[i]:null}).filter(Boolean);
+  set('sum-intel',met.length?met.join(' · ')+'  ('+met.length+'/4)':null);
+  set('sum-spillover',val('f-spillover'));
+
+  var flagged=Object.keys(trapStates).filter(function(k){return trapStates[k]===true});
+  var names={t1:'Scaling too fast',t2:'Visibility optimisation',t3:'System delays',t4:'Single-pillar fix',t5:'No feedback mechanism'};
+  set('sum-traps',flagged.length?flagged.map(function(k){return names[k]}).join(' · '):'No traps flagged yet');
+
+  // Progress
+  var filled=0,total=8;
+  ['f-gap','f-attr','f-symptom','f-structural','f-firstmove','f-spillover'].forEach(function(id){if(val(id).length>15)filled++;});
+  var trapped=Object.values(trapStates).filter(function(v){return v!==null}).length;
+  if(trapped>=3) filled++;
+  if(met.length>=2) filled++;
+  var pct=Math.round((filled/total)*100);
+  document.getElementById('pbar').style.width=pct+'%';
+  document.getElementById('pct').textContent=pct+'%';
+}
+</script>
+</body>
+</html>

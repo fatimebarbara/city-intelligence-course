@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Section 5 · End-of-Section Reflection</title>
+<style>
+  :root{
+    --teal-dark:#085041;--teal-mid:#0F6E56;--teal:#1D9E75;--teal-light:#5DCAA5;--teal-pale:#E1F5EE;--teal-faint:#F0FAF6;
+    --purple:#534AB7;--purple-pale:#EEEDFE;--purple-mid:#3C3489;
+    --amber:#BA7517;--amber-pale:#FAEEDA;--blue:#185FA5;--blue-pale:#E6F1FB;
+    --text:#1a1a1a;--text-mid:#444;--text-muted:#6b6b6b;
+    --border:#e2e2e2;--border-light:#f0f0f0;--bg:#fff;--bg-soft:#f8f9fa;
+    --radius:10px;--radius-sm:6px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Helvetica Neue',Arial,sans-serif;color:var(--text);background:var(--bg);font-size:15px;line-height:1.65}
+  .page{max-width:760px;margin:0 auto;padding:48px 24px 80px}
+  .bm-label{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--teal-mid);background:var(--teal-pale);padding:5px 14px;border-radius:20px;margin-bottom:18px}
+  .bm-title{font-size:28px;font-weight:700;color:var(--text);line-height:1.25;margin-bottom:10px;letter-spacing:-.3px;font-family:'Georgia',serif}
+  .bm-sub{font-size:14px;color:var(--text-muted);line-height:1.65;max-width:580px;margin-bottom:20px}
+  .intro-note{background:var(--bg-soft);border:1px solid var(--border-light);border-radius:var(--radius);padding:16px 20px;font-size:13px;color:var(--text-muted);line-height:1.65;margin-bottom:32px}
+  .divider{border:none;border-top:1px solid var(--border-light);margin:32px 0}
+  .progress-row{display:flex;align-items:center;gap:12px;margin-bottom:32px}
+  .progress-label{font-size:12px;color:var(--text-muted);white-space:nowrap}
+  .progress-outer{flex:1;height:5px;background:var(--border-light);border-radius:3px;overflow:hidden}
+  .progress-inner{height:100%;background:var(--teal);border-radius:3px;transition:width .4s ease;width:0%}
+  .progress-pct{font-size:12px;font-weight:700;color:var(--teal);min-width:36px;text-align:right}
+  .r-block{margin-bottom:28px}
+  .r-num{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:6px}
+  .r-q{font-size:16px;font-weight:600;color:var(--text);line-height:1.5;margin-bottom:10px;font-family:'Georgia',serif}
+  .r-why{font-size:13px;color:var(--text-muted);line-height:1.65;border-left:2px solid var(--border);padding-left:14px;margin-bottom:14px}
+  .r-aud{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+  .r-aud-card{border-radius:var(--radius-sm);padding:10px 12px;font-size:12px;line-height:1.55}
+  .r-aud-card.pm{background:var(--teal-faint);border:1px solid var(--teal-pale);color:var(--teal-dark)}
+  .r-aud-card.rs{background:#F5F0FF;border:1px solid #D8D4F8;color:var(--purple-mid)}
+  .r-aud-label{font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:3px;opacity:.8}
+  textarea{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px;font-family:'Helvetica Neue',Arial,sans-serif;font-size:14px;color:var(--text);line-height:1.65;resize:vertical;min-height:80px;transition:border-color .15s;outline:none}
+  textarea:focus{border-color:var(--teal-light)}
+  textarea::placeholder{color:#b0b0b0}
+  .journey-table{width:100%;border-collapse:collapse;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;font-size:13px;margin-bottom:28px}
+  .journey-table th{background:var(--bg-soft);padding:9px 13px;text-align:left;font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);border-bottom:1px solid var(--border)}
+  .journey-table td{padding:10px 13px;border-bottom:1px solid var(--border-light);vertical-align:top}
+  .journey-table tr:last-child td{border-bottom:none}
+  .stag{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;margin-bottom:3px}
+  .s1{background:#FEF3C7;color:#92400E}.s2{background:var(--purple-pale);color:var(--purple-mid)}
+  .s3{background:var(--teal-pale);color:var(--teal-dark)}.s4{background:var(--blue-pale);color:var(--blue)}
+  .s5{background:#EAF3DE;color:#27500A}.s6{background:#FAEEDA;color:#633806}
+  .check-item{display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid var(--border-light)}
+  .check-item:last-child{border-bottom:none}
+  .check-item input[type="checkbox"]{width:17px;height:17px;cursor:pointer;flex-shrink:0;margin-top:1px;accent-color:var(--teal)}
+  .check-item label{font-size:14px;color:var(--text);line-height:1.55;cursor:pointer}
+  .ready-box{display:none;background:var(--teal-pale);border-radius:var(--radius);padding:28px 32px;text-align:center;margin-top:32px;border:1px solid var(--teal-light)}
+  .ready-text{font-size:15px;color:var(--teal-dark);line-height:1.7}
+  .forward-box{background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius);padding:22px 24px;margin-top:28px}
+  .forward-label{font-size:10px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px}
+  .forward-text{font-size:14px;color:var(--text-mid);line-height:1.75}
+  .forward-text strong{color:var(--text)}
+  @media(max-width:560px){.r-aud{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="bm-label">Section 5 · End-of-section reflection</div>
+  <h1 class="bm-title">From insight to intervention — synthesising your learning</h1>
+  <p class="bm-sub">Section 5 asked you to cross the hardest threshold in this course: from diagnosis to design. These five reflections test whether that crossing has happened — and prepare you for Section 6, where you apply the intervention logic across all six pillars.</p>
+  <div class="intro-note">These reflections are harder than previous sections — because the work is harder. You now have a diagnosis, a structural gap, an attribution question, and an intervention design. These prompts ask you to be honest about what is strong, what is missing, and what the most important political or institutional challenge is.</div>
+
+  <div class="progress-row">
+    <span class="progress-label">Completion</span>
+    <div class="progress-outer"><div class="progress-inner" id="pbar"></div></div>
+    <span class="progress-pct" id="pct">0%</span>
+  </div>
+
+  <div class="r-block">
+    <p class="r-num">Reflection 01 — The structural vs surface test</p>
+    <p class="r-q">Look at the first move you designed in the intervention canvas. Apply the strictest version of the structural test: does it change an institutional architecture, a feedback loop, an accountability structure, or an access pathway? Or does it improve the quality of something that is already happening?</p>
+    <p class="r-why">The most common failure mode in intervention design is confusing improvement with structural change. A better-run working group is not structural. A redesigned accountability framework is. A new communications campaign is not structural. Redesigning the pathway between an existing investment and the populations not currently reached is. The distinction is not always obvious — this reflection asks you to test it rigorously.</p>
+    <div class="r-aud">
+      <div class="r-aud-card pm"><p class="r-aud-label">Policymaker</p>Think about what happens to this intervention when the political or administrative leadership changes. Does the structural change persist — or does it depend on a specific person's commitment?</div>
+      <div class="r-aud-card rs"><p class="r-aud-label">Researcher</p>Think about how you would operationalise "structural change" as a variable. What would distinguish this intervention from a surface improvement in your research design?</div>
+    </div>
+    <textarea placeholder="The structural test reveals that my first move is [structural / surface] because [specific reasoning]. If it is surface, the structural version would be [what would need to change in the design]..." oninput="u()"></textarea>
+  </div>
+
+  <div class="r-block">
+    <p class="r-num">Reflection 02 — The policy trap you are most vulnerable to</p>
+    <p class="r-q">Of the five policy traps — scaling too fast, optimising for visibility, ignoring system delays, the single-pillar fix, no feedback mechanism — which one is your intervention most vulnerable to in your specific institutional or political context? What is the structural reason it is a risk for you?</p>
+    <p class="r-why">The five policy traps are not equally distributed — they are shaped by institutional culture, political cycle, and the nature of the problem. A researcher's intervention is most likely to fall into the no-feedback-mechanism trap. A policymaker's is most likely to fall into visibility optimisation or scaling too fast. Naming the specific trap — and the structural reason it applies in your context — is the first step to designing against it.</p>
+    <div class="r-aud">
+      <div class="r-aud-card pm"><p class="r-aud-label">Policymaker</p>Which trap is most rewarded by your institution's current incentive structure? The trap that is institutionally rewarded is the hardest to design against.</div>
+      <div class="r-aud-card rs"><p class="r-aud-label">Researcher</p>Which trap is most embedded in your field's research culture or funding structure? The trap that is systematically incentivised is the one most likely to appear in published research.</div>
+    </div>
+    <textarea placeholder="The trap I am most vulnerable to is [trap name], because in my context [structural reason]. The way this trap would manifest is [specific scenario]. To design against it, I would need to [structural countermeasure]..." oninput="u()"></textarea>
+  </div>
+
+  <div class="r-block">
+    <p class="r-num">Reflection 03 — The spillover you did not anticipate</p>
+    <p class="r-q">Working through the intervention design canvas, was there a spillover effect — positive or negative — that you had not considered before? What does that unanticipated connection reveal about the system your intervention is entering?</p>
+    <p class="r-why">The most important thing about spillover effects is not the ones you plan for — it is the ones you discover in the process of designing carefully. An unanticipated positive spillover reveals a structural connection that can be deliberately amplified. An unanticipated negative spillover reveals a structural dependency that your intervention must account for. Both are diagnostically valuable.</p>
+    <div class="r-aud">
+      <div class="r-aud-card pm"><p class="r-aud-label">Policymaker</p>Which department or institution will be most affected by the spillover you did not initially anticipate? Do they know — and do they need to be part of the design?</div>
+      <div class="r-aud-card rs"><p class="r-aud-label">Researcher</p>How would you measure the unanticipated spillover? Is it currently tracked in any indicator set — or is it an outcome that would require new measurement design?</div>
+    </div>
+    <textarea placeholder="The spillover I did not initially anticipate is [effect on which pillar / domain]. This reveals that [structural connection I had not accounted for]. This changes the intervention design by [specific implication]..." oninput="u()"></textarea>
+  </div>
+
+  <div class="r-block">
+    <p class="r-num">Reflection 04 — The time horizon your institution will tolerate</p>
+    <p class="r-q">Structural interventions take time. Based on what you know about your institutional or research context: what is the longest time horizon your institution will tolerate before expecting results? And how does that compare to the realistic time horizon for the structural change your intervention is designed to produce?</p>
+    <p class="r-why">The gap between institutional patience and system change timelines is one of the most structurally important determinants of intervention success. It is not a political failing — it is a systemic mismatch that must be designed around, not ignored. Naming the gap explicitly, before the intervention begins, is the precondition for managing it.</p>
+    <div class="r-aud">
+      <div class="r-aud-card pm"><p class="r-aud-label">Policymaker</p>What is the minimum visible result you could produce within the institution's tolerance window that would protect the structural intervention long enough for it to work?</div>
+      <div class="r-aud-card rs"><p class="r-aud-label">Researcher</p>What proxy indicator — visible in the short run — could serve as an early signal of the long-run structural change you are measuring?</div>
+    </div>
+    <textarea placeholder="My institution's tolerance window is approximately [timeframe]. The realistic timeline for the structural change I am designing is [timeframe]. The gap between these is [analysis]. To bridge this gap, I would design [specific short-term visibility strategy that protects the long-term structural work]..." oninput="u()"></textarea>
+  </div>
+
+  <div class="r-block">
+    <p class="r-num">Reflection 05 — The argument you need to make</p>
+    <p class="r-q">Who in your institution or field is most likely to resist your intervention — not because it is wrong, but because it is structural? What argument would most effectively reach them? Not the argument that is most correct — the argument that is most likely to change their position.</p>
+    <p class="r-why">This is the question that separates good intervention design from good intervention implementation. The most structurally correct intervention in the world produces nothing if it cannot navigate the political and institutional reality of the context it enters. Naming the resistance and designing the argument is part of the intervention, not a distraction from it.</p>
+    <div class="r-aud">
+      <div class="r-aud-card pm"><p class="r-aud-label">Policymaker</p>What is the long-term cost case for the structural intervention, expressed in terms that the resisting actor values? Cost of inaction, expressed in their preferred metric, is often the most persuasive argument.</div>
+      <div class="r-aud-card rs"><p class="r-aud-label">Researcher</p>What existing evidence base most directly supports the structural argument — and in which journal or institutional channel would it be most credible to the resisting audience?</div>
+    </div>
+    <textarea style="min-height:100px;" placeholder="The most likely source of resistance to this intervention is [actor / institution / role], because [structural reason for resistance]. The argument most likely to reach them is [argument — not the most correct one, the most effective one], because [reasoning about their values and incentives]..." oninput="u()"></textarea>
+  </div>
+
+  <div class="divider"></div>
+
+  <div style="overflow-x:auto;margin-bottom:28px">
+    <table class="journey-table">
+      <thead><tr><th>Dimension</th><th>Sections 1–3</th><th>Section 4</th><th>Section 5</th></tr></thead>
+      <tbody>
+        <tr><td>The question</td><td><span class="s1">S1</span> Why do systems fail?<br><span class="s2">S2</span> What do they need to succeed?<br><span class="s3">S3</span> How is capacity measured?</td><td><span class="s4">S4</span> What is the structural gap in this city?</td><td><span class="s5">S5</span> What does a structural intervention look like?</td></tr>
+        <tr><td>The tool</td><td>Failure modes + 4 conditions + CII</td><td>Diagnostic template + 20-minute exercise</td><td>Intervention design canvas + real examples</td></tr>
+        <tr><td>The output</td><td>Understanding the system</td><td>A diagnosis and attribution question</td><td>A designed, tested intervention with first move</td></tr>
+        <tr><td>Coming next</td><td colspan="3"><span class="s6">S6</span> Designing across the six pillars — applying the intervention logic to each CII pillar with specific design constraints and spillover maps</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:16px">Before the Section 5 quiz — a final self-check</p>
+  <div id="cl">
+    <div class="check-item"><input type="checkbox" id="c1" onchange="u()"><label for="c1">I can explain the difference between a symptom response and a structural intervention — with a specific example from my own context</label></div>
+    <div class="check-item"><input type="checkbox" id="c2" onchange="u()"><label for="c2">I can name the five policy traps and identify which one is most relevant to my institutional context</label></div>
+    <div class="check-item"><input type="checkbox" id="c3" onchange="u()"><label for="c3">I have completed the intervention design canvas and my design satisfies at least three of the four intelligence criteria</label></div>
+    <div class="check-item"><input type="checkbox" id="c4" onchange="u()"><label for="c4">I can describe the spillover effects of my intervention — including at least one I did not initially anticipate</label></div>
+    <div class="check-item"><input type="checkbox" id="c5" onchange="u()"><label for="c5">I have named the argument I need to make to the most likely source of resistance — and I understand why correctness alone is not enough</label></div>
+  </div>
+
+  <div class="forward-box">
+    <p class="forward-label">Section 6 — Designing across the six pillars</p>
+    <p class="forward-text">Section 5 gave you the design framework for a single structural intervention. <strong>Section 6 applies that framework across all six CII pillars</strong> — showing the specific design constraints, the most common structural gaps, and the most important spillover relationships for each pillar. It is the most practically dense section of the course: six pillar-specific design guides in one section. Come with your intervention canvas completed and your target pillar clearly identified.</p>
+  </div>
+
+  <div class="ready-box" id="readyBox">
+    <p class="ready-text">You are ready for the Section 5 quiz.<br>The quiz tests whether you can distinguish structural from surface interventions — and identify which policy trap a given intervention has fallen into.</p>
+  </div>
+</div>
+<script>
+function u(){
+  var t=document.querySelectorAll('textarea'),c=document.querySelectorAll('#cl input');
+  var tf=0;t.forEach(function(x){if(x.value.trim().length>25)tf++;});
+  var cf=0;c.forEach(function(x){if(x.checked)cf++;});
+  var total=t.length+c.length,done=tf+cf;
+  var pct=Math.round((done/total)*100);
+  document.getElementById('pbar').style.width=pct+'%';
+  document.getElementById('pct').textContent=pct+'%';
+  document.getElementById('readyBox').style.display=(pct>=75)?'block':'none';
+}
+</script>
+</body>
+</html>
