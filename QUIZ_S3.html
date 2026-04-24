@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Section 3 Quiz — Methodological Reasoning</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=DM+Sans:wght@300;400;500;600&display=swap');
+:root{--teal-dark:#085041;--teal-mid:#0F6E56;--teal:#1D9E75;--teal-light:#5DCAA5;--teal-pale:#E1F5EE;--teal-faint:#F0FAF6;--correct:#0F6E56;--correct-pale:#E1F5EE;--correct-border:#5DCAA5;--wrong:#B91C1C;--wrong-pale:#FEF2F2;--wrong-border:#FECACA;--text:#1a1a1a;--text-mid:#3a3a3a;--text-muted:#777;--border:#E5E5E5;--bg:#FAFAF9;--card:#FFFFFF;--radius:12px;--radius-sm:8px;}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:15px;line-height:1.65}
+.quiz-wrap{max-width:680px;margin:0 auto;padding:40px 20px 80px}
+.quiz-header{text-align:center;margin-bottom:40px}
+.q-section-label{font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--teal-mid);margin-bottom:12px}
+.q-title{font-family:'Playfair Display',serif;font-size:28px;font-weight:700;color:var(--text);line-height:1.2;margin-bottom:10px}
+.q-desc{font-size:14px;color:var(--text-muted);line-height:1.6;max-width:500px;margin:0 auto}
+.progress-wrap{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px 20px;margin-bottom:28px;display:flex;align-items:center;gap:14px}
+.progress-outer{flex:1;height:6px;background:#E8EAE8;border-radius:3px;overflow:hidden}
+.progress-inner{height:100%;background:linear-gradient(90deg,var(--teal),var(--teal-light));border-radius:3px;transition:width .4s ease;width:0%}
+.progress-text{font-size:12px;font-weight:600;color:var(--teal-mid);white-space:nowrap}
+.score-display{font-size:12px;font-weight:600;color:var(--text-muted);white-space:nowrap}
+.q-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:28px;margin-bottom:16px;display:none;animation:slideIn .3s ease}
+.q-card.active{display:block}
+@keyframes slideIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.q-meta{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.q-num{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--teal-mid);background:var(--teal-pale);padding:3px 10px;border-radius:20px}
+.q-type{font-size:10px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--text-muted)}
+.q-text{font-family:'Playfair Display',serif;font-size:17px;font-weight:500;line-height:1.55;color:var(--text);margin-bottom:20px}
+.multi-note{font-size:12px;color:var(--text-muted);margin-bottom:10px;font-style:italic}
+.options{display:flex;flex-direction:column;gap:8px;margin-bottom:20px}
+.opt{display:flex;align-items:flex-start;gap:12px;padding:12px 14px;border:1px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;transition:all .15s;background:var(--card)}
+.opt:hover:not(.disabled){border-color:var(--teal-light);background:var(--teal-faint)}
+.opt.correct{border-color:var(--correct-border);background:var(--correct-pale)}
+.opt.wrong{border-color:var(--wrong-border);background:var(--wrong-pale)}
+.opt.disabled{cursor:default;opacity:.75}
+.opt-marker{width:22px;height:22px;border-radius:50%;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;font-size:11px;font-weight:700;color:var(--text-muted)}
+.opt.correct .opt-marker{border-color:var(--correct);background:var(--correct);color:#fff}
+.opt.wrong .opt-marker{border-color:var(--wrong);background:var(--wrong);color:#fff}
+.opt-text{font-size:14px;color:var(--text-mid);line-height:1.55;padding-top:1px}
+.tf-row{display:flex;gap:10px;margin-bottom:20px}
+.tf-btn{flex:1;padding:12px;border:1px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;font-size:14px;font-weight:600;text-align:center;transition:all .15s;background:var(--card);color:var(--text-muted)}
+.tf-btn:hover:not(.disabled){border-color:var(--teal-light);background:var(--teal-faint);color:var(--teal-dark)}
+.tf-btn.correct{border-color:var(--correct-border);background:var(--correct-pale);color:var(--correct)}
+.tf-btn.wrong{border-color:var(--wrong-border);background:var(--wrong-pale);color:var(--wrong)}
+.tf-btn.disabled{cursor:default}
+.match-grid{display:grid;gap:8px;margin-bottom:20px}
+.match-row{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:center}
+.match-left{padding:10px 12px;background:var(--teal-faint);border:1px solid var(--teal-pale);border-radius:var(--radius-sm);font-size:13px;font-weight:600;color:var(--teal-dark);text-align:right}
+.match-arrow{color:var(--text-muted);font-size:14px;text-align:center}
+.match-select{padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:13px;font-family:'DM Sans',sans-serif;background:var(--card);color:var(--text);outline:none;cursor:pointer;width:100%}
+.match-select.correct{border-color:var(--correct-border);background:var(--correct-pale);color:var(--correct)}
+.match-select.wrong{border-color:var(--wrong-border);background:var(--wrong-pale);color:var(--wrong)}
+.check-match-btn{padding:9px 20px;background:var(--teal);color:#fff;border:none;border-radius:var(--radius-sm);font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background .15s;margin-bottom:16px}
+.check-match-btn:hover{background:var(--teal-mid)}
+.check-match-btn:disabled{background:#ccc;cursor:default}
+.blank-input{width:100%;padding:11px 14px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:14px;font-family:'DM Sans',sans-serif;color:var(--text);background:var(--card);outline:none;margin-bottom:16px;transition:border-color .15s}
+.blank-input.correct{border-color:var(--correct-border);background:var(--correct-pale)}
+.blank-input.wrong{border-color:var(--wrong-border);background:var(--wrong-pale)}
+.submit-blank{padding:9px 20px;background:var(--teal);color:#fff;border:none;border-radius:var(--radius-sm);font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background .15s;margin-bottom:16px}
+.feedback-box{display:none;padding:16px 18px;border-radius:var(--radius-sm);margin-bottom:20px;font-size:13px;line-height:1.7}
+.feedback-box.correct{background:var(--correct-pale);border:1px solid var(--correct-border);color:var(--teal-dark)}
+.feedback-box.wrong{background:var(--wrong-pale);border:1px solid var(--wrong-border);color:#7A1F1F}
+.feedback-box .fb-verdict{font-weight:700;display:block;margin-bottom:4px}
+.q-nav{display:flex;justify-content:flex-end}
+.next-btn{padding:10px 24px;background:var(--teal);color:#fff;border:none;border-radius:var(--radius-sm);font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background .15s;display:none}
+.next-btn:hover{background:var(--teal-mid)}
+.results-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:40px 32px;text-align:center;display:none}
+.results-circle{width:100px;height:100px;border-radius:50%;background:linear-gradient(135deg,var(--teal),var(--teal-light));display:flex;align-items:center;justify-content:center;margin:0 auto 20px;box-shadow:0 8px 24px rgba(29,158,117,.25)}
+.results-pct{font-family:'Playfair Display',serif;font-size:30px;font-weight:700;color:#fff}
+.results-title{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--text);margin-bottom:8px}
+.results-sub{font-size:14px;color:var(--text-muted);line-height:1.6;margin-bottom:24px}
+.results-detail{display:flex;gap:16px;justify-content:center;margin-bottom:24px}
+.rd-box{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 20px;text-align:center}
+.rd-num{font-family:'Playfair Display',serif;font-size:24px;font-weight:700;color:var(--teal)}
+.rd-label{font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.07em;margin-top:2px}
+.retry-btn{padding:11px 28px;background:var(--teal);color:#fff;border:none;border-radius:var(--radius-sm);font-size:14px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif}
+.pass-badge{display:inline-block;padding:4px 14px;border-radius:20px;font-size:12px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;margin-bottom:16px}
+.pass-badge.pass{background:var(--correct-pale);color:var(--correct);border:1px solid var(--correct-border)}
+.pass-badge.fail{background:var(--wrong-pale);color:var(--wrong);border:1px solid var(--wrong-border)}
+</style>
+</head>
+<body>
+<div class="quiz-wrap">
+  <div class="quiz-header">
+    <p class="q-section-label">Section 3 · City Intelligence Mastercourse</p>
+    <h1 class="q-title">Methodological reasoning</h1>
+    <p class="q-desc">Section 3 introduced an instrument. This quiz tests whether you can use it — reading pillar logic, interpreting profiles, and applying the CII's diagnostic purpose. Think precisely. 10 questions.</p>
+  </div>
+  <div class="progress-wrap">
+    <div class="progress-outer"><div class="progress-inner" id="progress-bar"></div></div>
+    <span class="progress-text" id="progress-text">0 / 10</span>
+    <span class="score-display" id="score-display">Score: 0</span>
+  </div>
+
+  <div class="q-card active" id="q1">
+    <div class="q-meta"><span class="q-num">Question 1</span><span class="q-type">True / False</span></div>
+    <p class="q-text">"The City Intelligence Index is designed to identify the highest-performing cities in Europe and rank them so that others can follow their example."</p>
+    <div class="tf-row">
+      <button class="tf-btn" onclick="checkTF('q1',this,'True','False')">True</button>
+      <button class="tf-btn" onclick="checkTF('q1',this,'False','False')">False</button>
+    </div>
+    <div class="feedback-box" id="fb-q1"></div>
+    <div class="q-nav"><button class="next-btn" id="next-q1" onclick="nextQ(1,2)">Next question →</button></div>
+  </div>
+
+  <div class="q-card" id="q2">
+    <div class="q-meta"><span class="q-num">Question 2</span><span class="q-type">Multiple choice</span></div>
+    <p class="q-text">What is the primary methodological reason for using 25 indicators per pillar rather than a single headline indicator?</p>
+    <div class="options" id="opts-q2">
+      <div class="opt" data-v="A"><span class="opt-marker">A</span><span class="opt-text">To make the index more complex and therefore more credible</span></div>
+      <div class="opt" data-v="B"><span class="opt-marker">B</span><span class="opt-text">To allow the index to be applied in cities with different data availability</span></div>
+      <div class="opt" data-v="C"><span class="opt-marker">C</span><span class="opt-text">To capture the structural complexity of each dimension — revealing patterns that no single indicator can show</span></div>
+      <div class="opt" data-v="D"><span class="opt-marker">D</span><span class="opt-text">To increase the number of data points and reduce statistical error</span></div>
+    </div>
+    <div class="feedback-box" id="fb-q2"></div>
+    <div class="q-nav"><button class="next-btn" id="next-q2" onclick="nextQ(2,3)">Next question →</button></div>
+  </div>
+
+  <div class="q-card" id="q3">
+    <div class="q-meta"><span class="q-num">Question 3</span><span class="q-type">Match and sort</span></div>
+    <p class="q-text">Match each CII pillar to the core question it asks.</p>
+    <div class="match-grid" id="match-q3">
+      <div class="match-row"><div class="match-left">Foundational</div><div class="match-arrow">→</div><select class="match-select" id="m3-1"><option value="">— select —</option><option>Can people actually participate?</option><option>Can the city generate and translate knowledge?</option><option>Do the city's systems work together?</option><option>Is the city restoring as well as consuming?</option><option>How openly does the city link to the world?</option><option>Are people actually living well?</option></select></div>
+      <div class="match-row"><div class="match-left">Integrator</div><div class="match-arrow">→</div><select class="match-select" id="m3-2"><option value="">— select —</option><option>Can people actually participate?</option><option>Can the city generate and translate knowledge?</option><option>Do the city's systems work together?</option><option>Is the city restoring as well as consuming?</option><option>How openly does the city link to the world?</option><option>Are people actually living well?</option></select></div>
+      <div class="match-row"><div class="match-left">Healthy Society</div><div class="match-arrow">→</div><select class="match-select" id="m3-3"><option value="">— select —</option><option>Can people actually participate?</option><option>Can the city generate and translate knowledge?</option><option>Do the city's systems work together?</option><option>Is the city restoring as well as consuming?</option><option>How openly does the city link to the world?</option><option>Are people actually living well?</option></select></div>
+      <div class="match-row"><div class="match-left">Connected</div><div class="match-arrow">→</div><select class="match-select" id="m3-4"><option value="">— select —</option><option>Can people actually participate?</option><option>Can the city generate and translate knowledge?</option><option>Do the city's systems work together?</option><option>Is the city restoring as well as consuming?</option><option>How openly does the city link to the world?</option><option>Are people actually living well?</option></select></div>
+    </div>
+    <button class="check-match-btn" id="check-q3" onclick="checkMatch4('q3',['Can people actually participate?','Do the city\'s systems work together?','Are people actually living well?','How openly does the city link to the world?'])">Check answers</button>
+    <div class="feedback-box" id="fb-q3"></div>
+    <div class="q-nav"><button class="next-btn" id="next-q3" onclick="nextQ(3,4)">Next question →</button></div>
+  </div>
+
+  <div class="q-card" id="q4">
+    <div class="q-meta"><span class="q-num">Question 4</span><span class="q-type">Multiple choice</span></div>
+    <p class="q-text">A city scores 0.81 on Innovator and 0.78 on Connected — both among the highest in the comparison group. Its Healthy Society score is 0.39. What is the most accurate diagnostic interpretation?</p>
+    <div class="options" id="opts-q4">
+      <div class="opt" data-v="A"><span class="opt-marker">A</span><span class="opt-text">The city is performing well overall — two strong pillars outweigh one weak one</span></div>
+      <div class="opt" data-v="B"><span class="opt-marker">B</span><span class="opt-text">The city's health system is underfunded and needs investment</span></div>
+      <div class="opt" data-v="C"><span class="opt-marker">C</span><span class="opt-text">The city's strong innovation and connectivity performance is not translating into population wellbeing — a structural disconnect the composite score would hide</span></div>
+      <div class="opt" data-v="D"><span class="opt-marker">D</span><span class="opt-text">The Healthy Society pillar is less reliable than the others and should be treated with caution</span></div>
+    </div>
+    <div class="feedback-box" id="fb-q4"></div>
+    <div class="q-nav"><button class="next-btn" id="next-q4" onclick="nextQ(4,5)">Next question →</button></div>
+  </div>
+
+  <div class="q-card" id="q5">
+    <div class="q-meta"><span class="q-num">Question 5</span><span class="q-type">Fill in the blank</span></div>
+    <p class="q-text">Complete the sentence: "A CII score tells you ______ — not what you will find when you look there."</p>
+    <input type="text" class="blank-input" id="blank-q5" placeholder="Type your answer..." />
+    <button class="submit-blank" onclick="checkBlank('q5',['where to look','where to investigate','which pillar to examine'])">Submit</button>
+    <div class="feedback-box" id="fb-q5"></div>
+    <div class="q-nav"><button class="next-btn" id="next-q5" onclick="nextQ(5,6)">Next question →</button></div>
+  </div>
+
+  <div class="q-card" id="q6">
+    <div class="q-meta"><span class="q-num">Question 6</span><span class="q-type">Multiple choice</span></div>
+    <p class="q-text">A researcher argues: "The Integrator pillar is the most underinvested dimension in urban policy — and this is why good policies consistently produce poor outcomes." Which approach best tests this argument using CII data?</p>
+    <div class="options" id="opts-q6">
+      <div class="opt" data-v="A"><span class="opt-marker">A</span><span class="opt-text">Compare Integrator scores across cities to identify which invest most in coordination</span></div>
+      <div class="opt" data-v="B"><span class="opt-marker">B</span><span class="opt-text">Correlate composite CII scores with GDP per capita</span></div>
+      <div class="opt" data-v="C"><span class="opt-marker">C</span><span class="opt-text">Identify cities with strong performance in other pillars but weak Integrator scores and examine whether their policy implementation outcomes underperform relative to their design quality</span></div>
+      <div class="opt" data-v="D"><span class="opt-marker">D</span><span class="opt-text">Survey policymakers in low-Integrator cities about their experience of coordination failure</span></div>
+    </div>
+    <div class="feedback-box" id="fb-q6"></div>
+    <div class="q-nav"><button class="next-btn" id="next-q6" onclick="nextQ(6,7)">Next question →</button></div>
+  </div>
+
+  <div class="q-card" id="q7">
+    <div class="q-meta"><span class="q-num">Question 7</span><span class="q-type">Multiple response</span></div>
+    <p class="q-text">Which statements about composite indices are correct according to the methodological principles of this section?</p>
+    <p class="multi-note">Select all that apply, then click Check.</p>
+    <div class="options" id="opts-q7">
+      <div class="opt multi-opt" onclick="toggleMulti(this)"><span class="opt-marker">□</span><span class="opt-text">Composite indices can reveal structural patterns that single indicators hide</span></div>
+      <div class="opt multi-opt" onclick="toggleMulti(this)"><span class="opt-marker">□</span><span class="opt-text">A high composite score can coexist with a critical weakness in a specific pillar</span></div>
+      <div class="opt multi-opt" onclick="toggleMulti(this)"><span class="opt-marker">□</span><span class="opt-text">Composite indices eliminate the need for qualitative research</span></div>
+      <div class="opt multi-opt" onclick="toggleMulti(this)"><span class="opt-marker">□</span><span class="opt-text">The composite score should always be read alongside the individual pillar breakdown</span></div>
+      <div class="opt multi-opt" onclick="toggleMulti(this)"><span class="opt-marker">□</span><span class="opt-text">An index score is a signal that tells you where to investigate — not an explanation of what you will find</span></div>
+    </div>
+    <button class="check-match-btn" id="check-q7" onclick="checkMulti('q7',['Composite indices can reveal structural patterns that single indicators hide','A high composite score can coexist with a critical weakness in a specific pillar','The composite score should always be read alongside the individual pillar breakdown','An index score is a signal that tells you where to investigate — not an explanation of what you will find'])">Check answers</button>
+    <div class="feedback-box" id="fb-q7"></div>
+    <div class="q-nav"><button class="next-btn" id="next-q7" onclick="nextQ(7,8)">Next question →</button></div>
+  </div>
+
+  <div class="q-card" id="q8">
+    <div class="q-meta"><span class="q-num">Question 8</span><span class="q-type">Multiple choice</span></div>
+    <p class="q-text">A city director presents a composite CII improvement from 0.61 to 0.67 over three years and says: "This proves our urban strategy is working." What is the most important question to ask?</p>
+    <div class="options" id="opts-q8">
+      <div class="opt" data-v="A"><span class="opt-marker">A</span><span class="opt-text">What is the confidence interval around the score improvement?</span></div>
+      <div class="opt" data-v="B"><span class="opt-marker">B</span><span class="opt-text">How does the composite score compare to other cities in the group?</span></div>
+      <div class="opt" data-v="C"><span class="opt-marker">C</span><span class="opt-text">Which pillars improved and which declined — does the improvement mask a widening gap in any specific pillar?</span></div>
+      <div class="opt" data-v="D"><span class="opt-marker">D</span><span class="opt-text">What was the total public investment associated with this improvement?</span></div>
+    </div>
+    <div class="feedback-box" id="fb-q8"></div>
+    <div class="q-nav"><button class="next-btn" id="next-q8" onclick="nextQ(8,9)">Next question →</button></div>
+  </div>
+
+  <div class="q-card" id="q9">
+    <div class="q-meta"><span class="q-num">Question 9</span><span class="q-type">Multiple choice</span></div>
+    <p class="q-text">A city scores 0.72 on Foundational and 0.41 on Innovator. The mayor asks: "Should we fix our Innovator weakness or protect our Foundational strength?" What does the CII framework suggest?</p>
+    <div class="options" id="opts-q9">
+      <div class="opt" data-v="A"><span class="opt-marker">A</span><span class="opt-text">Fix the Innovator weakness — it is the lower score and therefore the binding constraint</span></div>
+      <div class="opt" data-v="B"><span class="opt-marker">B</span><span class="opt-text">Protect the Foundational strength — it is the city's competitive advantage</span></div>
+      <div class="opt" data-v="C"><span class="opt-marker">C</span><span class="opt-text">Commission a new study on specific indicators before making any strategic decision</span></div>
+      <div class="opt" data-v="D"><span class="opt-marker">D</span><span class="opt-text">Understand the relationship between the two pillars first — strong Foundational performance is the prerequisite for Innovator development, so protecting it may be the higher-leverage move</span></div>
+    </div>
+    <div class="feedback-box" id="fb-q9"></div>
+    <div class="q-nav"><button class="next-btn" id="next-q9" onclick="nextQ(9,10)">Next question →</button></div>
+  </div>
+
+  <div class="q-card" id="q10">
+    <div class="q-meta"><span class="q-num">Question 10</span><span class="q-type">Multiple choice</span></div>
+    <p class="q-text">Which of the following is NOT a valid use of the CII according to the methodological principles introduced in this section?</p>
+    <div class="options" id="opts-q10">
+      <div class="opt" data-v="A"><span class="opt-marker">A</span><span class="opt-text">Using it to identify which pillar diverges most from a city's overall profile</span></div>
+      <div class="opt" data-v="B"><span class="opt-marker">B</span><span class="opt-text">Using it to rank cities and identify the best performers for others to emulate</span></div>
+      <div class="opt" data-v="C"><span class="opt-marker">C</span><span class="opt-text">Using it to detect when strong performance in one pillar coexists with critical weakness in another</span></div>
+      <div class="opt" data-v="D"><span class="opt-marker">D</span><span class="opt-text">Using it to generate an attribution question — a starting point for understanding why a pattern exists</span></div>
+    </div>
+    <div class="feedback-box" id="fb-q10"></div>
+    <div class="q-nav"><button class="next-btn" id="next-q10" onclick="showResults()">See my results →</button></div>
+  </div>
+
+  <div class="results-card" id="results">
+    <div class="results-circle"><span class="results-pct" id="res-pct">—</span></div>
+    <span class="pass-badge" id="pass-badge">—</span>
+    <h2 class="results-title" id="res-title">—</h2>
+    <p class="results-sub" id="res-sub">—</p>
+    <div class="results-detail">
+      <div class="rd-box"><div class="rd-num" id="res-correct">—</div><div class="rd-label">Correct</div></div>
+      <div class="rd-box"><div class="rd-num">10</div><div class="rd-label">Questions</div></div>
+      <div class="rd-box"><div class="rd-num" id="res-score">—</div><div class="rd-label">Points</div></div>
+    </div>
+    <button class="retry-btn" onclick="retryQuiz()">Retake quiz</button>
+  </div>
+</div>
+
+<script>
+var TOTAL=10;
+var state={answered:0,correct:0,points:0};
+var mcCorrect={'q2':'C','q4':'C','q6':'C','q8':'C','q9':'D','q10':'B'};
+var feedbacks={
+  'q1':'The correct answer is False. The CII is explicitly designed as a diagnostic instrument — not a ranking system. Its purpose is to reveal structural capacity, not to create a league table. Using it to rank cities produces the same distortions as every conventional city index: hiding structural weaknesses behind composite averages.',
+  'q2':'The correct answer is to capture the structural complexity of each dimension. Structural dimensions like Integrator capacity or Healthy Society performance are genuinely complex and resist single-variable measurement. The 25-indicator design triangulates a structural reality. Complexity for its own sake, statistical precision, and data availability are secondary considerations.',
+  'q3':'The correct matching is: Foundational → Can people actually participate? Integrator → Do the city\'s systems work together? Healthy Society → Are people actually living well? Connected → How openly does the city link to the world? These core questions — not just the pillar names — are what the CII is designed to test structurally.',
+  'q4':'The correct answer is that the city\'s strong innovation and connectivity performance is not translating into population wellbeing. This is the CII\'s most important diagnostic function: revealing when strong performance in economically visible dimensions coexists with critical weakness in the dimension that measures whether people are actually living well. The composite score hides this gap entirely.',
+  'q5':'The correct answer is "where to look." A CII score identifies that a structural problem exists — it does not explain what is producing it. A low Integrator score tells you coordination is failing; it doesn\'t tell you why. Every score opens a question; it does not close one.',
+  'q6':'The correct answer is to identify cities with strong performance in other pillars but weak Integrator scores and examine whether their implementation outcomes underperform. This tests the researcher\'s specific argument using the comparative architecture the CII provides. Comparing scores tells you performance; correlating with GDP tests a different hypothesis; surveying generates qualitative evidence but does not test the structural argument.',
+  'q7':'The four correct statements reflect the methodological principles introduced explicitly. Composite indices do not eliminate the need for qualitative research — they generate the questions qualitative research must answer. Equal weighting is a methodological choice requiring scrutiny, not a statement that all dimensions contribute equally in every context.',
+  'q8':'The correct answer is asking which pillars improved and which declined. A composite improvement can reflect genuine systemic progress — or strong improvement in a few pillars masking deterioration in others. The most important analytical move when presented with a composite change is always to disaggregate it. Statistical confidence, peer comparison, and investment attribution are all secondary to this question.',
+  'q9':'The correct answer is to understand the relationship between the two pillars first. Foundational intelligence is the floor of the CII — it is explicitly the prerequisite capacity all other pillars depend on. A city with strong Foundational and weak Innovator performance has the population capabilities to build an innovation ecosystem — but has not yet built the translation infrastructure. Simply chasing the lower score mistakes numerical gap for structural priority.',
+  'q10':'The correct answer is using the CII to rank cities and identify best performers. The CII is explicitly designed as a diagnostic tool, not a competition. Ranking cities misrepresents its purpose. The other options — pillar divergence analysis, composite-pillar comparison, and attribution question generation — are all valid uses that align with the instrument\'s diagnostic design.'
+};
+
+function showFeedback(qId,isCorrect,p){
+  var el=document.getElementById('fb-'+qId);
+  el.style.display='block';
+  el.className='feedback-box '+(isCorrect?'correct':'wrong');
+  el.innerHTML='<span class="fb-verdict">'+(isCorrect?'✓ Correct':'✗ Not quite')+'</span>'+feedbacks[qId];
+  document.getElementById('next-'+qId).style.display='block';
+  state.answered++;
+  if(isCorrect){state.correct++;state.points+=(p||1);}
+  var pct=Math.round((state.answered/TOTAL)*100);
+  document.getElementById('progress-bar').style.width=pct+'%';
+  document.getElementById('progress-text').textContent=state.answered+' / '+TOTAL;
+  document.getElementById('score-display').textContent='Score: '+state.correct;
+}
+
+function checkTF(qId,btn,chosen,c){
+  document.getElementById(qId).querySelectorAll('.tf-btn').forEach(function(b){b.classList.add('disabled')});
+  btn.classList.add(chosen===c?'correct':'wrong');
+  showFeedback(qId,chosen===c,1);
+}
+
+function checkMC(qId,opt,chosen){
+  var c=mcCorrect[qId];
+  document.getElementById('opts-'+qId).querySelectorAll('.opt').forEach(function(o,i){
+    o.classList.add('disabled');o.onclick=null;
+    if(String.fromCharCode(65+i)===c) o.classList.add('correct');
+  });
+  if(chosen!==c) opt.classList.add('wrong');
+  var p=(qId==='q6'||qId==='q9')?2:1;
+  showFeedback(qId,chosen===c,p);
+}
+
+function toggleMulti(opt){
+  if(opt.classList.contains('disabled')) return;
+  opt.classList.toggle('selected');
+  opt.querySelector('.opt-marker').textContent=opt.classList.contains('selected')?'✓':'□';
+}
+
+function checkMulti(qId,correctList){
+  var opts=document.getElementById('opts-'+qId).querySelectorAll('.multi-opt');
+  var selected=[];
+  opts.forEach(function(o){if(o.classList.contains('selected'))selected.push(o.querySelector('.opt-text').textContent.trim())});
+  opts.forEach(function(o){
+    o.classList.add('disabled');o.onclick=null;
+    var txt=o.querySelector('.opt-text').textContent.trim();
+    if(correctList.includes(txt)) o.classList.add('correct');
+    else if(o.classList.contains('selected')) o.classList.add('wrong');
+  });
+  document.getElementById('check-'+qId).disabled=true;
+  var ok=correctList.every(function(c){return selected.includes(c)})&&selected.length===correctList.length;
+  showFeedback(qId,ok,2);
+}
+
+function checkMatch4(qId,correctAnswers){
+  var n=correctAnswers.length;
+  var allCorrect=true;
+  for(var i=1;i<=n;i++){
+    var s=document.getElementById('m3-'+i);
+    s.disabled=true;
+    if(s.value===correctAnswers[i-1]) s.classList.add('correct');
+    else{s.classList.add('wrong');allCorrect=false;}
+  }
+  document.getElementById('check-'+qId).disabled=true;
+  showFeedback(qId,allCorrect,2);
+}
+
+function checkBlank(qId,acceptedAnswers){
+  var input=document.getElementById('blank-'+qId);
+  var val=input.value.trim().toLowerCase();
+  var ok=acceptedAnswers.some(function(a){return val===a.toLowerCase()||val.includes(a.toLowerCase().split(' ')[0])});
+  input.classList.add(ok?'correct':'wrong');
+  input.disabled=true;
+  document.querySelector('#'+qId+' .submit-blank').disabled=true;
+  showFeedback(qId,ok,1);
+}
+
+function nextQ(c,n){
+  document.getElementById('q'+c).classList.remove('active');
+  document.getElementById('q'+n).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function showResults(){
+  document.getElementById('q10').classList.remove('active');
+  document.getElementById('results').style.display='block';
+  var pct=Math.round((state.correct/TOTAL)*100);
+  var pass=pct>=70;
+  document.getElementById('res-pct').textContent=pct+'%';
+  document.getElementById('pass-badge').textContent=pass?'PASSED':'KEEP GOING';
+  document.getElementById('pass-badge').className='pass-badge '+(pass?'pass':'fail');
+  document.getElementById('res-title').textContent=pass?'Well done.':'Keep working at it.';
+  document.getElementById('res-sub').textContent=pass?'You can read a CII profile with analytical precision. Section 4 will ask you to bring a real city into the frame — come with your hypothesis ready.':'The CII\'s diagnostic logic requires practice. Review the six pillars explorer and the profile reading tool, then try again.';
+  document.getElementById('res-correct').textContent=state.correct;
+  document.getElementById('res-score').textContent=state.points;
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function retryQuiz(){
+  state={answered:0,correct:0,points:0};
+  document.getElementById('progress-bar').style.width='0%';
+  document.getElementById('progress-text').textContent='0 / '+TOTAL;
+  document.getElementById('score-display').textContent='Score: 0';
+  document.getElementById('results').style.display='none';
+  document.querySelectorAll('.q-card').forEach(function(c){c.classList.remove('active')});
+  document.getElementById('q1').classList.add('active');
+  document.querySelectorAll('.feedback-box').forEach(function(f){f.style.display='none'});
+  document.querySelectorAll('.next-btn').forEach(function(b){b.style.display='none'});
+  document.querySelectorAll('.opt').forEach(function(o){o.className='opt'});
+  document.querySelectorAll('.tf-btn').forEach(function(b){b.className='tf-btn'});
+  document.querySelectorAll('.blank-input').forEach(function(i){i.value='';i.className='blank-input';i.disabled=false});
+  document.querySelectorAll('.submit-blank').forEach(function(b){b.disabled=false});
+  document.querySelectorAll('.match-select').forEach(function(s){s.value='';s.className='match-select';s.disabled=false});
+  document.querySelectorAll('.check-match-btn').forEach(function(b){b.disabled=false});
+  document.querySelectorAll('.multi-opt').forEach(function(o){
+    o.classList.remove('selected','correct','wrong','disabled');
+    o.querySelector('.opt-marker').textContent='□';
+    o.onclick=function(){toggleMulti(this)};
+  });
+  bindAll();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function bindAll(){
+  for(var qId in mcCorrect){
+    (function(id){
+      document.getElementById('opts-'+id).querySelectorAll('.opt').forEach(function(o,i){
+        o.onclick=function(){checkMC(id,this,String.fromCharCode(65+i))};
+      });
+    })(qId);
+  }
+}
+bindAll();
+</script>
+</body>
+</html>
