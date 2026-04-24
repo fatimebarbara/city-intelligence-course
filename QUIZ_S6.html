@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Section 6 Quiz — From One Intervention to a Strategy</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=DM+Sans:wght@300;400;500;600&display=swap');
+:root{--teal-dark:#085041;--teal-mid:#0F6E56;--teal:#1D9E75;--teal-light:#5DCAA5;--teal-pale:#E1F5EE;--teal-faint:#F0FAF6;--correct:#0F6E56;--correct-pale:#E1F5EE;--correct-border:#5DCAA5;--wrong:#B91C1C;--wrong-pale:#FEF2F2;--wrong-border:#FECACA;--text:#1a1a1a;--text-mid:#3a3a3a;--text-muted:#777;--border:#E5E5E5;--bg:#FAFAF9;--card:#FFFFFF;--radius:12px;--radius-sm:8px;}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:15px;line-height:1.65}
+.quiz-wrap{max-width:680px;margin:0 auto;padding:40px 20px 80px}
+.quiz-header{text-align:center;margin-bottom:40px}
+.q-section-label{font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--teal-mid);margin-bottom:12px}
+.q-title{font-family:'Playfair Display',serif;font-size:28px;font-weight:700;color:var(--text);line-height:1.2;margin-bottom:10px}
+.q-desc{font-size:14px;color:var(--text-muted);line-height:1.6;max-width:500px;margin:0 auto}
+.progress-wrap{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px 20px;margin-bottom:28px;display:flex;align-items:center;gap:14px}
+.progress-outer{flex:1;height:6px;background:#E8EAE8;border-radius:3px;overflow:hidden}
+.progress-inner{height:100%;background:linear-gradient(90deg,var(--teal),var(--teal-light));border-radius:3px;transition:width .4s ease;width:0%}
+.progress-text{font-size:12px;font-weight:600;color:var(--teal-mid);white-space:nowrap}
+.score-display{font-size:12px;font-weight:600;color:var(--text-muted);white-space:nowrap}
+.q-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:28px;margin-bottom:16px;display:none;animation:slideIn .3s ease}
+.q-card.active{display:block}
+@keyframes slideIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.q-meta{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.q-num{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--teal-mid);background:var(--teal-pale);padding:3px 10px;border-radius:20px}
+.q-type{font-size:10px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--text-muted)}
+.q-text{font-family:'Playfair Display',serif;font-size:17px;font-weight:500;line-height:1.55;color:var(--text);margin-bottom:20px}
+.multi-note{font-size:12px;color:var(--text-muted);margin-bottom:10px;font-style:italic}
+.options{display:flex;flex-direction:column;gap:8px;margin-bottom:20px}
+.opt{display:flex;align-items:flex-start;gap:12px;padding:12px 14px;border:1px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;transition:all .15s;background:var(--card)}
+.opt:hover:not(.disabled){border-color:var(--teal-light);background:var(--teal-faint)}
+.opt.correct{border-color:var(--correct-border);background:var(--correct-pale)}
+.opt.wrong{border-color:var(--wrong-border);background:var(--wrong-pale)}
+.opt.disabled{cursor:default;opacity:.75}
+.opt-marker{width:22px;height:22px;border-radius:50%;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;font-size:11px;font-weight:700;color:var(--text-muted)}
+.opt.correct .opt-marker{border-color:var(--correct);background:var(--correct);color:#fff}
+.opt.wrong .opt-marker{border-color:var(--wrong);background:var(--wrong);color:#fff}
+.opt-text{font-size:14px;color:var(--text-mid);line-height:1.55;padding-top:1px}
+.tf-row{display:flex;gap:10px;margin-bottom:20px}
+.tf-btn{flex:1;padding:12px;border:1px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;font-size:14px;font-weight:600;text-align:center;transition:all .15s;background:var(--card);color:var(--text-muted)}
+.tf-btn:hover:not(.disabled){border-color:var(--teal-light);background:var(--teal-faint);color:var(--teal-dark)}
+.tf-btn.correct{border-color:var(--correct-border);background:var(--correct-pale);color:var(--correct)}
+.tf-btn.wrong{border-color:var(--wrong-border);background:var(--wrong-pale);color:var(--wrong)}
+.tf-btn.disabled{cursor:default}
+.match-grid{display:grid;gap:8px;margin-bottom:16px}
+.match-row{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:center}
+.match-left{padding:10px 12px;background:var(--teal-faint);border:1px solid var(--teal-pale);border-radius:var(--radius-sm);font-size:13px;font-weight:600;color:var(--teal-dark);text-align:right}
+.match-arrow{color:var(--text-muted);font-size:14px;text-align:center}
+.match-select{padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:12px;font-family:'DM Sans',sans-serif;background:var(--card);color:var(--text);outline:none;cursor:pointer;width:100%}
+.match-select.correct{border-color:var(--correct-border);background:var(--correct-pale);color:var(--correct)}
+.match-select.wrong{border-color:var(--wrong-border);background:var(--wrong-pale);color:var(--wrong)}
+.check-match-btn{padding:9px 20px;background:var(--teal);color:#fff;border:none;border-radius:var(--radius-sm);font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background .15s;margin-bottom:16px}
+.check-match-btn:hover{background:var(--teal-mid)}
+.check-match-btn:disabled{background:#ccc;cursor:default}
+.blank-input{width:100%;padding:11px 14px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:14px;font-family:'DM Sans',sans-serif;color:var(--text);background:var(--card);outline:none;margin-bottom:16px;transition:border-color .15s}
+.blank-input.correct{border-color:var(--correct-border);background:var(--correct-pale)}
+.blank-input.wrong{border-color:var(--wrong-border);background:var(--wrong-pale)}
+.submit-blank{padding:9px 20px;background:var(--teal);color:#fff;border:none;border-radius:var(--radius-sm);font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background .15s;margin-bottom:16px}
+.feedback-box{display:none;padding:16px 18px;border-radius:var(--radius-sm);margin-bottom:20px;font-size:13px;line-height:1.7}
+.feedback-box.correct{background:var(--correct-pale);border:1px solid var(--correct-border);color:var(--teal-dark)}
+.feedback-box.wrong{background:var(--wrong-pale);border:1px solid var(--wrong-border);color:#7A1F1F}
+.feedback-box .fb-verdict{font-weight:700;display:block;margin-bottom:4px}
+.q-nav{display:flex;justify-content:flex-end}
+.next-btn{padding:10px 24px;background:var(--teal);color:#fff;border:none;border-radius:var(--radius-sm);font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background .15s;display:none}
+.next-btn:hover{background:var(--teal-mid)}
+.results-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:40px 32px;text-align:center;display:none}
+.results-circle{width:100px;height:100px;border-radius:50%;background:linear-gradient(135deg,var(--teal),var(--teal-light));display:flex;align-items:center;justify-content:center;margin:0 auto 20px;box-shadow:0 8px 24px rgba(29,158,117,.25)}
+.results-pct{font-family:'Playfair Display',serif;font-size:30px;font-weight:700;color:#fff}
+.results-title{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--text);margin-bottom:8px}
+.results-sub{font-size:14px;color:var(--text-muted);line-height:1.6;margin-bottom:24px}
+.results-detail{display:flex;gap:16px;justify-content:center;margin-bottom:24px}
+.rd-box{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 20px;text-align:center}
+.rd-num{font-family:'Playfair Display',serif;font-size:24px;font-weight:700;color:var(--teal)}
+.rd-label{font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.07em;margin-top:2px}
+.retry-btn{padding:11px 28px;background:var(--teal);color:#fff;border:none;border-radius:var(--radius-sm);font-size:14px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif}
+.pass-badge{display:inline-block;padding:4px 14px;border-radius:20px;font-size:12px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;margin-bottom:16px}
+.pass-badge.pass{background:var(--correct-pale);color:var(--correct);border:1px solid var(--correct-border)}
+.pass-badge.fail{background:var(--wrong-pale);color:var(--wrong);border:1px solid var(--wrong-border)}
+</style>
+</head>
+<body>
+<div class="quiz-wrap">
+  <div class="quiz-header">
+    <p class="q-section-label">Section 6 · City Intelligence Mastercourse</p>
+    <h1 class="q-title">From one intervention to a strategy</h1>
+    <p class="q-desc">Section 5 gave you a design. Section 6 gave you a sequence. This quiz tests whether you can distinguish compounding from parallel — and whether you know which pillar to start with, and why. 10 questions.</p>
+  </div>
+  <div class="progress-wrap">
+    <div class="progress-outer"><div class="progress-inner" id="progress-bar"></div></div>
+    <span class="progress-text" id="progress-text">0 / 10</span>
+    <span class="score-display" id="score-display">Score: 0</span>
+  </div>
+
+  <!-- Q1 T/F -->
+  <div class="q-card active" id="q1">
+    <div class="q-meta"><span class="q-num">Question 1</span><span class="q-type">True / False</span></div>
+    <p class="q-text">"A compounding intervention sequence is simply a portfolio of well-designed interventions targeting different CII pillars at the same time."</p>
+    <div class="tf-row">
+      <button class="tf-btn" onclick="checkTF('q1',this,'True','False')">True</button>
+      <button class="tf-btn" onclick="checkTF('q1',this,'False','False')">False</button>
+    </div>
+    <div class="feedback-box" id="fb-q1"></div>
+    <div class="q-nav"><button class="next-btn" id="next-q1" onclick="nextQ(1,2)">Next question →</button></div>
+  </div>
+
+  <!-- Q2 MC -->
+  <div class="q-card" id="q2">
+    <div class="q-meta"><span class="q-num">Question 2</span><span class="q-type">Multiple choice</span></div>
+    <p class="q-text">Why does Section 6 describe the Foundational pillar as "the floor — not metaphorically, structurally"?</p>
+    <div class="options" id="opts-q2">
+      <div class="opt" data-v="A"><span class="opt-marker">A</span><span class="opt-text">Because Foundational indicators are measured at a more disaggregated level than other pillars</span></div>
+      <div class="opt" data-v="B"><span class="opt-marker">B</span><span class="opt-text">Because Foundational performance is always the lowest-scoring pillar in the comparison group</span></div>
+      <div class="opt" data-v="C"><span class="opt-marker">C</span><span class="opt-text">Because the participation conditions Foundational captures — education, digital access, institutional trust — are prerequisites that constrain the development ceiling of every other pillar</span></div>
+      <div class="opt" data-v="D"><span class="opt-marker">D</span><span class="opt-text">Because policymakers have most direct control over Foundational indicators</span></div>
+    </div>
+    <div class="feedback-box" id="fb-q2"></div>
+    <div class="q-nav"><button class="next-btn" id="next-q2" onclick="nextQ(2,3)">Next question →</button></div>
+  </div>
+
+  <!-- Q3 MC -->
+  <div class="q-card" id="q3">
+    <div class="q-meta"><span class="q-num">Question 3</span><span class="q-type">Multiple choice</span></div>
+    <p class="q-text">A city has a strong Foundational score (0.74) but weak Innovator performance (0.38). The city director proposes funding a new innovation hub as the first intervention. What does the Section 6 sequencing logic say about this?</p>
+    <div class="options" id="opts-q3">
+      <div class="opt" data-v="A"><span class="opt-marker">A</span><span class="opt-text">The hub is correct — Innovator is the weakest pillar and the lowest score should always be addressed first</span></div>
+      <div class="opt" data-v="B"><span class="opt-marker">B</span><span class="opt-text">The hub may fail to compound because the blocking constraint here is not the absence of innovation infrastructure — it is the missing translation pathway between a strong Foundational floor and the innovation economy</span></div>
+      <div class="opt" data-v="C"><span class="opt-marker">C</span><span class="opt-text">The hub is wrong because Foundational must always be addressed before Innovator regardless of scores</span></div>
+      <div class="opt" data-v="D"><span class="opt-marker">D</span><span class="opt-text">The sequencing logic cannot be applied until the attribution question from Section 4 has been answered</span></div>
+    </div>
+    <div class="feedback-box" id="fb-q3"></div>
+    <div class="q-nav"><button class="next-btn" id="next-q3" onclick="nextQ(3,4)">Next question →</button></div>
+  </div>
+
+  <!-- Q4 Fill -->
+  <div class="q-card" id="q4">
+    <div class="q-meta"><span class="q-num">Question 4</span><span class="q-type">Fill in the blank</span></div>
+    <p class="q-text">Complete the sentence: "A strategy is not a collection of interventions. A strategy is a sequence designed so that each intervention makes the next one ______."</p>
+    <input type="text" class="blank-input" id="blank-q4" placeholder="Type your answer..." />
+    <button class="submit-blank" onclick="checkBlank('q4',['more likely to succeed','more successful','likelier to succeed','more likely to work'])">Submit</button>
+    <div class="feedback-box" id="fb-q4"></div>
+    <div class="q-nav"><button class="next-btn" id="next-q4" onclick="nextQ(4,5)">Next question →</button></div>
+  </div>
+
+  <!-- Q5 MC -->
+  <div class="q-card" id="q5">
+    <div class="q-meta"><span class="q-num">Question 5</span><span class="q-type">Multiple choice</span></div>
+    <p class="q-text">What is the critical difference between a compounding sequence and a set of parallel interventions?</p>
+    <div class="options" id="opts-q5">
+      <div class="opt" data-v="A"><span class="opt-marker">A</span><span class="opt-text">A compounding sequence targets more pillars than a parallel approach</span></div>
+      <div class="opt" data-v="B"><span class="opt-marker">B</span><span class="opt-text">In a compounding sequence, each step creates a condition that makes the next step more likely to succeed — the steps are structurally dependent, not independent</span></div>
+      <div class="opt" data-v="C"><span class="opt-marker">C</span><span class="opt-text">A compounding sequence is managed by a single department rather than multiple departments simultaneously</span></div>
+      <div class="opt" data-v="D"><span class="opt-marker">D</span><span class="opt-text">A compounding sequence produces results faster than parallel interventions</span></div>
+    </div>
+    <div class="feedback-box" id="fb-q5"></div>
+    <div class="q-nav"><button class="next-btn" id="next-q5" onclick="nextQ(5,6)">Next question →</button></div>
+  </div>
+
+  <!-- Q6 MC -->
+  <div class="q-card" id="q6">
+    <div class="q-meta"><span class="q-num">Question 6</span><span class="q-type">Multiple choice</span></div>
+    <p class="q-text">A city has this CII profile: Foundational 0.42, Innovator 0.71, Integrator 0.68, Regenerative 0.65, Connected 0.72, Healthy Society 0.44. Which diagnosis does the Section 6 dependency logic most strongly support?</p>
+    <div class="options" id="opts-q6">
+      <div class="opt" data-v="A"><span class="opt-marker">A</span><span class="opt-text">The city should invest in Healthy Society as the accountability layer is critically weak</span></div>
+      <div class="opt" data-v="B"><span class="opt-marker">B</span><span class="opt-text">The city's strong capacity pillars are performing below their potential because the Foundational floor is too low — the binding constraint is the gap between participation conditions and the systems built above them</span></div>
+      <div class="opt" data-v="C"><span class="opt-marker">C</span><span class="opt-text">The city is performing well overall and the Foundational gap is modest enough to address as a secondary priority</span></div>
+      <div class="opt" data-v="D"><span class="opt-marker">D</span><span class="opt-text">The city's Innovator and Connected strengths should be leveraged before addressing foundational weaknesses</span></div>
+    </div>
+    <div class="feedback-box" id="fb-q6"></div>
+    <div class="q-nav"><button class="next-btn" id="next-q6" onclick="nextQ(6,7)">Next question →</button></div>
+  </div>
+
+  <!-- Q7 Multi -->
+  <div class="q-card" id="q7">
+    <div class="q-meta"><span class="q-num">Question 7</span><span class="q-type">Multiple response</span></div>
+    <p class="q-text">Which of the following are characteristics of a compounding sequence? Select all that apply.</p>
+    <p class="multi-note">Select all that apply, then click Check.</p>
+    <div class="options" id="opts-q7">
+      <div class="opt multi-opt" onclick="toggleMulti(this)"><span class="opt-marker">□</span><span class="opt-text">Each step creates a condition that makes the following step more likely to succeed</span></div>
+      <div class="opt multi-opt" onclick="toggleMulti(this)"><span class="opt-marker">□</span><span class="opt-text">All steps run simultaneously to maximise efficiency</span></div>
+      <div class="opt multi-opt" onclick="toggleMulti(this)"><span class="opt-marker">□</span><span class="opt-text">The starting point is chosen based on the dependency structure — not the most visible pillar</span></div>
+      <div class="opt multi-opt" onclick="toggleMulti(this)"><span class="opt-marker">□</span><span class="opt-text">Accountability for the sequence as a whole is assigned to a single responsible owner</span></div>
+      <div class="opt multi-opt" onclick="toggleMulti(this)"><span class="opt-marker">□</span><span class="opt-text">Each step is evaluated independently against its own output metrics</span></div>
+      <div class="opt multi-opt" onclick="toggleMulti(this)"><span class="opt-marker">□</span><span class="opt-text">The sequence produces an outcome that none of the individual steps would have produced alone</span></div>
+    </div>
+    <button class="check-match-btn" id="check-q7" onclick="checkMulti('q7',['Each step creates a condition that makes the following step more likely to succeed','The starting point is chosen based on the dependency structure — not the most visible pillar','Accountability for the sequence as a whole is assigned to a single responsible owner','The sequence produces an outcome that none of the individual steps would have produced alone'])">Check answers</button>
+    <div class="feedback-box" id="fb-q7"></div>
+    <div class="q-nav"><button class="next-btn" id="next-q7" onclick="nextQ(7,8)">Next question →</button></div>
+  </div>
+
+  <!-- Q8 MC -->
+  <div class="q-card" id="q8">
+    <div class="q-meta"><span class="q-num">Question 8</span><span class="q-type">Multiple choice</span></div>
+    <p class="q-text">A city's sequencing plan has three steps: Step 1 targets Integrator, Step 2 targets Foundational, Step 3 targets Innovator. A city intelligence practitioner says the sequence is inverted. Why?</p>
+    <div class="options" id="opts-q8">
+      <div class="opt" data-v="A"><span class="opt-marker">A</span><span class="opt-text">Because Innovator should always come last in any CII sequencing framework</span></div>
+      <div class="opt" data-v="B"><span class="opt-marker">B</span><span class="opt-text">Because Integrator capacity is limited by the quality of the Foundational floor it operates on — building coordination architecture before the participation conditions exist reduces the effectiveness of Step 1</span></div>
+      <div class="opt" data-v="C"><span class="opt-marker">C</span><span class="opt-text">Because the dependency map always requires Foundational to be the first step regardless of the city's specific profile</span></div>
+      <div class="opt" data-v="D"><span class="opt-marker">D</span><span class="opt-text">Because the practitioner prefers a different political starting point</span></div>
+    </div>
+    <div class="feedback-box" id="fb-q8"></div>
+    <div class="q-nav"><button class="next-btn" id="next-q8" onclick="nextQ(8,9)">Next question →</button></div>
+  </div>
+
+  <!-- Q9 MC -->
+  <div class="q-card" id="q9">
+    <div class="q-meta"><span class="q-num">Question 9</span><span class="q-type">Multiple choice</span></div>
+    <p class="q-text">The Section 6 videos name two reasons why a sequence fails to compound. Which answer correctly identifies both?</p>
+    <div class="options" id="opts-q9">
+      <div class="opt" data-v="A"><span class="opt-marker">A</span><span class="opt-text">Too many pillars targeted simultaneously, and insufficient budget for the sequence</span></div>
+      <div class="opt" data-v="B"><span class="opt-marker">B</span><span class="opt-text">Starting at the wrong pillar, and losing the thread between steps — through fragmented accountability, misaligned metrics, or political discontinuity</span></div>
+      <div class="opt" data-v="C"><span class="opt-marker">C</span><span class="opt-text">Weak diagnostic work in Section 4, and choosing a first intervention that is too structural</span></div>
+      <div class="opt" data-v="D"><span class="opt-marker">D</span><span class="opt-text">Moving too slowly between steps, and evaluating outcomes before the system has had time to respond</span></div>
+    </div>
+    <div class="feedback-box" id="fb-q9"></div>
+    <div class="q-nav"><button class="next-btn" id="next-q9" onclick="nextQ(9,10)">Next question →</button></div>
+  </div>
+
+  <!-- Q10 MC -->
+  <div class="q-card" id="q10">
+    <div class="q-meta"><span class="q-num">Question 10</span><span class="q-type">Multiple choice</span></div>
+    <p class="q-text">A policymaker presents a three-step sequence: Step 1 improves public transport access in peripheral districts. Step 2 launches a digital skills programme in those districts. Step 3 creates an employment pathway programme. A city intelligence practitioner says: "This is a good portfolio — but it is not yet a compounding sequence." What is missing?</p>
+    <div class="options" id="opts-q10">
+      <div class="opt" data-v="A"><span class="opt-marker">A</span><span class="opt-text">The steps do not target enough different CII pillars</span></div>
+      <div class="opt" data-v="B"><span class="opt-marker">B</span><span class="opt-text">The steps are not expensive enough to produce structural change</span></div>
+      <div class="opt" data-v="C"><span class="opt-marker">C</span><span class="opt-text">The sequence has not named the structural dependency between steps — why Step 2 only works because Step 1 happened, and why Step 3 would produce a different outcome without Steps 1 and 2 having preceded it</span></div>
+      <div class="opt" data-v="D"><span class="opt-marker">D</span><span class="opt-text">The sequence has not been approved by all the relevant departments</span></div>
+    </div>
+    <div class="feedback-box" id="fb-q10"></div>
+    <div class="q-nav"><button class="next-btn" id="next-q10" onclick="showResults()">See my results →</button></div>
+  </div>
+
+  <div class="results-card" id="results">
+    <div class="results-circle"><span class="results-pct" id="res-pct">—</span></div>
+    <span class="pass-badge" id="pass-badge">—</span>
+    <h2 class="results-title" id="res-title">—</h2>
+    <p class="results-sub" id="res-sub">—</p>
+    <div class="results-detail">
+      <div class="rd-box"><div class="rd-num" id="res-correct">—</div><div class="rd-label">Correct</div></div>
+      <div class="rd-box"><div class="rd-num">10</div><div class="rd-label">Questions</div></div>
+      <div class="rd-box"><div class="rd-num" id="res-score">—</div><div class="rd-label">Points</div></div>
+    </div>
+    <button class="retry-btn" onclick="retryQuiz()">Retake quiz</button>
+  </div>
+</div>
+
+<script>
+var TOTAL=10;
+var state={answered:0,correct:0,points:0};
+var mcCorrect={'q2':'C','q3':'B','q5':'B','q6':'B','q8':'B','q9':'B','q10':'C'};
+var feedbacks={
+  'q1':'The correct answer is False. A compounding sequence is fundamentally different from a portfolio. A portfolio is a collection of parallel interventions — each well-designed, each targeted at a different pillar, but structurally independent. A compounding sequence is designed so that each step creates the conditions the next step depends on. Remove one step from a compounding sequence and the others become less effective. Remove one intervention from a portfolio and the others are unaffected.',
+  'q2':'The correct answer is that Foundational captures the participation conditions — education, digital access, institutional trust — that are prerequisites constraining the development ceiling of every other pillar. The word "structurally" distinguishes this from metaphor. It is not that Foundational matters most in an abstract sense. It is that every other pillar\'s development is structurally bounded by whether these conditions exist for the populations involved.',
+  'q3':'The correct answer is that the hub may fail to compound because the blocking constraint is the missing translation pathway — not the absence of innovation infrastructure. With strong Foundational performance at 0.74, the human capital for innovation exists. The problem is the pathway between that capability and the innovation economy — the institutional translation infrastructure that converts population capability into economic activity. A hub without that pathway will attract talent the city already has and fail to create new pathways.',
+  'q4':'The correct answer is "more likely to succeed." This is the precise definition of a compounding sequence in Section 6. Each step is designed not only to produce its own outcome, but to raise the probability that the next step will work. This is the design criterion that distinguishes a sequence from a portfolio.',
+  'q5':'The correct answer is that in a compounding sequence, each step creates a condition that makes the next step more likely to succeed — the steps are structurally dependent, not independent. Scale (option A) and speed (option D) are not the defining features. Single-department management (option C) is not required — compounding sequences often require multiple departments. The dependency between steps is what defines a compounding sequence, not any operational feature of how it is managed.',
+  'q6':'The correct answer is that the city\'s strong capacity pillars are performing below their potential because the Foundational floor is too low. This is the Section 6 dependency logic applied precisely. When Foundational is at 0.42 and capacity pillars are 0.65–0.72, the structural diagnosis is not that capacity pillars are performing badly — it is that they are performing below what they would achieve if the Foundational floor were raised. The ceiling is set by the floor.',
+  'q7':'The four correct answers describe the structural properties of a compounding sequence. Running all steps simultaneously makes them parallel, not compounding — simultaneity removes the dependency structure. Evaluating each step independently against its own output metrics breaks the thread that makes the sequence compound — the evaluation framework must track the chain of dependencies, not just the individual outputs.',
+  'q8':'The correct answer is that Integrator capacity is limited by the quality of the Foundational floor it operates on. Coordination architecture — the shared frameworks, accountability structures, and governance mechanisms that Integrator captures — requires the participation conditions to work. Building coordination infrastructure in a context where a significant portion of the population cannot participate in it (because Foundational is weak) reduces the effectiveness of that infrastructure. The dependency flows from floor to capacity.',
+  'q9':'The correct answer names both reasons from the videos: starting at the wrong pillar, and losing the thread between steps through fragmented accountability, misaligned metrics, or political discontinuity. Starting at the wrong pillar means the first intervention does not create the condition the second depends on. Losing the thread means the chain of dependency breaks before compounding has time to materialise.',
+  'q10':'The correct answer is that the sequence has not named the structural dependency between steps. Three good interventions targeting the same district population are a portfolio — they can run in parallel or in any order without affecting each other. A compounding sequence requires naming why Step 2 only works because Step 1 happened — transport access created the physical conditions for digital skill uptake. And why Step 3 produces a different outcome because Steps 1 and 2 preceded it — the combination of access, skill, and employment pathway creates an economic participation mechanism that none of the three would produce alone.'
+};
+
+function showFeedback(qId,isCorrect,p){
+  var el=document.getElementById('fb-'+qId);
+  el.style.display='block';
+  el.className='feedback-box '+(isCorrect?'correct':'wrong');
+  el.innerHTML='<span class="fb-verdict">'+(isCorrect?'✓ Correct':'✗ Not quite')+'</span>'+feedbacks[qId];
+  document.getElementById('next-'+qId).style.display='block';
+  state.answered++;
+  if(isCorrect){state.correct++;state.points+=(p||1);}
+  var pct=Math.round((state.answered/TOTAL)*100);
+  document.getElementById('progress-bar').style.width=pct+'%';
+  document.getElementById('progress-text').textContent=state.answered+' / '+TOTAL;
+  document.getElementById('score-display').textContent='Score: '+state.correct;
+}
+
+function checkTF(qId,btn,chosen,c){
+  document.getElementById(qId).querySelectorAll('.tf-btn').forEach(function(b){b.classList.add('disabled')});
+  btn.classList.add(chosen===c?'correct':'wrong');
+  showFeedback(qId,chosen===c,1);
+}
+
+function checkMC(qId,opt,chosen){
+  var c=mcCorrect[qId];
+  document.getElementById('opts-'+qId).querySelectorAll('.opt').forEach(function(o,i){
+    o.classList.add('disabled');o.onclick=null;
+    if(String.fromCharCode(65+i)===c) o.classList.add('correct');
+  });
+  if(chosen!==c) opt.classList.add('wrong');
+  var p=(qId==='q3'||qId==='q6'||qId==='q8'||qId==='q10')?2:1;
+  showFeedback(qId,chosen===c,p);
+}
+
+function toggleMulti(opt){
+  if(opt.classList.contains('disabled')) return;
+  opt.classList.toggle('selected');
+  opt.querySelector('.opt-marker').textContent=opt.classList.contains('selected')?'✓':'□';
+}
+
+function checkMulti(qId,correctList){
+  var opts=document.getElementById('opts-'+qId).querySelectorAll('.multi-opt');
+  var selected=[];
+  opts.forEach(function(o){if(o.classList.contains('selected'))selected.push(o.querySelector('.opt-text').textContent.trim())});
+  opts.forEach(function(o){
+    o.classList.add('disabled');o.onclick=null;
+    var txt=o.querySelector('.opt-text').textContent.trim();
+    if(correctList.includes(txt)) o.classList.add('correct');
+    else if(o.classList.contains('selected')) o.classList.add('wrong');
+  });
+  document.getElementById('check-'+qId).disabled=true;
+  var ok=correctList.every(function(c){return selected.includes(c)})&&selected.length===correctList.length;
+  showFeedback(qId,ok,2);
+}
+
+function checkBlank(qId,acceptedAnswers){
+  var input=document.getElementById('blank-'+qId);
+  var val=input.value.trim().toLowerCase();
+  var ok=acceptedAnswers.some(function(a){return val===a.toLowerCase()||val.includes('more likely')||val.includes('succeed')});
+  input.classList.add(ok?'correct':'wrong');
+  input.disabled=true;
+  document.querySelector('#'+qId+' .submit-blank').disabled=true;
+  showFeedback(qId,ok,1);
+}
+
+function nextQ(c,n){
+  document.getElementById('q'+c).classList.remove('active');
+  document.getElementById('q'+n).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function showResults(){
+  document.getElementById('q10').classList.remove('active');
+  document.getElementById('results').style.display='block';
+  var pct=Math.round((state.correct/TOTAL)*100);
+  var pass=pct>=70;
+  document.getElementById('res-pct').textContent=pct+'%';
+  document.getElementById('pass-badge').textContent=pass?'PASSED':'KEEP GOING';
+  document.getElementById('pass-badge').className='pass-badge '+(pass?'pass':'fail');
+  document.getElementById('res-title').textContent=pass?'Well done.':'Keep working at it.';
+  document.getElementById('res-sub').textContent=pass?'You can distinguish a compounding strategy from a parallel portfolio — and you know why the starting point matters. Sections 7 and 8 will test whether that strategy can survive contact with an institution.':'Revisit the dependency mapper and the sequence design tool. The distinction between compounding and parallel, and the dependency logic that drives the starting point choice, are the core skills to consolidate.';
+  document.getElementById('res-correct').textContent=state.correct;
+  document.getElementById('res-score').textContent=state.points;
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function retryQuiz(){
+  state={answered:0,correct:0,points:0};
+  document.getElementById('progress-bar').style.width='0%';
+  document.getElementById('progress-text').textContent='0 / '+TOTAL;
+  document.getElementById('score-display').textContent='Score: 0';
+  document.getElementById('results').style.display='none';
+  document.querySelectorAll('.q-card').forEach(function(c){c.classList.remove('active')});
+  document.getElementById('q1').classList.add('active');
+  document.querySelectorAll('.feedback-box').forEach(function(f){f.style.display='none'});
+  document.querySelectorAll('.next-btn').forEach(function(b){b.style.display='none'});
+  document.querySelectorAll('.opt').forEach(function(o){o.className='opt'});
+  document.querySelectorAll('.tf-btn').forEach(function(b){b.className='tf-btn'});
+  document.querySelectorAll('.blank-input').forEach(function(i){i.value='';i.className='blank-input';i.disabled=false});
+  document.querySelectorAll('.submit-blank').forEach(function(b){b.disabled=false});
+  document.querySelectorAll('.check-match-btn').forEach(function(b){b.disabled=false});
+  document.querySelectorAll('.multi-opt').forEach(function(o){
+    o.classList.remove('selected','correct','wrong','disabled');
+    o.querySelector('.opt-marker').textContent='□';
+    o.onclick=function(){toggleMulti(this)};
+  });
+  bindAll();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function bindAll(){
+  for(var qId in mcCorrect){
+    (function(id){
+      document.getElementById('opts-'+id).querySelectorAll('.opt').forEach(function(o,i){
+        o.onclick=function(){checkMC(id,this,String.fromCharCode(65+i))};
+      });
+    })(qId);
+  }
+}
+bindAll();
+</script>
+</body>
+</html>
