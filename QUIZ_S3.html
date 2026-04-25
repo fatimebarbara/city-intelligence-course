@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Section 3 Quiz — Methodological Reasoning</title>
+<title>Section 4 Quiz — Methodological Reasoning</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=DM+Sans:wght@300;400;500;600&display=swap');
 :root{--teal-dark:#085041;--teal-mid:#0F6E56;--teal:#1D9E75;--teal-light:#5DCAA5;--teal-pale:#E1F5EE;--teal-faint:#F0FAF6;--correct:#0F6E56;--correct-pale:#E1F5EE;--correct-border:#5DCAA5;--wrong:#B91C1C;--wrong-pale:#FEF2F2;--wrong-border:#FECACA;--text:#1a1a1a;--text-mid:#3a3a3a;--text-muted:#777;--border:#E5E5E5;--bg:#FAFAF9;--card:#FFFFFF;--radius:12px;--radius-sm:8px;}
@@ -82,9 +82,9 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 <body>
 <div class="quiz-wrap">
   <div class="quiz-header">
-    <p class="q-section-label">Section 3 · City Intelligence Mastercourse</p>
+    <p class="q-section-label">Section 4 · City Intelligence Mastercourse</p>
     <h1 class="q-title">Methodological reasoning</h1>
-    <p class="q-desc">Section 3 introduced an instrument. This quiz tests whether you can use it — reading pillar logic, interpreting profiles, and applying the CII's diagnostic purpose. Think precisely. 10 questions.</p>
+    <p class="q-desc">Section 4 introduced an instrument. This quiz tests whether you can use it — reading pillar logic, interpreting profiles, and applying the CII's diagnostic purpose. Think precisely. 10 questions.</p>
   </div>
   <div class="progress-wrap">
     <div class="progress-outer"><div class="progress-inner" id="progress-bar"></div></div>
@@ -341,7 +341,7 @@ function showResults(){
   document.getElementById('pass-badge').textContent=pass?'PASSED':'KEEP GOING';
   document.getElementById('pass-badge').className='pass-badge '+(pass?'pass':'fail');
   document.getElementById('res-title').textContent=pass?'Well done.':'Keep working at it.';
-  document.getElementById('res-sub').textContent=pass?'You can read a CII profile with analytical precision. Section 4 will ask you to bring a real city into the frame — come with your hypothesis ready.':'The CII\'s diagnostic logic requires practice. Review the six pillars explorer and the profile reading tool, then try again.';
+  document.getElementById('res-sub').textContent=pass?'You can read a CII profile with analytical precision. Section 5 will ask you to bring a real city into the frame — come with your hypothesis ready.':'The CII\'s diagnostic logic requires practice. Review the six pillars explorer and the profile reading tool, then try again.';
   document.getElementById('res-correct').textContent=state.correct;
   document.getElementById('res-score').textContent=state.points;
   window.scrollTo({top:0,behavior:'smooth'});
