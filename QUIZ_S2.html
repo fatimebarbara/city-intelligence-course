@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Section 2 Quiz — City Intelligence and Its Four Conditions</title>
+<title>Section 3 Quiz — City Intelligence and Its Four Conditions</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=DM+Sans:wght@300;400;500;600&display=swap');
 :root{--teal-dark:#085041;--teal-mid:#0F6E56;--teal:#1D9E75;--teal-light:#5DCAA5;--teal-pale:#E1F5EE;--teal-faint:#F0FAF6;--correct:#0F6E56;--correct-pale:#E1F5EE;--correct-border:#5DCAA5;--wrong:#B91C1C;--wrong-pale:#FEF2F2;--wrong-border:#FECACA;--text:#1a1a1a;--text-mid:#3a3a3a;--text-muted:#777;--border:#E5E5E5;--bg:#FAFAF9;--card:#FFFFFF;--radius:12px;--radius-sm:8px;}
@@ -86,9 +86,9 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 <body>
 <div class="quiz-wrap">
   <div class="quiz-header">
-    <p class="q-section-label">Section 2 · City Intelligence Mastercourse</p>
+    <p class="q-section-label">Section 3 · City Intelligence Mastercourse</p>
     <h1 class="q-title">Understanding city intelligence and its four conditions</h1>
-    <p class="q-desc">Section 1 asked you to recognise how systems fail. Section 2 asked something harder: what a system needs to succeed. This quiz tests whether you can hold that distinction clearly. 10 questions.</p>
+    <p class="q-desc">Section 2 asked you to recognise how systems fail. Section 3 asked something harder: what a system needs to succeed. This quiz tests whether you can hold that distinction clearly. 10 questions.</p>
   </div>
   <div class="progress-wrap">
     <div class="progress-outer"><div class="progress-inner" id="progress-bar"></div></div>
@@ -255,7 +255,7 @@ var state={answered:0,correct:0,points:0};
 var correct={'q2':'C','q4':'B','q6':'B','q8':'C','q9':'C','q10':'C'};
 var pts={'q2':1,'q3':2,'q4':1,'q5':1,'q6':1,'q7':2,'q8':2,'q9':2,'q10':1};
 var feedbacks={
-  'q1':'The correct answer is False. Data abundance does not produce intelligence automatically. This is the central argument of Section 2. A city can have more data, more dashboards, and more digital tools and still lack intelligence in how its systems function. Intelligence depends on how systems function — how information flows, how decisions are made, how feedback is integrated.',
+  'q1':'The correct answer is False. Data abundance does not produce intelligence automatically. This is the central argument of Section 3. A city can have more data, more dashboards, and more digital tools and still lack intelligence in how its systems function. Intelligence depends on how systems function — how information flows, how decisions are made, how feedback is integrated.',
   'q2':'The correct answer is a city\'s capacity to use what it knows — through connected systems of information flow, decision-making, and feedback. Volume of data (option A), technological sophistication (option B), and crisis response speed (option D) are real urban capacities — but none of them defines city intelligence. Intelligence is about how a system uses what it knows, not how much it knows.',
   'q3':'The correct matching is: Data & information → What the system knows; Governance & institutions → Who interprets and decides; Decision & action → What the system does; Outcomes & impact → What changes in people\'s lives. This sequence matters: intelligence requires all four layers to be connected, not just present. A break at any transition prevents the system from learning.',
   'q4':'The correct answer is interpretation that never becomes action — the break between governance and decision. The data layer is functioning (reports are distributed). Governance has access. But there is no formal mechanism connecting awareness to the decision cycle. The break is not in data production or in outcome measurement — it is in the pathway from interpretation to action.',
@@ -361,7 +361,7 @@ function showResults(){
   document.getElementById('pass-badge').textContent=pass?'PASSED':'KEEP GOING';
   document.getElementById('pass-badge').className='pass-badge '+(pass?'pass':'fail');
   document.getElementById('res-title').textContent=pass?'Well done.':'Keep working at it.';
-  document.getElementById('res-sub').textContent=pass?'You have a strong grasp of what city intelligence is — and what it requires structurally. Carry the four conditions forward as a diagnostic lens into Section 3.':'Review the concept map and the four conditions self-audit. The distinction between intelligence as a property of individual layers versus an emergent property of connections is the key insight to consolidate.';
+  document.getElementById('res-sub').textContent=pass?'You have a strong grasp of what city intelligence is — and what it requires structurally. Carry the four conditions forward as a diagnostic lens into Section 4.':'Review the concept map and the four conditions self-audit. The distinction between intelligence as a property of individual layers versus an emergent property of connections is the key insight to consolidate.';
   document.getElementById('res-correct').textContent=state.correct;
   document.getElementById('res-score').textContent=state.points;
   window.scrollTo({top:0,behavior:'smooth'});
