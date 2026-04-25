@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Section 7 Quiz — Why Strategies Fail in Practice</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=DM+Sans:wght@300;400;500;600&display=swap');
+:root{--teal-dark:#085041;--teal-mid:#0F6E56;--teal:#1D9E75;--teal-light:#5DCAA5;--teal-pale:#E1F5EE;--teal-faint:#F0FAF6;--correct:#0F6E56;--correct-pale:#E1F5EE;--correct-border:#5DCAA5;--wrong:#B91C1C;--wrong-pale:#FEF2F2;--wrong-border:#FECACA;--text:#1a1a1a;--text-mid:#3a3a3a;--text-muted:#777;--border:#E5E5E5;--bg:#FAFAF9;--card:#FFFFFF;--radius:12px;--radius-sm:8px;}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:15px;line-height:1.65}
+.quiz-wrap{max-width:680px;margin:0 auto;padding:40px 20px 80px}
+.quiz-header{text-align:center;margin-bottom:40px}
+.q-section-label{font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--teal-mid);margin-bottom:12px}
+.q-title{font-family:'Playfair Display',serif;font-size:28px;font-weight:700;color:var(--text);line-height:1.2;margin-bottom:10px}
+.q-desc{font-size:14px;color:var(--text-muted);line-height:1.6;max-width:500px;margin:0 auto}
+.progress-wrap{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px 20px;margin-bottom:28px;display:flex;align-items:center;gap:14px}
+.progress-outer{flex:1;height:6px;background:#E8EAE8;border-radius:3px;overflow:hidden}
+.progress-inner{height:100%;background:linear-gradient(90deg,var(--teal),var(--teal-light));border-radius:3px;transition:width .4s ease;width:0%}
+.progress-text{font-size:12px;font-weight:600;color:var(--teal-mid);white-space:nowrap}
+.score-display{font-size:12px;font-weight:600;color:var(--text-muted);white-space:nowrap}
+.q-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:28px;margin-bottom:16px;display:none;animation:slideIn .3s ease}
+.q-card.active{display:block}
+@keyframes slideIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.q-meta{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.q-num{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--teal-mid);background:var(--teal-pale);padding:3px 10px;border-radius:20px}
+.q-type{font-size:10px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--text-muted)}
+.q-text{font-family:'Playfair Display',serif;font-size:17px;font-weight:500;line-height:1.55;color:var(--text);margin-bottom:20px}
+.multi-note{font-size:12px;color:var(--text-muted);margin-bottom:10px;font-style:italic}
+.options{display:flex;flex-direction:column;gap:8px;margin-bottom:20px}
+.opt{display:flex;align-items:flex-start;gap:12px;padding:12px 14px;border:1px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;transition:all .15s;background:var(--card)}
+.opt:hover:not(.disabled){border-color:var(--teal-light);background:var(--teal-faint)}
+.opt.correct{border-color:var(--correct-border);background:var(--correct-pale)}
+.opt.wrong{border-color:var(--wrong-border);background:var(--wrong-pale)}
+.opt.disabled{cursor:default;opacity:.75}
+.opt-marker{width:22px;height:22px;border-radius:50%;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;font-size:11px;font-weight:700;color:var(--text-muted)}
+.opt.correct .opt-marker{border-color:var(--correct);background:var(--correct);color:#fff}
+.opt.wrong .opt-marker{border-color:var(--wrong);background:var(--wrong);color:#fff}
+.opt-text{font-size:14px;color:var(--text-mid);line-height:1.55;padding-top:1px}
+.tf-row{display:flex;gap:10px;margin-bottom:20px}
+.tf-btn{flex:1;padding:12px;border:1px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;font-size:14px;font-weight:600;text-align:center;transition:all .15s;background:var(--card);color:var(--text-muted)}
+.tf-btn:hover:not(.disabled){border-color:var(--teal-light);background:var(--teal-faint);color:var(--teal-dark)}
+.tf-btn.correct{border-color:var(--correct-border);background:var(--correct-pale);color:var(--correct)}
+.tf-btn.wrong{border-color:var(--wrong-border);background:var(--wrong-pale);color:var(--wrong)}
+.tf-btn.disabled{cursor:default}
+.check-match-btn{padding:9px 20px;background:var(--teal);color:#fff;border:none;border-radius:var(--radius-sm);font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background .15s;margin-bottom:16px}
+.check-match-btn:hover{background:var(--teal-mid)}
+.check-match-btn:disabled{background:#ccc;cursor:default}
+.feedback-box{display:none;padding:16px 18px;border-radius:var(--radius-sm);margin-bottom:20px;font-size:13px;line-height:1.7}
+.feedback-box.correct{background:var(--correct-pale);border:1px solid var(--correct-border);color:var(--teal-dark)}
+.feedback-box.wrong{background:var(--wrong-pale);border:1px solid var(--wrong-border);color:#7A1F1F}
+.feedback-box .fb-verdict{font-weight:700;display:block;margin-bottom:4px}
+.q-nav{display:flex;justify-content:flex-end}
+.next-btn{padding:10px 24px;background:var(--teal);color:#fff;border:none;border-radius:var(--radius-sm);font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background .15s;display:none}
+.next-btn:hover{background:var(--teal-mid)}
+.results-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:40px 32px;text-align:center;display:none}
+.results-circle{width:100px;height:100px;border-radius:50%;background:linear-gradient(135deg,var(--teal),var(--teal-light));display:flex;align-items:center;justify-content:center;margin:0 auto 20px;box-shadow:0 8px 24px rgba(29,158,117,.25)}
+.results-pct{font-family:'Playfair Display',serif;font-size:30px;font-weight:700;color:#fff}
+.results-title{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--text);margin-bottom:8px}
+.results-sub{font-size:14px;color:var(--text-muted);line-height:1.6;margin-bottom:24px}
+.results-detail{display:flex;gap:16px;justify-content:center;margin-bottom:24px}
+.rd-box{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 20px;text-align:center}
+.rd-num{font-family:'Playfair Display',serif;font-size:24px;font-weight:700;color:var(--teal)}
+.rd-label{font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.07em;margin-top:2px}
+.retry-btn{padding:11px 28px;background:var(--teal);color:#fff;border:none;border-radius:var(--radius-sm);font-size:14px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif}
+.pass-badge{display:inline-block;padding:4px 14px;border-radius:20px;font-size:12px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;margin-bottom:16px}
+.pass-badge.pass{background:var(--correct-pale);color:var(--correct);border:1px solid var(--correct-border)}
+.pass-badge.fail{background:var(--wrong-pale);color:var(--wrong);border:1px solid var(--wrong-border)}
+</style>
+</head>
+<body>
+<div class="quiz-wrap">
+  <div class="quiz-header">
+    <p class="q-section-label">Section 7 · City Intelligence Mastercourse</p>
+    <h1 class="q-title">Why strategies fail in practice</h1>
+    <p class="q-desc">Your strategy is well-designed. This quiz tests whether you can see what will break it — before it does. Recognise the failure mode, name the structural mechanism, know why good intentions are not enough. 10 questions.</p>
+  </div>
+  <div class="progress-wrap">
+    <div class="progress-outer"><div class="progress-inner" id="progress-bar"></div></div>
+    <span class="progress-text" id="progress-text">0 / 10</span>
+    <span class="score-display" id="score-display">Score: 0</span>
+  </div>
+
+  <div class="q-card active" id="q1">
+    <div class="q-meta"><span class="q-num">Question 1</span><span class="q-type">True / False</span></div>
+    <p class="q-text">"Implementation failure modes are primarily caused by a lack of political will or insufficient evidence. A strategy with strong political backing and solid evidence will survive institutional resistance."</p>
+    <div class="tf-row">
+      <button class="tf-btn" onclick="checkTF('q1',this,'True','False')">True</button>
+      <button class="tf-btn" onclick="checkTF('q1',this,'False','False')">False</button>
+    </div>
+    <div class="feedback-box" id="fb-q1"></div>
+    <div class="q-nav"><button class="next-btn" id="next-q1" onclick="nextQ(1,2)">Next question →</button></div>
+  </div>
+
+  <div class="q-card" id="q2">
+    <div class="q-meta"><span class="q-num">Question 2</span><span class="q-type">Multiple choice</span></div>
+    <p class="q-text">A three-step compounding strategy crosses three departments. Each department successfully delivers its own step. Two years later, the compounding outcome — the thing that no single step could have produced alone — has not materialised. No department considers this a failure because each has met its own targets. Which failure mode has operated?</p>
+    <div class="options" id="opts-q2">
+      <div class="opt" data-v="A"><span class="opt-marker">A</span><span class="opt-text">Mandate fragmentation — no one was responsible for the connection between steps</span></div>
+      <div class="opt" data-v="B"><span class="opt-marker">B</span><span class="opt-text">Metric substitution — departments reported on their own output metrics rather than the shared outcome</span></div>
+      <div class="opt" data-v="C"><span class="opt-marker">C</span><span class="opt-text">Political cycle truncation — the sequence was broken by a change in leadership</span></div>
+      <div class="opt" data-v="D"><span class="opt-marker">D</span><span class="opt-text">Institutional capture — the most powerful department redesigned the intervention</span></div>
+    </div>
+    <div class="feedback-box" id="fb-q2"></div>
+    <div class="q-nav"><button class="next-btn" id="next-q2" onclick="nextQ(2,3)">Next question →</button></div>
+  </div>
+
+  <div class="q-card" id="q3">
+    <div class="q-meta"><span class="q-num">Question 3</span><span class="q-type">Multiple choice</span></div>
+    <p class="q-text">A city launches a structural intervention designed to redesign the pathway between digital infrastructure and the populations not currently reaching it. Eighteen months later, the intervention has been substantially modified: the structural redesign element has been removed, the digital access component has been expanded, and the programme is now managed by the digital services department. What failure mode has operated?</p>
+    <div class="options" id="opts-q3">
+      <div class="opt" data-v="A"><span class="opt-marker">A</span><span class="opt-text">Metric substitution — the digital access metrics substituted for the structural pathway metric</span></div>
+      <div class="opt" data-v="B"><span class="opt-marker">B</span><span class="opt-text">Mandate fragmentation — the pathway redesign crossed too many departments to be managed</span></div>
+      <div class="opt" data-v="C"><span class="opt-marker">C</span><span class="opt-text">Institutional capture — the digital services department gradually redesigned the intervention to serve its own mandate rather than the structural goal</span></div>
+      <div class="opt" data-v="D"><span class="opt-marker">D</span><span class="opt-text">Political cycle truncation — the intervention was redesigned after a change in administration</span></div>
+    </div>
+    <div class="feedback-box" id="fb-q3"></div>
+    <div class="q-nav"><button class="next-btn" id="next-q3" onclick="nextQ(3,4)">Next question →</button></div>
+  </div>
+
+  <div class="q-card" id="q4">
+    <div class="q-meta"><span class="q-num">Question 4</span><span class="q-type">Multiple choice</span></div>
+    <p class="q-text">Section 7 argues that all four implementation failure modes share one root cause. Which of the following correctly describes it?</p>
+    <div class="options" id="opts-q4">
+      <div class="opt" data-v="A"><span class="opt-marker">A</span><span class="opt-text">Insufficient evidence base — strategies that lack strong empirical foundations are more vulnerable to institutional resistance</span></div>
+      <div class="opt" data-v="B"><span class="opt-marker">B</span><span class="opt-text">The strategy was designed to cross institutional boundaries, but the institution was not redesigned to cross them with it</span></div>
+      <div class="opt" data-v="C"><span class="opt-marker">C</span><span class="opt-text">Political opposition — cross-boundary strategies always generate resistance from actors whose power they threaten</span></div>
+      <div class="opt" data-v="D"><span class="opt-marker">D</span><span class="opt-text">Communication failure — the strategy's logic was not effectively communicated to the departments responsible for implementing it</span></div>
+    </div>
+    <div class="feedback-box" id="fb-q4"></div>
+    <div class="q-nav"><button class="next-btn" id="next-q4" onclick="nextQ(4,5)">Next question →</button></div>
+  </div>
+
+  <div class="q-card" id="q5">
+    <div class="q-meta"><span class="q-num">Question 5</span><span class="q-type">Multiple choice</span></div>
+    <p class="q-text">A compounding strategy requires six years to produce its primary outcome. The current administration has a four-year mandate. The strategy champion knows there will be a leadership transition before the compounding effect is visible. She proposes: "Let's invest heavily in communications so the new administration understands the strategy's value." What does Section 7's framework say about this response?</p>
+    <div class="options" id="opts-q5">
+      <div class="opt" data-v="A"><span class="opt-marker">A</span><span class="opt-text">It is the correct response — a well-communicated strategy is more likely to survive a transition</span></div>
+      <div class="opt" data-v="B"><span class="opt-marker">B</span><span class="opt-text">It is necessary but insufficient — communications addresses motivation, not the structural discontinuity that political transitions create in institutional memory and accountability</span></div>
+      <div class="opt" data-v="C"><span class="opt-marker">C</span><span class="opt-text">It is the wrong response — the only solution is to accelerate the sequence so it completes before the transition</span></div>
+      <div class="opt" data-v="D"><span class="opt-marker">D</span><span class="opt-text">It is unnecessary — well-designed structural interventions naturally survive transitions because their results are visible</span></div>
+    </div>
+    <div class="feedback-box" id="fb-q5"></div>
+    <div class="q-nav"><button class="next-btn" id="next-q5" onclick="nextQ(5,6)">Next question →</button></div>
+  </div>
+
+  <div class="q-card" id="q6">
+    <div class="q-meta"><span class="q-num">Question 6</span><span class="q-type">Multiple choice</span></div>
+    <p class="q-text">A researcher evaluates a cross-boundary urban strategy five years after implementation. Every department reports positive outcomes. The strategy is described as a success in all official documents. But a comparison of the original strategy logic with the current programme design shows that the structural mechanism — the element designed to change the accountability architecture — was removed in year two and replaced with an expanded service delivery component. What failure mode did the evaluation fail to detect?</p>
+    <div class="options" id="opts-q6">
+      <div class="opt" data-v="A"><span class="opt-marker">A</span><span class="opt-text">Mandate fragmentation — the evaluation did not track cross-departmental accountability</span></div>
+      <div class="opt" data-v="B"><span class="opt-marker">B</span><span class="opt-text">Institutional capture — the evaluation used the substituted metrics rather than the original structural outcome as its standard of success</span></div>
+      <div class="opt" data-v="C"><span class="opt-marker">C</span><span class="opt-text">Political cycle truncation — the evaluation did not account for the change in administration</span></div>
+      <div class="opt" data-v="D"><span class="opt-marker">D</span><span class="opt-text">Metric substitution — but only because the evaluation was commissioned by one of the implementing departments</span></div>
+    </div>
+    <div class="feedback-box" id="fb-q6"></div>
+    <div class="q-nav"><button class="next-btn" id="next-q6" onclick="nextQ(6,7)">Next question →</button></div>
+  </div>
+
+  <div class="q-card" id="q7">
+    <div class="q-meta"><span class="q-num">Question 7</span><span class="q-type">Multiple response</span></div>
+    <p class="q-text">Which of the following are structural features of institutions that make implementation failure modes more likely? Select all that apply.</p>
+    <p class="multi-note">Select all that apply, then click Check.</p>
+    <div class="options" id="opts-q7">
+      <div class="opt multi-opt" onclick="toggleMulti(this)"><span class="opt-marker">□</span><span class="opt-text">Separate departmental mandates with accountability stopping at each boundary</span></div>
+      <div class="opt multi-opt" onclick="toggleMulti(this)"><span class="opt-marker">□</span><span class="opt-text">Individual performance frameworks that predate the cross-boundary strategy</span></div>
+      <div class="opt multi-opt" onclick="toggleMulti(this)"><span class="opt-marker">□</span><span class="opt-text">Insufficient funding for the strategy</span></div>
+      <div class="opt multi-opt" onclick="toggleMulti(this)"><span class="opt-marker">□</span><span class="opt-text">Political cycles that reset priorities at leadership transitions</span></div>
+      <div class="opt multi-opt" onclick="toggleMulti(this)"><span class="opt-marker">□</span><span class="opt-text">Weak evidence base for the strategy's theoretical foundations</span></div>
+      <div class="opt multi-opt" onclick="toggleMulti(this)"><span class="opt-marker">□</span><span class="opt-text">Concentration of resources and relationships in one dominant institutional actor within each domain</span></div>
+    </div>
+    <button class="check-match-btn" id="check-q7" onclick="checkMulti('q7',['Separate departmental mandates with accountability stopping at each boundary','Individual performance frameworks that predate the cross-boundary strategy','Political cycles that reset priorities at leadership transitions','Concentration of resources and relationships in one dominant institutional actor within each domain'])">Check answers</button>
+    <div class="feedback-box" id="fb-q7"></div>
+    <div class="q-nav"><button class="next-btn" id="next-q7" onclick="nextQ(7,8)">Next question →</button></div>
+  </div>
+
+  <div class="q-card" id="q8">
+    <div class="q-meta"><span class="q-num">Question 8</span><span class="q-type">Multiple choice</span></div>
+    <p class="q-text">A city's cross-boundary strategy is structured so that Step 1 is owned by the housing department, Step 2 by the transport department, and Step 3 by the health department. Each step has its own budget line, its own reporting template, and its own annual review. No one has been assigned responsibility for the sequence as a whole. Three years in, Steps 1 and 2 have been delivered. Step 3 has not been funded because it was not in the health department's original budget plan. Which failure mode is this?</p>
+    <div class="options" id="opts-q8">
+      <div class="opt" data-v="A"><span class="opt-marker">A</span><span class="opt-text">Metric substitution — each department reported on its own metrics</span></div>
+      <div class="opt" data-v="B"><span class="opt-marker">B</span><span class="opt-text">Institutional capture — the health department has captured Step 3</span></div>
+      <div class="opt" data-v="C"><span class="opt-marker">C</span><span class="opt-text">Mandate fragmentation — no one owned the chain; accountability stopped at each departmental boundary; the sequence broke at the transition from Step 2 to Step 3</span></div>
+      <div class="opt" data-v="D"><span class="opt-marker">D</span><span class="opt-text">Political cycle truncation — the strategy was broken by a budget cycle reset</span></div>
+    </div>
+    <div class="feedback-box" id="fb-q8"></div>
+    <div class="q-nav"><button class="next-btn" id="next-q8" onclick="nextQ(8,9)">Next question →</button></div>
+  </div>
+
+  <div class="q-card" id="q9">
+    <div class="q-meta"><span class="q-num">Question 9</span><span class="q-type">Multiple choice</span></div>
+    <p class="q-text">Why do implementation failure modes require governance countermeasures rather than motivational solutions?</p>
+    <div class="options" id="opts-q9">
+      <div class="opt" data-v="A"><span class="opt-marker">A</span><span class="opt-text">Because the people responsible for implementation are never genuinely committed to the strategy's goals</span></div>
+      <div class="opt" data-v="B"><span class="opt-marker">B</span><span class="opt-text">Because governance is more powerful than motivation in institutional contexts</span></div>
+      <div class="opt" data-v="C"><span class="opt-marker">C</span><span class="opt-text">Because the failure modes are produced by structural features of institutions — mandate design, metric systems, accountability architecture — that persist regardless of individual motivation or evidence quality</span></div>
+      <div class="opt" data-v="D"><span class="opt-marker">D</span><span class="opt-text">Because motivational solutions have never been tried in cross-boundary strategy implementation</span></div>
+    </div>
+    <div class="feedback-box" id="fb-q9"></div>
+    <div class="q-nav"><button class="next-btn" id="next-q9" onclick="nextQ(9,10)">Next question →</button></div>
+  </div>
+
+  <div class="q-card" id="q10">
+    <div class="q-meta"><span class="q-num">Question 10</span><span class="q-type">Multiple choice</span></div>
+    <p class="q-text">A senior policymaker says: "I've seen this failure mode in my city before. But our situation is different — we have very strong political will, excellent evidence, and full departmental buy-in. We won't have the same problem." What does Section 7 say about this assessment?</p>
+    <div class="options" id="opts-q10">
+      <div class="opt" data-v="A"><span class="opt-marker">A</span><span class="opt-text">The assessment is correct — strong political will and buy-in are sufficient to overcome structural failure modes</span></div>
+      <div class="opt" data-v="B"><span class="opt-marker">B</span><span class="opt-text">The assessment is partially correct — strong buy-in reduces the risk of mandate fragmentation but not the other three failure modes</span></div>
+      <div class="opt" data-v="C"><span class="opt-marker">C</span><span class="opt-text">The assessment mistakes the conditions that make a strategy feel safe with the structural countermeasures that make it actually safe — strong will and buy-in are valuable but do not substitute for mandate design, shared metrics, transition-proofing, and structural protection</span></div>
+      <div class="opt" data-v="D"><span class="opt-marker">D</span><span class="opt-text">The assessment is wrong — political will and buy-in are irrelevant to implementation success</span></div>
+    </div>
+    <div class="feedback-box" id="fb-q10"></div>
+    <div class="q-nav"><button class="next-btn" id="next-q10" onclick="showResults()">See my results →</button></div>
+  </div>
+
+  <div class="results-card" id="results">
+    <div class="results-circle"><span class="results-pct" id="res-pct">—</span></div>
+    <span class="pass-badge" id="pass-badge">—</span>
+    <h2 class="results-title" id="res-title">—</h2>
+    <p class="results-sub" id="res-sub">—</p>
+    <div class="results-detail">
+      <div class="rd-box"><div class="rd-num" id="res-correct">—</div><div class="rd-label">Correct</div></div>
+      <div class="rd-box"><div class="rd-num">10</div><div class="rd-label">Questions</div></div>
+      <div class="rd-box"><div class="rd-num" id="res-score">—</div><div class="rd-label">Points</div></div>
+    </div>
+    <button class="retry-btn" onclick="retryQuiz()">Retake quiz</button>
+  </div>
+</div>
+<script>
+var TOTAL=10;
+var state={answered:0,correct:0,points:0};
+var mcCorrect={'q2':'B','q3':'C','q4':'B','q5':'B','q6':'B','q8':'C','q9':'C','q10':'C'};
+var feedbacks={
+  'q1':'The correct answer is False. Section 7\'s central argument is that implementation failure modes are structural, not motivational. They are produced by mandate design, metric systems, accountability architecture, and institutional incentive structures — none of which are changed by political will or evidence quality alone. A strategy with strong political backing and excellent evidence will still fail if it crosses departmental boundaries without the governance architecture to protect those connections.',
+  'q2':'The correct answer is metric substitution. Each department hit its own targets — which means each department was reporting success using its own output metrics. But the compounding outcome, which requires the steps to be connected, did not appear. The strategy looks successful by every departmental measure while failing by the only measure that matters: did the sequence produce what no single step could? The absence of a shared outcome metric allowed each department to declare success while the strategy quietly failed.',
+  'q3':'The correct answer is institutional capture. The scenario describes the classic pattern: a structural intervention enters a domain, the most powerful actor in that domain gradually takes management control, and the intervention is redesigned — well-intentioned, professionally managed, measurably improved — but with the structural mechanism removed. The pathway redesign was the structural element. The expanded digital access programme is the symptom response. The capture was completed when management moved to the digital services department.',
+  'q4':'The correct answer is that the strategy was designed to cross institutional boundaries, but the institution was not redesigned to cross them with it. This is the shared root cause of all four failure modes. Mandate fragmentation exists because mandates stop at boundaries. Metric substitution exists because metrics were designed for individual mandates. Political cycle truncation exists because accountability structures reset at transitions that don\'t cross boundaries. Institutional capture exists because power concentrates within boundaries. All four are predictable consequences of the same structural mismatch.',
+  'q5':'The correct answer is that communications is necessary but insufficient. Strong communications help — they reduce the chance that a new administration is ignorant of the strategy\'s logic. But political transitions create structural discontinuities: new priorities, new advisors, new performance frameworks, new budget negotiations. These are not motivational problems that better communications can resolve. They require governance countermeasures — transition-proofing mechanisms that embed the sequence logic in institutional architecture, not in the memories and commitments of individuals.',
+  'q6':'The correct answer is institutional capture — and the evaluation failed to detect it because it used the substituted metrics as its standard of success. The original strategy was designed to change accountability architecture — a structural outcome. The evaluation measured departmental outputs. Everything looked successful because the measurement framework had been captured along with the programme. This is the most dangerous aspect of institutional capture: it can make failure invisible to standard evaluation methods.',
+  'q7':'The four correct answers are all structural features of institutional architecture. Insufficient funding is a resource problem, not a structural feature. A weak evidence base is an analytical problem, not an institutional structural feature. Both can contribute to implementation failure, but neither is a structural feature of the institution itself — they are external to the institutional design.',
+  'q8':'The correct answer is mandate fragmentation. The scenario describes it precisely: separate ownership of each step, separate budget lines, separate reporting, and no cross-boundary accountability. When Step 3 required cross-boundary budget commitment, no structural mechanism existed to produce it — because accountability stopped at each departmental boundary. The health department not including Step 3 in its budget plan was not a failure of will: it was the predictable output of a governance structure that assigned no one responsibility for the sequence as a whole.',
+  'q9':'The correct answer is that failure modes are produced by structural features that persist regardless of motivation or evidence. This is the key insight. The people in the institution may be highly motivated, deeply committed, and fully convinced by the evidence. But if the mandate system fragments accountability at every boundary, motivated people operating within that system will still produce fragmentation. If the metric system measures outputs rather than shared outcomes, committed people within that system will still substitute. Structure shapes behaviour in predictable ways regardless of the intentions of the individuals within it.',
+  'q10':'The correct answer is that the assessment mistakes conditions that make a strategy feel safe for the structural countermeasures that make it actually safe. Strong political will, good evidence, and departmental buy-in are genuinely valuable. They create a favourable environment. But they do not substitute for the four governance countermeasures Section 8 will build: shared accountability architecture, shared outcome metrics, transition-proofing mechanisms, and structural protection against capture. These countermeasures are necessary not because the people involved are uncommitted — but because the institutional architecture through which they operate will produce the failure modes anyway.'
+};
+
+function showFeedback(qId,isCorrect,p){
+  var el=document.getElementById('fb-'+qId);
+  el.style.display='block';
+  el.className='feedback-box '+(isCorrect?'correct':'wrong');
+  el.innerHTML='<span class="fb-verdict">'+(isCorrect?'✓ Correct':'✗ Not quite')+'</span>'+feedbacks[qId];
+  document.getElementById('next-'+qId).style.display='block';
+  state.answered++;
+  if(isCorrect){state.correct++;state.points+=(p||1);}
+  var pct=Math.round((state.answered/TOTAL)*100);
+  document.getElementById('progress-bar').style.width=pct+'%';
+  document.getElementById('progress-text').textContent=state.answered+' / '+TOTAL;
+  document.getElementById('score-display').textContent='Score: '+state.correct;
+}
+
+function checkTF(qId,btn,chosen,c){
+  document.getElementById(qId).querySelectorAll('.tf-btn').forEach(function(b){b.classList.add('disabled')});
+  btn.classList.add(chosen===c?'correct':'wrong');
+  showFeedback(qId,chosen===c,1);
+}
+
+function checkMC(qId,opt,chosen){
+  var c=mcCorrect[qId];
+  document.getElementById('opts-'+qId).querySelectorAll('.opt').forEach(function(o,i){
+    o.classList.add('disabled');o.onclick=null;
+    if(String.fromCharCode(65+i)===c) o.classList.add('correct');
+  });
+  if(chosen!==c) opt.classList.add('wrong');
+  var p=(qId==='q3'||qId==='q6'||qId==='q10')?2:1;
+  showFeedback(qId,chosen===c,p);
+}
+
+function toggleMulti(opt){
+  if(opt.classList.contains('disabled')) return;
+  opt.classList.toggle('selected');
+  opt.querySelector('.opt-marker').textContent=opt.classList.contains('selected')?'✓':'□';
+}
+
+function checkMulti(qId,correctList){
+  var opts=document.getElementById('opts-'+qId).querySelectorAll('.multi-opt');
+  var selected=[];
+  opts.forEach(function(o){if(o.classList.contains('selected'))selected.push(o.querySelector('.opt-text').textContent.trim())});
+  opts.forEach(function(o){
+    o.classList.add('disabled');o.onclick=null;
+    var txt=o.querySelector('.opt-text').textContent.trim();
+    if(correctList.includes(txt)) o.classList.add('correct');
+    else if(o.classList.contains('selected')) o.classList.add('wrong');
+  });
+  document.getElementById('check-'+qId).disabled=true;
+  var ok=correctList.every(function(c){return selected.includes(c)})&&selected.length===correctList.length;
+  showFeedback(qId,ok,2);
+}
+
+function nextQ(c,n){
+  document.getElementById('q'+c).classList.remove('active');
+  document.getElementById('q'+n).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function showResults(){
+  document.getElementById('q10').classList.remove('active');
+  document.getElementById('results').style.display='block';
+  var pct=Math.round((state.correct/TOTAL)*100);
+  var pass=pct>=70;
+  document.getElementById('res-pct').textContent=pct+'%';
+  document.getElementById('pass-badge').textContent=pass?'PASSED':'KEEP GOING';
+  document.getElementById('pass-badge').className='pass-badge '+(pass?'pass':'fail');
+  document.getElementById('res-title').textContent=pass?'Well done.':'Keep working at it.';
+  document.getElementById('res-sub').textContent=pass?'You can read an institution diagnostically — you know which failure mode is operating before it has broken the chain. Section 8 will ask you to build the governance architecture that stops it.':'Review the threat mapper and the resistance audit. The ability to name which failure mode is at work in a specific scenario — not just to agree with the framework in the abstract — is the core skill. Revisit the four scenarios in the quiz where you hesitated.';
+  document.getElementById('res-correct').textContent=state.correct;
+  document.getElementById('res-score').textContent=state.points;
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function retryQuiz(){
+  state={answered:0,correct:0,points:0};
+  document.getElementById('progress-bar').style.width='0%';
+  document.getElementById('progress-text').textContent='0 / '+TOTAL;
+  document.getElementById('score-display').textContent='Score: 0';
+  document.getElementById('results').style.display='none';
+  document.querySelectorAll('.q-card').forEach(function(c){c.classList.remove('active')});
+  document.getElementById('q1').classList.add('active');
+  document.querySelectorAll('.feedback-box').forEach(function(f){f.style.display='none'});
+  document.querySelectorAll('.next-btn').forEach(function(b){b.style.display='none'});
+  document.querySelectorAll('.opt').forEach(function(o){o.className='opt'});
+  document.querySelectorAll('.tf-btn').forEach(function(b){b.className='tf-btn'});
+  document.querySelectorAll('.check-match-btn').forEach(function(b){b.disabled=false});
+  document.querySelectorAll('.multi-opt').forEach(function(o){
+    o.classList.remove('selected','correct','wrong','disabled');
+    o.querySelector('.opt-marker').textContent='□';
+    o.onclick=function(){toggleMulti(this)};
+  });
+  bindAll();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function bindAll(){
+  for(var qId in mcCorrect){
+    (function(id){
+      document.getElementById('opts-'+id).querySelectorAll('.opt').forEach(function(o,i){
+        o.onclick=function(){checkMC(id,this,String.fromCharCode(65+i))};
+      });
+    })(qId);
+  }
+}
+bindAll();
+</script>
+</body>
+</html>

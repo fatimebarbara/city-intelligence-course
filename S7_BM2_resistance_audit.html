@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Section 7 · Resistance Audit</title>
+<style>
+  :root{
+    --teal-dark:#085041;--teal-mid:#0F6E56;--teal:#1D9E75;--teal-light:#5DCAA5;--teal-pale:#E1F5EE;--teal-faint:#F0FAF6;
+    --purple:#534AB7;--purple-pale:#EEEDFE;--purple-mid:#3C3489;
+    --amber:#BA7517;--amber-pale:#FAEEDA;--blue:#185FA5;--blue-pale:#E6F1FB;
+    --coral:#D85A30;--coral-pale:#FAECE7;--green:#3B6D11;--green-pale:#EAF3DE;
+    --warn:#B91C1C;--warn-pale:#FEF2F2;--warn-border:#FECACA;
+    --text:#1a1a1a;--text-mid:#444;--text-muted:#6b6b6b;
+    --border:#e2e2e2;--border-light:#f0f0f0;--bg:#fff;--bg-soft:#f8f9fa;
+    --radius:10px;--radius-sm:6px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Helvetica Neue',Arial,sans-serif;color:var(--text);background:var(--bg);font-size:15px;line-height:1.65}
+  .page{max-width:760px;margin:0 auto;padding:48px 24px 80px}
+  .bm-label{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--teal-mid);background:var(--teal-pale);padding:5px 14px;border-radius:20px;margin-bottom:18px}
+  .bm-title{font-size:28px;font-weight:700;color:var(--text);line-height:1.25;margin-bottom:10px;letter-spacing:-.3px;font-family:'Georgia',serif}
+  .bm-sub{font-size:14px;color:var(--text-muted);line-height:1.65;max-width:580px;margin-bottom:20px}
+  .intro-note{background:var(--bg-soft);border:1px solid var(--border-light);border-radius:var(--radius);padding:16px 20px;font-size:13px;color:var(--text-muted);line-height:1.65;margin-bottom:28px}
+  .divider{border:none;border-top:1px solid var(--border-light);margin:28px 0}
+  .sec-head{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin:24px 0 12px;display:flex;align-items:center;gap:10px}
+  .sec-head::after{content:'';flex:1;height:1px;background:var(--border-light)}
+  textarea{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 12px;font-family:'Helvetica Neue',Arial,sans-serif;font-size:14px;color:var(--text);line-height:1.6;resize:vertical;min-height:64px;outline:none;transition:border-color .15s}
+  textarea:focus{border-color:var(--teal-light)}
+  textarea::placeholder{color:#b0b0b0}
+  .field-label{font-size:12px;font-weight:600;color:var(--text-mid);margin-bottom:5px;display:block}
+  .field-sub{font-size:12px;color:var(--text-muted);margin-bottom:6px;line-height:1.55}
+
+  /* Aud toggle */
+  .aud-toggle{display:flex;gap:8px;margin-bottom:20px}
+  .aud-btn{border:1px solid var(--border);border-radius:20px;padding:7px 18px;font-size:13px;font-weight:500;cursor:pointer;background:var(--bg-soft);color:var(--text-muted);transition:all .15s;font-family:'Helvetica Neue',Arial,sans-serif}
+  .aud-btn.pm-active{background:var(--teal-pale);color:var(--teal-dark);border-color:var(--teal-light);font-weight:600}
+  .aud-btn.rs-active{background:var(--purple-pale);color:var(--purple-mid);border-color:#AFA9EC;font-weight:600}
+
+  /* Progress */
+  .progress-row{display:flex;align-items:center;gap:12px;margin-bottom:24px}
+  .progress-label{font-size:12px;color:var(--text-muted);white-space:nowrap}
+  .progress-outer{flex:1;height:5px;background:var(--border-light);border-radius:3px;overflow:hidden}
+  .progress-inner{height:100%;background:var(--teal);border-radius:3px;transition:width .4s ease}
+  .progress-pct{font-size:12px;font-weight:700;color:var(--teal);min-width:36px;text-align:right}
+
+  /* Audit blocks */
+  .audit-block{border:1px solid var(--border);border-radius:var(--radius);padding:22px;margin-bottom:14px}
+  .ab-head{display:flex;align-items:flex-start;gap:12px;margin-bottom:14px}
+  .ab-badge{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:3px 10px;border-radius:12px;flex-shrink:0;margin-top:2px}
+  .fm1 .ab-badge{background:var(--blue-pale);color:var(--blue)}
+  .fm2 .ab-badge{background:var(--purple-pale);color:var(--purple)}
+  .fm3 .ab-badge{background:var(--amber-pale);color:var(--amber)}
+  .fm4 .ab-badge{background:var(--coral-pale);color:var(--coral)}
+  .ab-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:3px}
+  .ab-q{font-size:13px;color:var(--text-muted);line-height:1.55;font-style:italic}
+
+  /* Aud context */
+  .aud-ctx{border-radius:var(--radius-sm);padding:10px 13px;margin-bottom:12px;font-size:13px;line-height:1.6}
+  .aud-ctx.pm{background:var(--teal-faint);border-left:3px solid var(--teal-light);color:var(--teal-dark)}
+  .aud-ctx.rs{background:#F5F0FF;border-left:3px solid #AFA9EC;color:var(--purple-mid)}
+  .aud-ctx-label{font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:3px;display:block}
+
+  /* Early warning */
+  .ew-box{background:var(--bg-soft);border:1px solid var(--border-light);border-radius:var(--radius-sm);padding:14px;margin-top:10px}
+  .ew-title{font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px}
+  .ew-row{display:flex;align-items:flex-start;gap:8px;margin-bottom:8px}
+  .ew-num{font-size:11px;font-weight:700;color:var(--teal-mid);width:18px;flex-shrink:0;margin-top:2px}
+  .ew-input{flex:1}
+  .ew-input textarea{min-height:44px;font-size:13px}
+
+  /* Output panel */
+  .output-panel{background:var(--teal-faint);border:1px solid var(--teal-pale);border-radius:var(--radius);padding:22px;margin-top:24px}
+  .op-title{font-size:14px;font-weight:700;font-family:'Georgia',serif;color:var(--teal-dark);margin-bottom:14px}
+  .op-row{margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid var(--teal-pale)}
+  .op-row:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+  .op-label{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--teal-mid);margin-bottom:3px}
+  .op-val{font-size:13px;color:var(--teal-dark);line-height:1.6;font-family:'Georgia',serif;font-style:italic;min-height:18px}
+  .op-empty{color:var(--text-muted);font-style:normal;font-family:'Helvetica Neue',Arial,sans-serif;font-size:12px}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="bm-label">Section 7 · Resistance audit</div>
+  <h1 class="bm-title">Reading institutional resistance before it appears</h1>
+  <p class="bm-sub">For each of the four implementation failure modes: name the early-warning signal that would tell you it is beginning to operate in your context — before it has broken the chain. A governance countermeasure designed before the threat materialises is worth ten designed after.</p>
+  <div class="intro-note">The purpose of this audit is not to become pessimistic about implementation. It is to become specific. Vague institutional awareness does not produce governance countermeasures. Named signals do.</div>
+
+  <div class="aud-toggle">
+    <button class="aud-btn pm-active" id="btn-pm" onclick="setAud('pm')">I am a policymaker</button>
+    <button class="aud-btn" id="btn-rs" onclick="setAud('rs')">I am a researcher</button>
+  </div>
+  <div class="progress-row">
+    <span class="progress-label">Audit completion</span>
+    <div class="progress-outer"><div class="progress-inner" id="pbar" style="width:0%"></div></div>
+    <span class="progress-pct" id="pct">0%</span>
+  </div>
+
+  <!-- FM1 -->
+  <div class="audit-block fm1">
+    <div class="ab-head">
+      <span class="ab-badge">FM 01</span>
+      <div>
+        <p class="ab-title">Mandate fragmentation</p>
+        <p class="ab-q">Before the strategy launches: what would tell you that departmental accountability is already fragmenting the chain?</p>
+      </div>
+    </div>
+    <div class="aud-ctx pm" id="a1-pm"><span class="aud-ctx-label">Policymaker</span>Look at how the departments in your sequence currently behave in joint working contexts. The signal is not hostility — it is disengagement. Departments that nod in shared meetings but never reference each other's work in their own reporting are showing early fragmentation.</div>
+    <div class="aud-ctx rs" id="a1-rs" style="display:none"><span class="aud-ctx-label">Researcher</span>The research signal for mandate fragmentation is citation asymmetry: do the departments' own reports and evaluations reference the other departments' work? If not, the institutional knowledge systems are already siloed regardless of what the formal governance structure says.</div>
+    <div style="margin-bottom:12px">
+      <label class="field-label">Describe the first visible sign of mandate fragmentation in your context</label>
+      <p class="field-sub">Not the full breakdown — the first observable signal that the chain is at risk. What would you see, hear, or read that would tell you this failure mode is beginning?</p>
+      <textarea id="f-a1" placeholder="The first sign of mandate fragmentation would be [specific observable signal — a meeting dynamic, a reporting pattern, a budget decision, a staffing change]..." oninput="u()"></textarea>
+    </div>
+    <div class="ew-box">
+      <p class="ew-title">Your early-warning indicators for this failure mode</p>
+      <div class="ew-row"><div class="ew-num">01</div><div class="ew-input"><textarea id="ew1-1" placeholder="Indicator: [what you would measure or observe to detect this failure mode early]..." oninput="u()"></textarea></div></div>
+      <div class="ew-row"><div class="ew-num">02</div><div class="ew-input"><textarea id="ew1-2" placeholder="Indicator: ..." oninput="u()"></textarea></div></div>
+    </div>
+  </div>
+
+  <!-- FM2 -->
+  <div class="audit-block fm2">
+    <div class="ab-head">
+      <span class="ab-badge">FM 02</span>
+      <div>
+        <p class="ab-title">Metric substitution</p>
+        <p class="ab-q">Before the strategy launches: what would tell you that departments are about to start reporting on their own metrics rather than the shared outcome?</p>
+      </div>
+    </div>
+    <div class="aud-ctx pm" id="a2-pm"><span class="aud-ctx-label">Policymaker</span>The most reliable early signal is the budget conversation. When departments begin describing their contribution to the strategy in terms of what they are spending rather than what outcome they are producing, metric substitution has already begun.</div>
+    <div class="aud-ctx rs" id="a2-rs" style="display:none"><span class="aud-ctx-label">Researcher</span>The research signal is in the evaluation design: who commissioned it, which indicators are being tracked, and whether the evaluation framework was set before or after the strategy was launched. Evaluations designed by individual departments almost always operationalise substituted metrics.</div>
+    <div style="margin-bottom:12px">
+      <label class="field-label">Describe the first visible sign of metric substitution in your context</label>
+      <p class="field-sub">The moment when output measurement begins to replace outcome measurement — what does it look like in your specific institutional environment?</p>
+      <textarea id="f-a2" placeholder="The first sign of metric substitution would be [specific signal — a reporting template, a budget discussion, a progress review conversation, an evaluation brief]..." oninput="u()"></textarea>
+    </div>
+    <div class="ew-box">
+      <p class="ew-title">Your early-warning indicators for this failure mode</p>
+      <div class="ew-row"><div class="ew-num">01</div><div class="ew-input"><textarea id="ew2-1" placeholder="Indicator: [what you would measure or observe]..." oninput="u()"></textarea></div></div>
+      <div class="ew-row"><div class="ew-num">02</div><div class="ew-input"><textarea id="ew2-2" placeholder="Indicator: ..." oninput="u()"></textarea></div></div>
+    </div>
+  </div>
+
+  <!-- FM3 -->
+  <div class="audit-block fm3">
+    <div class="ab-head">
+      <span class="ab-badge">FM 03</span>
+      <div>
+        <p class="ab-title">Political cycle truncation</p>
+        <p class="ab-q">Before the strategy launches: what signals would tell you the sequence is not adequately transition-proofed?</p>
+      </div>
+    </div>
+    <div class="aud-ctx pm" id="a3-pm"><span class="aud-ctx-label">Policymaker</span>The clearest signal: can you describe the strategy to someone who has never heard of it in ten minutes, in a way that makes them understand why interrupting it mid-sequence would be costly? If you cannot, neither can the person who will need to make that case after you leave.</div>
+    <div class="aud-ctx rs" id="a3-rs" style="display:none"><span class="aud-ctx-label">Researcher</span>The research signal for truncation vulnerability is documentation quality. Can the strategy be reconstructed from its documentation by someone with no prior knowledge? If the logic lives only in the heads of the current team, the sequence will not survive the transition.</div>
+    <div style="margin-bottom:12px">
+      <label class="field-label">Describe the first visible sign of truncation risk in your context</label>
+      <p class="field-sub">What happens to cross-boundary strategies in your context when political leadership transitions? What would tell you this strategy is not yet protected from that pattern?</p>
+      <textarea id="f-a3" placeholder="The first sign of truncation risk would be [specific signal — the strategy exists only in a presentation, there is no named institutional home for it, it has no cross-party or cross-administration anchor]..." oninput="u()"></textarea>
+    </div>
+    <div class="ew-box">
+      <p class="ew-title">Your early-warning indicators for this failure mode</p>
+      <div class="ew-row"><div class="ew-num">01</div><div class="ew-input"><textarea id="ew3-1" placeholder="Indicator: ..." oninput="u()"></textarea></div></div>
+      <div class="ew-row"><div class="ew-num">02</div><div class="ew-input"><textarea id="ew3-2" placeholder="Indicator: ..." oninput="u()"></textarea></div></div>
+    </div>
+  </div>
+
+  <!-- FM4 -->
+  <div class="audit-block fm4">
+    <div class="ab-head">
+      <span class="ab-badge">FM 04</span>
+      <div>
+        <p class="ab-title">Institutional capture</p>
+        <p class="ab-q">Before the strategy launches: what would tell you that a powerful actor is beginning to reshape the structural elements of the intervention in their own interest?</p>
+      </div>
+    </div>
+    <div class="aud-ctx pm" id="a4-pm"><span class="aud-ctx-label">Policymaker</span>The earliest signal of capture is often found in staffing decisions and budget allocation requests: who is asking to manage the programme, and is their proposed governance structure subtly reassigning control of the structural elements to their domain?</div>
+    <div class="aud-ctx rs" id="a4-rs" style="display:none"><span class="aud-ctx-label">Researcher</span>The research signal for capture is in programme theory drift: compare the original intervention logic to the first operational plan. If the structural mechanism has been renamed, generalised, or repositioned as a "component" rather than the core, capture has already begun at the design stage.</div>
+    <div style="margin-bottom:12px">
+      <label class="field-label">Describe the first visible sign of institutional capture in your context</label>
+      <p class="field-sub">Name the actor most likely to capture this intervention — and the specific mechanism through which they would do so. Not the hostile takeover — the gradual, well-intentioned redesign.</p>
+      <textarea id="f-a4" placeholder="The actor most likely to capture this intervention is [actor], through [mechanism — budget control / staffing decisions / reporting requirements / programme design authority]. The first visible signal would be [specific observable change]..." oninput="u()"></textarea>
+    </div>
+    <div class="ew-box">
+      <p class="ew-title">Your early-warning indicators for this failure mode</p>
+      <div class="ew-row"><div class="ew-num">01</div><div class="ew-input"><textarea id="ew4-1" placeholder="Indicator: ..." oninput="u()"></textarea></div></div>
+      <div class="ew-row"><div class="ew-num">02</div><div class="ew-input"><textarea id="ew4-2" placeholder="Indicator: ..." oninput="u()"></textarea></div></div>
+    </div>
+  </div>
+
+  <!-- Output -->
+  <div class="output-panel">
+    <p class="op-title">Your resistance audit — summary for Section 8</p>
+    <div class="op-row"><p class="op-label">Mandate fragmentation — first signal</p><p class="op-val" id="out-a1"><span class="op-empty">Complete the audit above</span></p></div>
+    <div class="op-row"><p class="op-label">Metric substitution — first signal</p><p class="op-val" id="out-a2"><span class="op-empty">—</span></p></div>
+    <div class="op-row"><p class="op-label">Political cycle truncation — first signal</p><p class="op-val" id="out-a3"><span class="op-empty">—</span></p></div>
+    <div class="op-row"><p class="op-label">Institutional capture — first signal</p><p class="op-val" id="out-a4"><span class="op-empty">—</span></p></div>
+    <div class="op-row" style="border-bottom:none;padding-bottom:0;margin-bottom:0"><p class="op-label" style="color:var(--teal-mid)">Take this to Section 8</p><p style="font-size:13px;color:var(--teal-dark);line-height:1.65;font-family:'Georgia',serif;font-style:italic">Each early-warning indicator above becomes the design brief for one governance countermeasure in Section 8. The countermeasure is specifically designed to catch the signal before the failure mode has broken the chain.</p></div>
+  </div>
+
+</div>
+<script>
+var aud='pm';
+function setAud(a){
+  aud=a;
+  document.getElementById('btn-pm').className='aud-btn'+(a==='pm'?' pm-active':'');
+  document.getElementById('btn-rs').className='aud-btn'+(a==='rs'?' rs-active':'');
+  ['1','2','3','4'].forEach(function(n){
+    document.getElementById('a'+n+'-pm').style.display=a==='pm'?'block':'none';
+    document.getElementById('a'+n+'-rs').style.display=a==='rs'?'block':'none';
+  });
+}
+
+function u(){
+  var ids=['f-a1','f-a2','f-a3','f-a4','ew1-1','ew1-2','ew2-1','ew2-2','ew3-1','ew3-2','ew4-1','ew4-2'];
+  var filled=ids.filter(function(id){var el=document.getElementById(id);return el&&el.value.trim().length>15;}).length;
+  var pct=Math.round((filled/ids.length)*100);
+  document.getElementById('pbar').style.width=pct+'%';
+  document.getElementById('pct').textContent=pct+'%';
+
+  function setOut(id,srcId){
+    var val=document.getElementById(srcId).value.trim();
+    document.getElementById(id).innerHTML=val?val:'<span class="op-empty">—</span>';
+  }
+  setOut('out-a1','f-a1');setOut('out-a2','f-a2');setOut('out-a3','f-a3');setOut('out-a4','f-a4');
+}
+</script>
+</body>
+</html>
