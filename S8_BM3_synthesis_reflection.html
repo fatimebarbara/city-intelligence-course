@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Section 9 · End-of-section reflection</title>
+<style>
+  :root{
+    --teal-dark:#085041;--teal-mid:#0F6E56;--teal:#1D9E75;--teal-light:#5DCAA5;--teal-pale:#E1F5EE;--teal-faint:#F0FAF6;
+    --purple:#534AB7;--purple-pale:#EEEDFE;--purple-mid:#3C3489;
+    --amber:#BA7517;--amber-pale:#FAEEDA;--blue:#185FA5;--blue-pale:#E6F1FB;
+    --text:#1a1a1a;--text-mid:#444;--text-muted:#6b6b6b;
+    --border:#e2e2e2;--border-light:#f0f0f0;--bg:#fff;--bg-soft:#f8f9fa;
+    --radius:10px;--radius-sm:6px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Helvetica Neue',Arial,sans-serif;color:var(--text);background:var(--bg);font-size:15px;line-height:1.65}
+  .page{max-width:760px;margin:0 auto;padding:48px 24px 80px}
+  .bm-label{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--teal-mid);background:var(--teal-pale);padding:5px 14px;border-radius:20px;margin-bottom:18px}
+  .bm-title{font-size:28px;font-weight:700;color:var(--text);line-height:1.25;margin-bottom:10px;letter-spacing:-.3px;font-family:'Georgia',serif}
+  .bm-sub{font-size:14px;color:var(--text-muted);line-height:1.65;max-width:580px;margin-bottom:20px}
+  .intro-note{background:var(--bg-soft);border:1px solid var(--border-light);border-radius:var(--radius);padding:16px 20px;font-size:13px;color:var(--text-muted);line-height:1.65;margin-bottom:32px}
+  .divider{border:none;border-top:1px solid var(--border-light);margin:32px 0}
+  .progress-row{display:flex;align-items:center;gap:12px;margin-bottom:32px}
+  .progress-label{font-size:12px;color:var(--text-muted);white-space:nowrap}
+  .progress-outer{flex:1;height:5px;background:var(--border-light);border-radius:3px;overflow:hidden}
+  .progress-inner{height:100%;background:var(--teal);border-radius:3px;transition:width .4s ease}
+  .progress-pct{font-size:12px;font-weight:700;color:var(--teal);min-width:36px;text-align:right}
+  .r-block{margin-bottom:28px}
+  .r-num{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:6px}
+  .r-q{font-size:16px;font-weight:600;color:var(--text);line-height:1.5;margin-bottom:10px;font-family:'Georgia',serif}
+  .r-why{font-size:13px;color:var(--text-muted);line-height:1.65;border-left:2px solid var(--border);padding-left:14px;margin-bottom:12px}
+  .r-aud{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+  .r-aud-card{border-radius:var(--radius-sm);padding:10px 12px;font-size:12px;line-height:1.55}
+  .r-aud-card.pm{background:var(--teal-faint);border:1px solid var(--teal-pale);color:var(--teal-dark)}
+  .r-aud-card.rs{background:#F5F0FF;border:1px solid #D8D4F8;color:var(--purple-mid)}
+  .r-aud-label{font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:3px;display:block;opacity:.8}
+  textarea{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px;font-family:'Helvetica Neue',Arial,sans-serif;font-size:14px;color:var(--text);line-height:1.65;resize:vertical;min-height:80px;transition:border-color .15s;outline:none}
+  textarea:focus{border-color:var(--teal-light)}
+  textarea::placeholder{color:#b0b0b0}
+  .journey-table{width:100%;border-collapse:collapse;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;font-size:13px;margin-bottom:28px}
+  .journey-table th{background:var(--bg-soft);padding:9px 13px;text-align:left;font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);border-bottom:1px solid var(--border)}
+  .journey-table td{padding:10px 13px;border-bottom:1px solid var(--border-light);vertical-align:top;font-size:13px}
+  .journey-table tr:last-child td{border-bottom:none}
+  .stag{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;margin-bottom:3px}
+  .s2{background:#FEF3C7;color:#92400E}.s3{background:var(--purple-pale);color:var(--purple-mid)}
+  .s4{background:var(--teal-pale);color:var(--teal-dark)}.s5{background:var(--blue-pale);color:#0C447C}
+  .s6{background:#EAF3DE;color:#27500A}.s7{background:#FAEEDA;color:#633806}
+  .s8{background:var(--purple-pale);color:var(--purple-mid)}.s9{background:var(--teal-pale);color:var(--teal-dark)}
+  .s10{background:#FEF3C7;color:#92400E}.s11{background:var(--blue-pale);color:#0C447C}
+  .check-item{display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid var(--border-light)}
+  .check-item:last-child{border-bottom:none}
+  .check-item input[type="checkbox"]{width:17px;height:17px;cursor:pointer;flex-shrink:0;margin-top:1px;accent-color:var(--teal)}
+  .check-item label{font-size:14px;color:var(--text);line-height:1.55;cursor:pointer}
+  .ready-box{display:none;background:var(--teal-pale);border-radius:var(--radius);padding:28px 32px;text-align:center;margin-top:32px;border:1px solid var(--teal-light)}
+  .ready-text{font-size:15px;color:var(--teal-dark);line-height:1.7}
+  .forward-box{background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius);padding:22px 24px;margin-top:28px}
+  .forward-label{font-size:10px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px}
+  .forward-text{font-size:14px;color:var(--text-mid);line-height:1.75}
+  .forward-text strong{color:var(--text)}
+  .pdf-btn-wrap{text-align:center;margin-top:32px;padding-top:24px;border-top:1px solid var(--border-light)}
+  .pdf-btn{display:inline-flex;align-items:center;gap:8px;background:var(--teal-dark);color:#fff;border:none;border-radius:24px;padding:11px 28px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Helvetica Neue',Arial,sans-serif;transition:background .15s}
+  .pdf-btn:hover{background:var(--teal-mid)}
+  .pdf-hint{font-size:11px;color:var(--text-muted);margin-top:8px}
+  @media print{
+    .pdf-btn-wrap,.progress-row,.check-item,.ready-box,.forward-box,button{display:none!important}
+    body{background:#fff!important;font-size:13px}
+    .page{max-width:100%!important;padding:20px!important}
+    textarea{border:none!important;background:transparent!important;resize:none!important;min-height:0!important;font-size:13px!important}
+    .r-block{break-inside:avoid}
+    a[href]:after{content:''}
+  }
+  @media(max-width:560px){.r-aud{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="bm-label">Building city intelligence systems · End-of-section reflection</div>
+  <h1 class="bm-title">From countermeasures to a system — synthesising your learning</h1>
+  <p class="bm-sub">Section 9 completed the governance arc: from diagnosing failure modes to designing the architecture that prevents them. These five reflections test whether the transition from individual intervention design to system thinking has happened.</p>
+  <div class="intro-note">Section 9 is the last technical section of the course. Sections 10 and 11 shift the lens — from the city as a system to be designed, to the ethics of who designs it and for whom, and finally to the practitioner who does this work. These reflections are the bridge between the technical and the human.</div>
+
+  <div class="progress-row">
+    <span class="progress-label">Completion</span>
+    <div class="progress-outer"><div class="progress-inner" id="pbar" style="width:0%"></div></div>
+    <span class="progress-pct" id="pct">0%</span>
+  </div>
+
+  <div class="r-block">
+    <p class="r-num">Reflection 01 — The governance architecture you have designed</p>
+    <p class="r-q">Looking at the four countermeasures you designed in the governance countermeasure designer: are they a governance architecture — a set of connected structures that reinforce each other — or are they four independent interventions? What would make them genuinely systemic rather than parallel?</p>
+    <p class="r-why">The difference between a governance architecture and four governance measures is the same as the difference between a compounding sequence and a parallel portfolio. An architecture has connections — each countermeasure strengthens the others. The shared accountability framework makes the shared outcome metric possible to enforce. The transition-proofing protocol embeds the shared metric so it survives the political cycle. The structural protection mechanism protects the accountability framework from capture. If these connections are absent, the countermeasures are individually designed but not systemically connected.</p>
+    <div class="r-aud">
+      <div class="r-aud-card pm"><span class="r-aud-label">Policymaker</span>Test: if one of your four countermeasures were removed tomorrow, which of the others would be weakened as a result? That dependency is the connection you need to name and protect.</div>
+      <div class="r-aud-card rs"><span class="r-aud-label">Researcher</span>Test: does your governance architecture create a feedback loop — do the countermeasures together produce information that improves each of them over time? An architecture without a learning loop is a static structure, not a system.</div>
+    </div>
+    <textarea placeholder="My four countermeasures [are / are not yet] a governance architecture because [specific reasoning]. The connections between them are [connections that currently exist]. What would make them genuinely systemic is [specific design change that creates the missing connection]..." oninput="u()"></textarea>
+  </div>
+
+  <div class="r-block">
+    <p class="r-num">Reflection 02 — The weakest link in your system</p>
+    <p class="r-q">From your system audit: you identified the weakest component of your city intelligence system. What is the institutional reason it is weak — not the resource reason, not the political reason, but the structural reason? And what does the first structural move need to do that is different from what has been tried before?</p>
+    <p class="r-why">Every weak component has been identified before. The question is never "do you know it is weak?" — it is "why has it remained weak despite being known?" The institutional reason is almost always structural: a mandate gap, an accountability vacuum, a metric system that rewards something else, or a transition pattern that resets it every cycle. Naming the structural reason is the precondition for designing a first move that is different from the attempts that have already failed.</p>
+    <div class="r-aud">
+      <div class="r-aud-card pm"><span class="r-aud-label">Policymaker</span>What has been tried before to build this component — and why did it not produce a standing capacity? The answer to that question is the specification for the first structural move.</div>
+      <div class="r-aud-card rs"><span class="r-aud-label">Researcher</span>What structural feature of the research or institutional context produces the weakness? Is it a funding cycle, a career incentive, a methodological norm, or an institutional boundary? The structural reason predicts what a genuine fix would require.</div>
+    </div>
+    <textarea placeholder="The weakest component is [component]. It has remained weak despite being known because [structural reason — not resource, not political will, but institutional mechanism]. Previous attempts addressed [what was tried] but did not change [the structural mechanism]. The first structural move must specifically address [the mechanism] by [design element]..." oninput="u()"></textarea>
+  </div>
+
+  <div class="r-block">
+    <p class="r-num">Reflection 03 — The system your city almost has</p>
+    <p class="r-q">Very few cities have a complete city intelligence system. But many cities have three of the four components in some form. Looking at your system profile: which component, if strengthened, would activate the potential of the components that already exist? What is the amplifying move — not the gap-filling move?</p>
+    <p class="r-why">This is the leverage point question at the system level — applied not to an intervention but to a governance architecture. The amplifying move is different from the gap-filling move: it does not simply add a missing component, it strengthens the connection between components that already have some capacity. A city with a strong diagnostic function and a weak learning function, for example, may not need a whole new learning infrastructure — it may need a single structured feedback cycle that connects the diagnostic outputs to the next year's strategy design.</p>
+    <div class="r-aud">
+      <div class="r-aud-card pm"><span class="r-aud-label">Policymaker</span>Which existing institutional practice — a review cycle, a reporting process, a governance meeting — could be redesigned with minimal resource investment to create the connection that is currently missing between two strong components?</div>
+      <div class="r-aud-card rs"><span class="r-aud-label">Researcher</span>Which existing research infrastructure — a dataset, a collaboration, a funding stream — could be redirected to close the system loop that is currently open?</div>
+    </div>
+    <textarea placeholder="My system is strongest in [components]. If [specific component] were strengthened, it would activate [what becomes possible in the already-strong components]. The amplifying move — not the gap-filling move — is [specific action that connects existing capacities rather than building from scratch]..." oninput="u()"></textarea>
+  </div>
+
+  <div class="r-block">
+    <p class="r-num">Reflection 04 — What the governance architecture cannot solve</p>
+    <p class="r-q">The four countermeasures are structural responses to structural failure modes. But there are things a governance architecture cannot solve — and naming them is as important as naming what it can. What are the limits of what a governance architecture can do in your institutional context?</p>
+    <p class="r-why">Governance architectures solve structural problems. They do not solve political problems caused by fundamental value disagreements about what a city should prioritise. They do not solve resource problems caused by genuine fiscal constraints. They do not solve capability problems caused by the absence of the skills required to use them. Knowing the limits of what you are building is not pessimism — it is the design clarity that prevents you from overloading a governance architecture with responsibilities it was not designed to carry.</p>
+    <div class="r-aud">
+      <div class="r-aud-card pm"><span class="r-aud-label">Policymaker</span>In your institutional context, what is the most significant constraint that governance architecture cannot address — and what other type of intervention (political, capability-building, resource) would be needed alongside it?</div>
+      <div class="r-aud-card rs"><span class="r-aud-label">Researcher</span>What is the most significant methodological or institutional constraint that a governance architecture cannot solve in your research context — and what does that suggest about the limits of institutional design as a research intervention?</div>
+    </div>
+    <textarea placeholder="The most important thing my governance architecture cannot solve is [constraint type — political / resource / capability / value disagreement]. This matters because [specific reason it will affect the system's effectiveness]. What would be needed alongside the architecture to address it is [type of intervention — not a governance design]..." oninput="u()"></textarea>
+  </div>
+
+  <div class="r-block">
+    <p class="r-num">Reflection 05 — The full arc from Section 2 to Section 9</p>
+    <p class="r-q">You began this course with the five failure modes. You now have a governance architecture. Looking back at the full arc: what is the most important thing you understood at Section 2 that you now see differently at Section 9 — and what does that shift tell you about the kind of practitioner or researcher this course has been training you to become?</p>
+    <p class="r-why">This is the integration reflection for the entire technical arc of the course. Not a summary — an honest account of what has genuinely changed in how you think. The failure modes described patterns. The four conditions described requirements. The CII provided an instrument. The diagnostic tools applied it. The intervention design built a response. The sequencing logic connected responses into strategy. The governance architecture protected the strategy from the institution. The question is: what do you now see that you could not see at the beginning — and is that change in perception sufficient for the work that Sections 10 and 11 will ask of you?</p>
+    <div class="r-aud">
+      <div class="r-aud-card pm"><span class="r-aud-label">Policymaker</span>What specific decision, conversation, or institutional practice would you now approach differently — not because you have new information, but because you have a different analytical frame?</div>
+      <div class="r-aud-card rs"><span class="r-aud-label">Researcher</span>What research question does this full arc open for you that you did not have before Section 2 — and what would it take to answer it?</div>
+    </div>
+    <textarea style="min-height:100px;" placeholder="At Section 2, I understood the failure modes as [how you understood them then]. At Section 9, I see them differently as [how you understand them now, having built the governance architecture]. The most significant shift is [specific change in understanding]. This tells me the kind of practitioner/researcher this course has trained me to become is [specific description — not generic]..." oninput="u()"></textarea>
+  </div>
+
+  <div class="divider"></div>
+
+  <div style="overflow-x:auto;margin-bottom:28px">
+    <table class="journey-table">
+      <thead><tr><th>Arc</th><th>Sections 2–4: Understanding</th><th>Sections 5–7: Design</th><th>Sections 8–9: Governance</th></tr></thead>
+      <tbody>
+        <tr><td>The question</td>
+          <td><span class="stag s2">S2</span> Why do cities fail?<br><span class="stag s3">S3</span> What is intelligence?<br><span class="stag s4">S4</span> How is it measured?</td>
+          <td><span class="stag s5">S5</span> How do I diagnose?<br><span class="stag s6">S6</span> How do I intervene?<br><span class="stag s7">S7</span> How do I sequence?</td>
+          <td><span class="stag s8">S8</span> Why will this fail?<br><span class="stag s9">S9</span> How do I protect it?</td>
+        </tr>
+        <tr><td>The output</td><td>Diagnostic capability</td><td>Intervention strategy</td><td>Governance architecture</td></tr>
+        <tr><td>Coming next</td><td colspan="3">
+          <span class="stag s10">S10</span> Ethics, power and data — whose intelligence counts, who is excluded by design, and what responsibilities come with the CII framework<br>
+          <span class="stag s11">S11</span> The city intelligence mindset in leadership — what this work requires of the person doing it
+        </td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:16px">Before the Section 9 quiz — a final self-check</p>
+  <div id="cl">
+    <div class="check-item"><input type="checkbox" id="c1" onchange="u()"><label for="c1">I can name all four governance countermeasures and describe the failure mode each one is designed against</label></div>
+    <div class="check-item"><input type="checkbox" id="c2" onchange="u()"><label for="c2">I have designed all four countermeasures for my specific institutional context — not as templates but as specific governance objects</label></div>
+    <div class="check-item"><input type="checkbox" id="c3" onchange="u()"><label for="c3">I have audited the four components of my city intelligence system and identified the weakest link</label></div>
+    <div class="check-item"><input type="checkbox" id="c4" onchange="u()"><label for="c4">I can distinguish between a governance architecture (connected structures that reinforce each other) and four parallel governance measures</label></div>
+    <div class="check-item"><input type="checkbox" id="c5" onchange="u()"><label for="c5">I have named the first structural move that would begin building my weakest system component — and explained why it is different from what has been tried before</label></div>
+  </div>
+
+  <div class="forward-box">
+    <p class="forward-label">Section 10 — Ethics, power and data</p>
+    <p class="forward-text">Sections 2 through 9 have built a technical arc: from understanding failure to designing governance. <strong>Section 10 asks the question the technical arc has been quietly avoiding:</strong> who designed the City Intelligence Index, whose cities are in it, whose data was used, and who benefits from the intelligence it produces? These are not supplementary ethics questions — they are structural questions about the validity and application of everything the course has built. Come to Section 10 with your governance architecture and your system design — and a willingness to question the framework you have just learned to use.</p>
+  </div>
+
+  <div class="ready-box" id="readyBox">
+    <p class="ready-text">You are ready for the Section 9 quiz.<br>The quiz tests whether you can apply the four countermeasures to real scenarios — and whether you understand what connects them into a governance architecture rather than four parallel measures.</p>
+  </div>
+
+  <div class="pdf-btn-wrap">
+    <button class="pdf-btn" onclick="window.print()">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17v-6M9 14l3 3 3-3"/><rect x="3" y="3" width="18" height="14" rx="2"/><path d="M3 17h18v4H3z"/></svg>
+      Save my answers as PDF
+    </button>
+    <p class="pdf-hint">Opens your browser's print dialog — choose "Save as PDF" as the destination</p>
+  </div>
+</div>
+<script>
+function u(){
+  var t=document.querySelectorAll('textarea'),c=document.querySelectorAll('#cl input');
+  var tf=0;t.forEach(function(x){if(x.value.trim().length>25)tf++;});
+  var cf=0;c.forEach(function(x){if(x.checked)cf++;});
+  var total=t.length+c.length,done=tf+cf;
+  var pct=Math.round((done/total)*100);
+  document.getElementById('pbar').style.width=pct+'%';
+  document.getElementById('pct').textContent=pct+'%';
+  document.getElementById('readyBox').style.display=(pct>=75)?'block':'none';
+}
+</script>
+</body>
+</html>

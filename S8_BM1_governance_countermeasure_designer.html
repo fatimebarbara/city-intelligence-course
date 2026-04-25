@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Section 9 · Building city intelligence systems — Governance countermeasure designer</title>
+<style>
+  :root{
+    --teal-dark:#085041;--teal-mid:#0F6E56;--teal:#1D9E75;--teal-light:#5DCAA5;--teal-pale:#E1F5EE;--teal-faint:#F0FAF6;
+    --purple:#534AB7;--purple-pale:#EEEDFE;--purple-mid:#3C3489;
+    --amber:#BA7517;--amber-pale:#FAEEDA;--blue:#185FA5;--blue-pale:#E6F1FB;
+    --coral:#D85A30;--coral-pale:#FAECE7;--green:#3B6D11;--green-pale:#EAF3DE;
+    --warn:#B91C1C;--warn-pale:#FEF2F2;--warn-border:#FECACA;
+    --text:#1a1a1a;--text-mid:#444;--text-muted:#6b6b6b;
+    --border:#e2e2e2;--border-light:#f0f0f0;--bg:#fff;--bg-soft:#f8f9fa;
+    --radius:10px;--radius-sm:6px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Helvetica Neue',Arial,sans-serif;color:var(--text);background:var(--bg);font-size:15px;line-height:1.65}
+  .page{max-width:760px;margin:0 auto;padding:48px 24px 80px}
+  .bm-label{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--teal-mid);background:var(--teal-pale);padding:5px 14px;border-radius:20px;margin-bottom:18px}
+  .bm-title{font-size:28px;font-weight:700;color:var(--text);line-height:1.25;margin-bottom:10px;letter-spacing:-.3px;font-family:'Georgia',serif}
+  .bm-sub{font-size:14px;color:var(--text-muted);line-height:1.65;max-width:580px;margin-bottom:20px}
+  .intro-note{background:var(--bg-soft);border:1px solid var(--border-light);border-radius:var(--radius);padding:16px 20px;font-size:13px;color:var(--text-muted);line-height:1.65;margin-bottom:28px}
+  .divider{border:none;border-top:1px solid var(--border-light);margin:28px 0}
+  .sec-head{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin:24px 0 12px;display:flex;align-items:center;gap:10px}
+  .sec-head::after{content:'';flex:1;height:1px;background:var(--border-light)}
+  textarea,input[type=text]{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 12px;font-family:'Helvetica Neue',Arial,sans-serif;font-size:14px;color:var(--text);line-height:1.6;resize:vertical;min-height:64px;outline:none;transition:border-color .15s}
+  textarea:focus,input[type=text]:focus{border-color:var(--teal-light)}
+  textarea::placeholder,input::placeholder{color:#b0b0b0}
+  .field-label{font-size:12px;font-weight:600;color:var(--text-mid);margin-bottom:5px;display:block}
+  .field-sub{font-size:12px;color:var(--text-muted);margin-bottom:6px;line-height:1.55}
+  .field-group{margin-bottom:16px}
+
+  /* Progress */
+  .progress-row{display:flex;align-items:center;gap:12px;margin-bottom:24px}
+  .progress-label{font-size:12px;color:var(--text-muted);white-space:nowrap}
+  .progress-outer{flex:1;height:5px;background:var(--border-light);border-radius:3px;overflow:hidden}
+  .progress-inner{height:100%;background:var(--teal);border-radius:3px;transition:width .4s ease}
+  .progress-pct{font-size:12px;font-weight:700;color:var(--teal);min-width:36px;text-align:right}
+
+  /* Countermeasure cards */
+  .cm-card{border:1px solid var(--border);border-radius:var(--radius);margin-bottom:16px;overflow:hidden}
+  .cm-header{padding:18px 20px;display:flex;align-items:flex-start;gap:14px;background:var(--bg-soft);border-bottom:1px solid var(--border-light)}
+  .cm-badge{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:4px 11px;border-radius:12px;flex-shrink:0;margin-top:2px}
+  .cm1 .cm-badge{background:var(--blue-pale);color:var(--blue)}
+  .cm2 .cm-badge{background:var(--purple-pale);color:var(--purple-mid)}
+  .cm3 .cm-badge{background:var(--amber-pale);color:var(--amber)}
+  .cm4 .cm-badge{background:var(--coral-pale);color:var(--coral)}
+  .cm-head-text{flex:1}
+  .cm-name{font-size:15px;font-weight:700;color:var(--text);margin-bottom:3px}
+  .cm-fm{font-size:12px;color:var(--text-muted);margin-bottom:4px}
+  .cm-def{font-size:13px;color:var(--text-mid);line-height:1.55}
+  .cm-body{padding:20px}
+
+  /* Design questions */
+  .dq-box{background:var(--teal-faint);border-radius:var(--radius-sm);padding:14px 16px;margin-bottom:14px}
+  .dq-title{font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--teal-mid);margin-bottom:8px}
+  .dq-q{font-size:13px;color:var(--teal-dark);line-height:1.6;margin-bottom:6px;padding-left:12px;border-left:2px solid var(--teal-pale)}
+
+  /* Status indicator */
+  .cm-status{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:3px 10px;border-radius:10px;margin-top:8px}
+  .cm-status.not-started{background:var(--bg-soft);color:var(--text-muted);border:1px solid var(--border)}
+  .cm-status.in-progress{background:var(--amber-pale);color:var(--amber)}
+  .cm-status.complete{background:var(--green-pale);color:var(--green)}
+
+  /* Aud toggle */
+  .aud-toggle{display:flex;gap:8px;margin-bottom:20px}
+  .aud-btn{border:1px solid var(--border);border-radius:20px;padding:7px 18px;font-size:13px;font-weight:500;cursor:pointer;background:var(--bg-soft);color:var(--text-muted);transition:all .15s;font-family:'Helvetica Neue',Arial,sans-serif}
+  .aud-btn.pm-active{background:var(--teal-pale);color:var(--teal-dark);border-color:var(--teal-light);font-weight:600}
+  .aud-btn.rs-active{background:var(--purple-pale);color:var(--purple-mid);border-color:#AFA9EC;font-weight:600}
+  .aud-ctx{border-radius:var(--radius-sm);padding:10px 13px;margin-bottom:14px;font-size:13px;line-height:1.6}
+  .aud-ctx.pm{background:var(--teal-faint);border-left:3px solid var(--teal-light);color:var(--teal-dark)}
+  .aud-ctx.rs{background:#F5F0FF;border-left:3px solid #AFA9EC;color:var(--purple-mid)}
+  .aud-ctx-label{font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:3px;display:block}
+
+  /* Output summary */
+  .output-panel{background:var(--teal-faint);border:1px solid var(--teal-pale);border-radius:var(--radius);padding:22px;margin-top:24px}
+  .op-title{font-size:15px;font-weight:700;font-family:'Georgia',serif;color:var(--teal-dark);margin-bottom:14px}
+  .op-row{margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid var(--teal-pale)}
+  .op-row:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+  .op-label{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--teal-mid);margin-bottom:3px}
+  .op-val{font-size:13px;color:var(--teal-dark);line-height:1.6;font-family:'Georgia',serif;font-style:italic;min-height:18px}
+  .op-empty{color:var(--text-muted);font-style:normal;font-family:'Helvetica Neue',Arial,sans-serif;font-size:12px}
+
+  /* PDF */
+  .pdf-btn-wrap{text-align:center;margin-top:32px;padding-top:24px;border-top:1px solid var(--border-light)}
+  .pdf-btn{display:inline-flex;align-items:center;gap:8px;background:var(--teal-dark);color:#fff;border:none;border-radius:24px;padding:11px 28px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Helvetica Neue',Arial,sans-serif;transition:background .15s}
+  .pdf-btn:hover{background:var(--teal-mid)}
+  .pdf-hint{font-size:11px;color:var(--text-muted);margin-top:8px}
+  @media print{
+    .pdf-btn-wrap,.progress-row,.aud-toggle,.cm-header button,button{display:none!important}
+    body{background:#fff!important;font-size:13px}
+    .page{max-width:100%!important;padding:20px!important}
+    textarea{border:none!important;background:transparent!important;resize:none!important;min-height:0!important;font-size:13px!important}
+    .cm-card{break-inside:avoid}
+    a[href]:after{content:''}
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="bm-label">Building city intelligence systems · Governance countermeasure designer</div>
+  <h1 class="bm-title">Designing your four countermeasures</h1>
+  <p class="bm-sub">One governance design object for each of the four implementation failure modes from Section 8. These are not templates — they are design frameworks that require your city's specific institutional architecture as their input.</p>
+  <div class="intro-note">Start from your Section 8 threat profile. For each failure mode you rated as medium or high severity, design the countermeasure here before your strategy launches. A countermeasure designed before the threat materialises is worth ten designed after.</div>
+
+  <div class="aud-toggle">
+    <button class="aud-btn pm-active" id="btn-pm" onclick="setAud('pm')">I am a policymaker</button>
+    <button class="aud-btn" id="btn-rs" onclick="setAud('rs')">I am a researcher</button>
+  </div>
+
+  <div class="progress-row">
+    <span class="progress-label">Design completion</span>
+    <div class="progress-outer"><div class="progress-inner" id="pbar" style="width:0%"></div></div>
+    <span class="progress-pct" id="pct">0%</span>
+  </div>
+
+  <!-- CM1: Shared Accountability Framework -->
+  <div class="cm-card cm1">
+    <div class="cm-header">
+      <span class="cm-badge">CM 01</span>
+      <div class="cm-head-text">
+        <p class="cm-name">Shared accountability framework</p>
+        <p class="cm-fm">Countermeasure against: Mandate fragmentation</p>
+        <p class="cm-def">A formal structure in which two or more departments are jointly accountable for a shared outcome — with budget authority, reporting lines, and performance metrics that cross their individual mandates.</p>
+      </div>
+    </div>
+    <div class="cm-body">
+      <div class="aud-ctx pm" id="a1-pm"><span class="aud-ctx-label">Policymaker</span>The political challenge here is that shared accountability requires each department to accept partial credit for outcomes they cannot control alone. Name the departments and design the authority structure before the political resistance crystallises.</div>
+      <div class="aud-ctx rs" id="a1-rs" style="display:none"><span class="aud-ctx-label">Researcher</span>For research contexts: a shared accountability framework between research institutions and implementing bodies. Who holds the causal claim for the shared outcome — and who is accountable when the evidence doesn't translate?</div>
+      <div class="dq-box">
+        <p class="dq-title">Three design questions this countermeasure must answer</p>
+        <p class="dq-q">1. Who holds accountability for the sequence as a whole — and what budget authority do they have over the departments that own each step?</p>
+        <p class="dq-q">2. What happens structurally when a department's individual mandate conflicts with the shared outcome?</p>
+        <p class="dq-q">3. How is the shared outcome defined precisely enough that all departments know when they have collectively succeeded?</p>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Your shared accountability framework design</label>
+        <p class="field-sub">Name the departments, the accountability structure, the authority level, and the conflict resolution mechanism.</p>
+        <textarea id="f-cm1" placeholder="The departments jointly accountable are [names]. The accountable owner of the sequence is [role/position], who has [specific authority] over [specific decisions]. When a departmental mandate conflicts with the shared outcome, [resolution mechanism]. The shared outcome is defined as [precise outcome statement]..." oninput="u()"></textarea>
+      </div>
+      <div class="field-group">
+        <label class="field-label">The first structural move to establish this framework</label>
+        <textarea id="f-cm1-move" placeholder="The first structural move is [specific action — formal mandate change / budget line creation / authority delegation / governance document]..." oninput="u()" style="min-height:48px"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- CM2: Shared Outcome Metric System -->
+  <div class="cm-card cm2">
+    <div class="cm-header">
+      <span class="cm-badge">CM 02</span>
+      <div class="cm-head-text">
+        <p class="cm-name">Shared outcome metric system</p>
+        <p class="cm-fm">Countermeasure against: Metric substitution</p>
+        <p class="cm-def">One metric — jointly produced, structurally visible, designed before the strategy launches — that no single department can satisfy independently and that all departments report against.</p>
+      </div>
+    </div>
+    <div class="cm-body">
+      <div class="aud-ctx pm" id="a2-pm"><span class="aud-ctx-label">Policymaker</span>The hardest design question is the metric itself. It must be jointly produced (no department can move it alone), structurally visible (in all departmental reporting), and designed before launch. A metric added after two years as an evaluation exercise does not count.</div>
+      <div class="aud-ctx rs" id="a2-rs" style="display:none"><span class="aud-ctx-label">Researcher</span>The research equivalent is the primary outcome in a multi-site trial: one agreed measure, tracked by all sites, that the intervention is designed to move. Designing it before data collection — not after — is the methodological non-negotiable.</div>
+      <div class="dq-box">
+        <p class="dq-title">Three properties the shared metric must have</p>
+        <p class="dq-q">1. Jointly produced: no single department can move it alone — it requires the combined effect of multiple steps.</p>
+        <p class="dq-q">2. Structurally visible: it appears in every department's reporting framework, not just the strategy owner's dashboard.</p>
+        <p class="dq-q">3. Designed at launch: agreed before the strategy begins, not commissioned as an evaluation after results are needed.</p>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Your shared outcome metric</label>
+        <p class="field-sub">Name the metric precisely — not a category, not an indicator family. One measurable outcome that requires all departments in the sequence to contribute.</p>
+        <textarea id="f-cm2" placeholder="The shared outcome metric is [precise metric definition]. It is jointly produced because [which departments must each contribute what]. It is currently tracked in [which reporting systems] and needs to be added to [which systems]. It will be designed into the strategy launch document by [date/process]..." oninput="u()"></textarea>
+      </div>
+      <div class="field-group">
+        <label class="field-label">What metric substitution would look like if it occurred</label>
+        <p class="field-sub">Name the individual departmental metrics most likely to substitute — the ones that would look like success while the shared outcome goes unmeasured.</p>
+        <textarea id="f-cm2-risk" placeholder="Metric substitution would look like [which departmental metric] being reported as evidence of success while [the shared outcome] goes unmeasured..." oninput="u()" style="min-height:48px"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- CM3: Transition-Proofing Protocol -->
+  <div class="cm-card cm3">
+    <div class="cm-header">
+      <span class="cm-badge">CM 03</span>
+      <div class="cm-head-text">
+        <p class="cm-name">Transition-proofing protocol</p>
+        <p class="cm-fm">Countermeasure against: Political cycle truncation</p>
+        <p class="cm-def">Three elements that embed the strategy logic in institutional architecture rather than individual memory: a strategy logic document, an embedded metric, and a cross-administration anchor.</p>
+      </div>
+    </div>
+    <div class="cm-body">
+      <div class="aud-ctx pm" id="a3-pm"><span class="aud-ctx-label">Policymaker</span>The transition-proofing protocol must be built into the strategy design before it launches — not added as a legacy document when you sense the political winds are changing. Its purpose is to make the compounding logic legible to an incoming administration that had no part in creating it.</div>
+      <div class="aud-ctx rs" id="a3-rs" style="display:none"><span class="aud-ctx-label">Researcher</span>For research contexts: the protocol is a pre-registration and data management plan that ensures the study can be completed and the data analysed even if the original research team changes. The causal chain must live in the protocol, not in the lead researcher's head.</div>
+      <div class="dq-box">
+        <p class="dq-title">Three elements of a transition-proofing protocol</p>
+        <p class="dq-q">1. Strategy logic document: a formal record of the causal chain — written so that an incoming leader with no prior knowledge can understand why interrupting the sequence would be costly.</p>
+        <p class="dq-q">2. Embedded metric: the shared outcome metric anchored in baseline institutional reporting, so it continues being tracked regardless of who is in office.</p>
+        <p class="dq-q">3. Cross-administration anchor: a formal commitment at the institutional level above the current administration that the sequence logic will be honoured through the transition.</p>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Your transition-proofing protocol</label>
+        <p class="field-sub">Design all three elements specifically for your context. Name who holds what, where it lives institutionally, and what the anchor commitment looks like.</p>
+        <textarea id="f-cm3" placeholder="Strategy logic document: will be [format], owned by [role], held at [institutional level]. Embedded metric: will be anchored in [specific reporting system] from [date]. Cross-administration anchor: the commitment will be [formal mechanism — legislation / multi-party agreement / institutional mandate] at [level above current administration]..." oninput="u()"></textarea>
+      </div>
+      <div class="field-group">
+        <label class="field-label">The time horizon before the first political or institutional transition</label>
+        <textarea id="f-cm3-horizon" placeholder="The next transition is expected [timeframe]. The most vulnerable step in the sequence at that transition is [step]. The protocol must be in place by [date] to protect it..." oninput="u()" style="min-height:48px"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- CM4: Structural Protection Mechanism -->
+  <div class="cm-card cm4">
+    <div class="cm-header">
+      <span class="cm-badge">CM 04</span>
+      <div class="cm-head-text">
+        <p class="cm-name">Structural protection mechanism</p>
+        <p class="cm-fm">Countermeasure against: Institutional capture</p>
+        <p class="cm-def">A formal separation between the authority to design the structural element and the authority to manage the programmatic element — so that the most powerful actor cannot redefine the structural mechanism without triggering an explicit governance review.</p>
+      </div>
+    </div>
+    <div class="cm-body">
+      <div class="aud-ctx pm" id="a4-pm"><span class="aud-ctx-label">Policymaker</span>The design principle is politically difficult: the department that implements the programme should not be the same entity that defines whether its structural mechanism remains intact. That definition authority needs an independent home — or it will migrate to whoever controls the budget.</div>
+      <div class="aud-ctx rs" id="a4-rs" style="display:none"><span class="aud-ctx-label">Researcher</span>For research contexts: the structural protection mechanism is a separation between the funding body's programme objectives and the research team's methodological integrity. The research design — particularly the primary outcome and causal mechanism — must be protected from funder-driven revision after the study has begun.</div>
+      <div class="dq-box">
+        <p class="dq-title">Two design questions this countermeasure must answer</p>
+        <p class="dq-q">1. Who defines whether the structural element of the intervention remains intact — and is that person or body independent from the implementing department?</p>
+        <p class="dq-q">2. What triggers a governance review if the structural mechanism is modified — and who has authority to restore it?</p>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Your structural protection mechanism</label>
+        <p class="field-sub">Name the structural element to be protected, who holds definition authority, and what the review trigger looks like.</p>
+        <textarea id="f-cm4" placeholder="The structural element to be protected is [specific mechanism — pathway redesign / accountability architecture / feedback loop design]. Definition authority is held by [role/body independent of implementing department]. A governance review is triggered when [specific condition — budget reallocation above X% / programme theory modification / staffing change at director level]. The review authority is [body/role] who can [restore/reject the modification]..." oninput="u()"></textarea>
+      </div>
+      <div class="field-group">
+        <label class="field-label">The actor most likely to capture this intervention — and why they are not malicious</label>
+        <p class="field-sub">Naming the most likely capture actor honestly — and acknowledging their legitimate interest — is the precondition for designing a mechanism they can accept.</p>
+        <textarea id="f-cm4-actor" placeholder="The most likely capture actor is [department/role], because [legitimate interest they have in this domain]. They are not acting in bad faith — they are optimising for [their mandate]. The structural protection mechanism must acknowledge their interest by [design element] while protecting the structural logic by [design element]..." oninput="u()" style="min-height:56px"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- Output -->
+  <div class="output-panel">
+    <p class="op-title">Your governance architecture — four-countermeasure summary</p>
+    <div class="op-row"><p class="op-label">Shared accountability framework — first move</p><p class="op-val" id="out-cm1"><span class="op-empty">Complete CM 01 above</span></p></div>
+    <div class="op-row"><p class="op-label">Shared outcome metric</p><p class="op-val" id="out-cm2"><span class="op-empty">—</span></p></div>
+    <div class="op-row"><p class="op-label">Transition-proofing protocol — time horizon</p><p class="op-val" id="out-cm3"><span class="op-empty">—</span></p></div>
+    <div class="op-row" style="border-bottom:none;padding-bottom:0;margin-bottom:0"><p class="op-label">Structural protection — actor and mechanism</p><p class="op-val" id="out-cm4"><span class="op-empty">—</span></p></div>
+  </div>
+
+  <div class="pdf-btn-wrap">
+    <button class="pdf-btn" onclick="window.print()">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17v-6M9 14l3 3 3-3"/><rect x="3" y="3" width="18" height="14" rx="2"/><path d="M3 17h18v4H3z"/></svg>
+      Save my countermeasure designs as PDF
+    </button>
+    <p class="pdf-hint">Opens your browser's print dialog — choose "Save as PDF" as the destination</p>
+  </div>
+</div>
+<script>
+var aud='pm';
+function setAud(a){
+  aud=a;
+  document.getElementById('btn-pm').className='aud-btn'+(a==='pm'?' pm-active':'');
+  document.getElementById('btn-rs').className='aud-btn'+(a==='rs'?' rs-active':'');
+  ['1','2','3','4'].forEach(function(n){
+    document.getElementById('a'+n+'-pm').style.display=a==='pm'?'block':'none';
+    document.getElementById('a'+n+'-rs').style.display=a==='rs'?'block':'none';
+  });
+}
+function u(){
+  var ids=['f-cm1','f-cm1-move','f-cm2','f-cm2-risk','f-cm3','f-cm3-horizon','f-cm4','f-cm4-actor'];
+  var filled=ids.filter(function(id){var el=document.getElementById(id);return el&&el.value.trim().length>15;}).length;
+  var pct=Math.round((filled/ids.length)*100);
+  document.getElementById('pbar').style.width=pct+'%';
+  document.getElementById('pct').textContent=pct+'%';
+  function setOut(outId,srcId){
+    var val=document.getElementById(srcId).value.trim();
+    document.getElementById(outId).innerHTML=val?val:'<span class="op-empty">—</span>';
+  }
+  setOut('out-cm1','f-cm1-move');
+  setOut('out-cm2','f-cm2');
+  setOut('out-cm3','f-cm3-horizon');
+  setOut('out-cm4','f-cm4-actor');
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Section 9 · Building city intelligence systems — System audit</title>
+<style>
+  :root{
+    --teal-dark:#085041;--teal-mid:#0F6E56;--teal:#1D9E75;--teal-light:#5DCAA5;--teal-pale:#E1F5EE;--teal-faint:#F0FAF6;
+    --purple:#534AB7;--purple-pale:#EEEDFE;--purple-mid:#3C3489;
+    --amber:#BA7517;--amber-pale:#FAEEDA;--blue:#185FA5;--blue-pale:#E6F1FB;
+    --coral:#D85A30;--coral-pale:#FAECE7;--green:#3B6D11;--green-pale:#EAF3DE;
+    --text:#1a1a1a;--text-mid:#444;--text-muted:#6b6b6b;
+    --border:#e2e2e2;--border-light:#f0f0f0;--bg:#fff;--bg-soft:#f8f9fa;
+    --radius:10px;--radius-sm:6px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Helvetica Neue',Arial,sans-serif;color:var(--text);background:var(--bg);font-size:15px;line-height:1.65}
+  .page{max-width:760px;margin:0 auto;padding:48px 24px 80px}
+  .bm-label{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--teal-mid);background:var(--teal-pale);padding:5px 14px;border-radius:20px;margin-bottom:18px}
+  .bm-title{font-size:28px;font-weight:700;color:var(--text);line-height:1.25;margin-bottom:10px;letter-spacing:-.3px;font-family:'Georgia',serif}
+  .bm-sub{font-size:14px;color:var(--text-muted);line-height:1.65;max-width:580px;margin-bottom:20px}
+  .intro-note{background:var(--bg-soft);border:1px solid var(--border-light);border-radius:var(--radius);padding:16px 20px;font-size:13px;color:var(--text-muted);line-height:1.65;margin-bottom:28px}
+  textarea{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 12px;font-family:'Helvetica Neue',Arial,sans-serif;font-size:14px;color:var(--text);line-height:1.6;resize:vertical;min-height:60px;outline:none;transition:border-color .15s}
+  textarea:focus{border-color:var(--teal-light)}
+  textarea::placeholder{color:#b0b0b0}
+  .field-label{font-size:12px;font-weight:600;color:var(--text-mid);margin-bottom:5px;display:block}
+  .field-sub{font-size:12px;color:var(--text-muted);margin-bottom:6px;line-height:1.55}
+
+  /* Aud toggle */
+  .aud-toggle{display:flex;gap:8px;margin-bottom:20px}
+  .aud-btn{border:1px solid var(--border);border-radius:20px;padding:7px 18px;font-size:13px;font-weight:500;cursor:pointer;background:var(--bg-soft);color:var(--text-muted);transition:all .15s;font-family:'Helvetica Neue',Arial,sans-serif}
+  .aud-btn.pm-active{background:var(--teal-pale);color:var(--teal-dark);border-color:var(--teal-light);font-weight:600}
+  .aud-btn.rs-active{background:var(--purple-pale);color:var(--purple-mid);border-color:#AFA9EC;font-weight:600}
+
+  /* Progress */
+  .progress-row{display:flex;align-items:center;gap:12px;margin-bottom:24px}
+  .progress-label{font-size:12px;color:var(--text-muted);white-space:nowrap}
+  .progress-outer{flex:1;height:5px;background:var(--border-light);border-radius:3px;overflow:hidden}
+  .progress-inner{height:100%;background:var(--teal);border-radius:3px;transition:width .4s ease}
+  .progress-pct{font-size:12px;font-weight:700;color:var(--teal);min-width:36px;text-align:right}
+
+  /* Component blocks */
+  .comp-block{border:1px solid var(--border);border-radius:var(--radius);margin-bottom:16px;overflow:hidden}
+  .comp-header{display:flex;align-items:flex-start;gap:14px;padding:16px 20px;background:var(--bg-soft);border-bottom:1px solid var(--border-light)}
+  .comp-badge{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:3px 10px;border-radius:12px;flex-shrink:0;margin-top:2px}
+  .c1 .comp-badge{background:var(--blue-pale);color:var(--blue)}
+  .c2 .comp-badge{background:var(--purple-pale);color:var(--purple-mid)}
+  .c3 .comp-badge{background:var(--teal-pale);color:var(--teal-dark)}
+  .c4 .comp-badge{background:var(--green-pale);color:var(--green)}
+  .comp-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:2px}
+  .comp-def{font-size:13px;color:var(--text-muted);line-height:1.5}
+  .comp-body{padding:18px 20px}
+
+  /* Strength scale */
+  .strength-row{display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+  .str-label{font-size:12px;font-weight:600;color:var(--text-mid);white-space:nowrap}
+  .str-btns{display:flex;gap:6px}
+  .str-btn{border:1px solid var(--border);border-radius:14px;padding:4px 13px;font-size:12px;font-weight:600;cursor:pointer;background:var(--bg-soft);color:var(--text-muted);transition:all .15s;font-family:'Helvetica Neue',Arial,sans-serif}
+  .str-btn:hover{background:var(--bg)}
+  .str-btn.absent.active{background:var(--warn-pale);border-color:var(--warn-border);color:#B91C1C}
+  .str-btn.fragment.active{background:var(--amber-pale);border-color:#E8C06A;color:var(--amber)}
+  .str-btn.partial.active{background:var(--blue-pale);border-color:#6BA3D4;color:var(--blue)}
+  .str-btn.strong.active{background:var(--green-pale);border-color:#97C459;color:var(--green)}
+
+  /* Aud context */
+  .aud-ctx{border-radius:var(--radius-sm);padding:10px 13px;margin-bottom:12px;font-size:13px;line-height:1.6}
+  .aud-ctx.pm{background:var(--teal-faint);border-left:3px solid var(--teal-light);color:var(--teal-dark)}
+  .aud-ctx.rs{background:#F5F0FF;border-left:3px solid #AFA9EC;color:var(--purple-mid)}
+  .aud-ctx-label{font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:3px;display:block}
+
+  /* System profile visual */
+  .system-profile{background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-top:24px}
+  .sp-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:14px}
+  .sp-row{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+  .sp-name{font-size:13px;font-weight:600;color:var(--text-mid);min-width:140px}
+  .sp-bar-outer{flex:1;height:8px;background:var(--border-light);border-radius:4px;overflow:hidden}
+  .sp-bar-inner{height:100%;border-radius:4px;transition:width .4s ease;background:var(--teal)}
+  .sp-val{font-size:12px;font-weight:700;color:var(--teal);min-width:70px;text-align:right}
+  .sp-weak-label{font-size:12px;color:var(--text-muted);margin-top:10px;line-height:1.6}
+
+  /* First move output */
+  .first-move-box{background:var(--teal-faint);border:1px solid var(--teal-pale);border-radius:var(--radius);padding:20px;margin-top:20px}
+  .fm-title{font-size:14px;font-weight:700;font-family:'Georgia',serif;color:var(--teal-dark);margin-bottom:10px}
+  .fm-text{font-size:13px;color:var(--teal-dark);line-height:1.65;font-family:'Georgia',serif;font-style:italic;min-height:18px}
+  .fm-empty{color:var(--text-muted);font-style:normal;font-family:'Helvetica Neue',Arial,sans-serif;font-size:12px}
+
+  /* PDF */
+  .pdf-btn-wrap{text-align:center;margin-top:32px;padding-top:24px;border-top:1px solid var(--border-light)}
+  .pdf-btn{display:inline-flex;align-items:center;gap:8px;background:var(--teal-dark);color:#fff;border:none;border-radius:24px;padding:11px 28px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Helvetica Neue',Arial,sans-serif;transition:background .15s}
+  .pdf-btn:hover{background:var(--teal-mid)}
+  .pdf-hint{font-size:11px;color:var(--text-muted);margin-top:8px}
+  @media print{
+    .pdf-btn-wrap,.progress-row,.aud-toggle,.str-btns,button{display:none!important}
+    body{background:#fff!important;font-size:13px}
+    .page{max-width:100%!important;padding:20px!important}
+    textarea{border:none!important;background:transparent!important;resize:none!important;min-height:0!important;font-size:13px!important}
+    .comp-block,.first-move-box{break-inside:avoid}
+    a[href]:after{content:''}
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="bm-label">Building city intelligence systems · System audit</div>
+  <h1 class="bm-title">How strong is your city intelligence system?</h1>
+  <p class="bm-sub">A structured audit of the four components of a city intelligence system — diagnostic, strategy, governance, and learning. Audience-switchable. Output: a system strength profile and the first structural move for your weakest component.</p>
+  <div class="intro-note">Most cities and organisations have fragments of each component. The system only works when all four are connected. The purpose of this audit is not to score yourself — it is to identify where the weakest link is, so that the first structural move is placed correctly.</div>
+
+  <div class="aud-toggle">
+    <button class="aud-btn pm-active" id="btn-pm" onclick="setAud('pm')">I am a policymaker</button>
+    <button class="aud-btn" id="btn-rs" onclick="setAud('rs')">I am a researcher</button>
+  </div>
+  <div class="progress-row">
+    <span class="progress-label">Audit completion</span>
+    <div class="progress-outer"><div class="progress-inner" id="pbar" style="width:0%"></div></div>
+    <span class="progress-pct" id="pct">0%</span>
+  </div>
+
+  <!-- Component 1: Diagnostic -->
+  <div class="comp-block c1">
+    <div class="comp-header">
+      <span class="comp-badge">Component 01</span>
+      <div><p class="comp-title">Diagnostic function</p><p class="comp-def">A standing capacity to read the city's CII profile, identify emerging structural gaps, and surface weak signals before they become crises — not as a one-time exercise, but as an ongoing institutional practice.</p></div>
+    </div>
+    <div class="comp-body">
+      <div class="aud-ctx pm" id="c1-pm"><span class="aud-ctx-label">Policymaker</span>The diagnostic function exists when there is a standing team or role with mandate and resources to read the city's structural performance on a regular cycle — and whose findings enter the decision-making process formally, not informally.</div>
+      <div class="aud-ctx rs" id="c1-rs" style="display:none"><span class="aud-ctx-label">Researcher</span>The diagnostic function in a research context is the systematic review and tracking of your field's evidence base — a standing process for identifying where the evidence is weak, where structural gaps are emerging in the literature, and where weak signals in the data deserve closer examination.</div>
+      <div class="strength-row">
+        <span class="str-label">Current strength:</span>
+        <div class="str-btns">
+          <button class="str-btn absent" onclick="setStr(1,'absent',0,this)">Absent</button>
+          <button class="str-btn fragment" onclick="setStr(1,'fragment',25,this)">Fragments exist</button>
+          <button class="str-btn partial" onclick="setStr(1,'partial',65,this)">Partially built</button>
+          <button class="str-btn strong" onclick="setStr(1,'strong',95,this)">Strong</button>
+        </div>
+      </div>
+      <label class="field-label">What does the diagnostic function look like in your context today?</label>
+      <p class="field-sub">Name what exists — and what is missing that would make it a standing practice rather than an occasional exercise.</p>
+      <textarea id="f-c1" placeholder="Currently: [what exists — data collection, analysis, reporting]. What is missing: [standing mandate / regular cycle / formal entry into decisions / dedicated resource]..." oninput="u()"></textarea>
+    </div>
+  </div>
+
+  <!-- Component 2: Strategy -->
+  <div class="comp-block c2">
+    <div class="comp-header">
+      <span class="comp-badge">Component 02</span>
+      <div><p class="comp-title">Strategy function</p><p class="comp-def">A standing capacity to design compounding interventions, sequence them against the dependency hierarchy, and hold the thread of the sequence across departmental boundaries — not as a project, but as an institutional capability.</p></div>
+    </div>
+    <div class="comp-body">
+      <div class="aud-ctx pm" id="c2-pm"><span class="aud-ctx-label">Policymaker</span>The strategy function exists when there is an entity — a team, a unit, a cross-departmental body — with the mandate and authority to hold the sequence across departments and over time. Not just to design it once, but to protect it as conditions change.</div>
+      <div class="aud-ctx rs" id="c2-rs" style="display:none"><span class="aud-ctx-label">Researcher</span>The strategy function in research is the capacity to sequence your research agenda — to design studies that build on each other, to hold the thread of the causal argument across multiple papers or projects, and to protect the structural logic of the research programme from external pressures to pivot.</div>
+      <div class="strength-row">
+        <span class="str-label">Current strength:</span>
+        <div class="str-btns">
+          <button class="str-btn absent" onclick="setStr(2,'absent',0,this)">Absent</button>
+          <button class="str-btn fragment" onclick="setStr(2,'fragment',25,this)">Fragments exist</button>
+          <button class="str-btn partial" onclick="setStr(2,'partial',65,this)">Partially built</button>
+          <button class="str-btn strong" onclick="setStr(2,'strong',95,this)">Strong</button>
+        </div>
+      </div>
+      <label class="field-label">What does the strategy function look like in your context today?</label>
+      <textarea id="f-c2" placeholder="Currently: [what exists — cross-departmental coordination / mandate for sequencing / authority over the chain]. What is missing: [cross-boundary authority / standing team / sequence protection mechanism]..." oninput="u()"></textarea>
+    </div>
+  </div>
+
+  <!-- Component 3: Governance -->
+  <div class="comp-block c3">
+    <div class="comp-header">
+      <span class="comp-badge">Component 03</span>
+      <div><p class="comp-title">Governance function</p><p class="comp-def">The four countermeasures — shared accountability framework, shared outcome metrics, transition-proofing, structural protection — that protect the strategy from the four implementation failure modes. Not a committee: an architecture.</p></div>
+    </div>
+    <div class="comp-body">
+      <div class="aud-ctx pm" id="c3-pm"><span class="aud-ctx-label">Policymaker</span>The governance function is strong when all four countermeasures are in place before the strategy launches. It is partially built when some are designed but not all. It is absent when governance is addressed only after a failure mode has already broken the chain.</div>
+      <div class="aud-ctx rs" id="c3-rs" style="display:none"><span class="aud-ctx-label">Researcher</span>The governance function in research is the institutional architecture that protects the study from capture: pre-registration, independent oversight, separation between funder and analyst, and transition protocols for multi-year projects that survive team changes.</div>
+      <div class="strength-row">
+        <span class="str-label">Current strength:</span>
+        <div class="str-btns">
+          <button class="str-btn absent" onclick="setStr(3,'absent',0,this)">Absent</button>
+          <button class="str-btn fragment" onclick="setStr(3,'fragment',25,this)">Fragments exist</button>
+          <button class="str-btn partial" onclick="setStr(3,'partial',65,this)">Partially built</button>
+          <button class="str-btn strong" onclick="setStr(3,'strong',95,this)">Strong</button>
+        </div>
+      </div>
+      <label class="field-label">Which of the four countermeasures are currently in place?</label>
+      <textarea id="f-c3" placeholder="Currently in place: [which countermeasures exist in some form]. Missing: [which countermeasures are absent]. The most urgent gap is [countermeasure] because [reason it is most likely to produce failure in this context]..." oninput="u()"></textarea>
+    </div>
+  </div>
+
+  <!-- Component 4: Learning -->
+  <div class="comp-block c4">
+    <div class="comp-header">
+      <span class="comp-badge">Component 04</span>
+      <div><p class="comp-title">Learning function</p><p class="comp-def">The feedback loops that close the system — the mechanism through which outcomes are read back into the diagnostic function, so that next year's diagnosis is more precise and next year's strategy starts from a richer institutional knowledge base.</p></div>
+    </div>
+    <div class="comp-body">
+      <div class="aud-ctx pm" id="c4-pm"><span class="aud-ctx-label">Policymaker</span>The learning function is absent when evaluations are produced but never formally integrated into the next cycle's diagnosis. It is strong when there is a structured process — triggered at defined intervals — that connects outcome data back to the diagnostic function and updates the strategy logic accordingly.</div>
+      <div class="aud-ctx rs" id="c4-rs" style="display:none"><span class="aud-ctx-label">Researcher</span>The learning function is the systematic review process that closes the research cycle — where findings from one study are formally integrated into the design of the next, and where anomalies are tracked as weak signals rather than dismissed as noise.</div>
+      <div class="strength-row">
+        <span class="str-label">Current strength:</span>
+        <div class="str-btns">
+          <button class="str-btn absent" onclick="setStr(4,'absent',0,this)">Absent</button>
+          <button class="str-btn fragment" onclick="setStr(4,'fragment',25,this)">Fragments exist</button>
+          <button class="str-btn partial" onclick="setStr(4,'partial',65,this)">Partially built</button>
+          <button class="str-btn strong" onclick="setStr(4,'strong',95,this)">Strong</button>
+        </div>
+      </div>
+      <label class="field-label">How does learning currently feed back into your diagnostic and strategy functions?</label>
+      <textarea id="f-c4" placeholder="Currently: [what evaluation or review processes exist]. How findings feed back: [formal process / informal / ad hoc / not at all]. What is missing: [structured cycle / formal integration point / feedback loop trigger]..." oninput="u()"></textarea>
+    </div>
+  </div>
+
+  <!-- System Profile -->
+  <div class="system-profile" id="sys-profile" style="display:none">
+    <p class="sp-title">Your city intelligence system profile</p>
+    <div class="sp-row"><span class="sp-name">Diagnostic function</span><div class="sp-bar-outer"><div class="sp-bar-inner" id="bar-c1" style="width:0%"></div></div><span class="sp-val" id="val-c1">—</span></div>
+    <div class="sp-row"><span class="sp-name">Strategy function</span><div class="sp-bar-outer"><div class="sp-bar-inner" id="bar-c2" style="width:0%"></div></div><span class="sp-val" id="val-c2">—</span></div>
+    <div class="sp-row"><span class="sp-name">Governance function</span><div class="sp-bar-outer"><div class="sp-bar-inner" id="bar-c3" style="width:0%"></div></div><span class="sp-val" id="val-c3">—</span></div>
+    <div class="sp-row"><span class="sp-name">Learning function</span><div class="sp-bar-outer"><div class="sp-bar-inner" id="bar-c4" style="width:0%"></div></div><span class="sp-val" id="val-c4">—</span></div>
+    <p class="sp-weak-label" id="sp-analysis"></p>
+  </div>
+
+  <div class="field-label" style="margin-top:20px;font-size:13px;font-weight:700;color:var(--text)">The first structural move — for your weakest component</div>
+  <p class="field-sub" style="margin-bottom:8px">Based on your system profile: what is the single most important structural move that would begin to build the weakest component? Not the whole component — the first move that creates the condition the next move depends on.</p>
+  <textarea id="f-firstmove" placeholder="The weakest component in my system is [component]. The first structural move to begin building it is [specific action — not a study, not a meeting, a structural change]. This move creates the condition for [what it unlocks next]..." oninput="u()" style="min-height:80px"></textarea>
+
+  <div class="first-move-box">
+    <p class="fm-title">Your first structural move</p>
+    <p class="fm-text" id="out-firstmove"><span class="fm-empty">Complete the field above</span></p>
+  </div>
+
+  <div class="pdf-btn-wrap">
+    <button class="pdf-btn" onclick="window.print()">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17v-6M9 14l3 3 3-3"/><rect x="3" y="3" width="18" height="14" rx="2"/><path d="M3 17h18v4H3z"/></svg>
+      Save my system audit as PDF
+    </button>
+    <p class="pdf-hint">Opens your browser's print dialog — choose "Save as PDF" as the destination</p>
+  </div>
+</div>
+<script>
+var aud='pm';
+var strengths={1:null,2:null,3:null,4:null};
+var strVals={absent:0,fragment:25,partial:65,strong:95};
+var strLabels={absent:'Absent',fragment:'Fragments exist',partial:'Partially built',strong:'Strong'};
+var compNames={1:'Diagnostic function',2:'Strategy function',3:'Governance function',4:'Learning function'};
+
+function setAud(a){
+  aud=a;
+  document.getElementById('btn-pm').className='aud-btn'+(a==='pm'?' pm-active':'');
+  document.getElementById('btn-rs').className='aud-btn'+(a==='rs'?' rs-active':'');
+  ['1','2','3','4'].forEach(function(n){
+    document.getElementById('c'+n+'-pm').style.display=a==='pm'?'block':'none';
+    document.getElementById('c'+n+'-rs').style.display=a==='rs'?'block':'none';
+  });
+}
+
+function setStr(comp,level,val,btn){
+  var block=btn.closest('.comp-block');
+  block.querySelectorAll('.str-btn').forEach(function(b){b.classList.remove('active')});
+  btn.classList.add('active');
+  strengths[comp]=level;
+  document.getElementById('bar-c'+comp).style.width=val+'%';
+  document.getElementById('val-c'+comp).textContent=strLabels[level];
+  document.getElementById('sys-profile').style.display='block';
+  updateAnalysis();
+  u();
+}
+
+function updateAnalysis(){
+  var filled=Object.values(strengths).filter(function(v){return v!==null});
+  if(filled.length===0) return;
+  var minVal=100,minComp=null;
+  for(var c=1;c<=4;c++){
+    if(strengths[c]!==null && strVals[strengths[c]]<minVal){
+      minVal=strVals[strengths[c]];
+      minComp=c;
+    }
+  }
+  var analysis='';
+  if(minComp){
+    if(minVal===0) analysis='Your <strong>'+compNames[minComp]+'</strong> is absent — this is the binding constraint. A city intelligence system with a missing component cannot function: the absent component breaks the cycle. This is where the first structural move must be placed.';
+    else if(minVal===25) analysis='Your <strong>'+compNames[minComp]+'</strong> exists only in fragments. This is your weakest link. Fragments do not constitute a standing capacity — they produce the appearance of the function without its structural effect. The first move should convert the strongest fragment into a formal institutional practice.';
+    else if(minVal===65) analysis='Your <strong>'+compNames[minComp]+'</strong> is partially built. This is your development priority. A partial function produces some of the system\'s benefits but cannot sustain a compounding strategy over time. The first move should identify the specific gap between partial and fully operational.';
+    else analysis='All four components are strong — your system is functional. The question is now whether all four are connected: does your learning function feed back into your diagnostic function on a regular cycle? That connection is what makes the system self-improving rather than merely adequate.';
+  }
+  document.getElementById('sp-analysis').innerHTML=analysis;
+}
+
+function u(){
+  var textIds=['f-c1','f-c2','f-c3','f-c4','f-firstmove'];
+  var filled=textIds.filter(function(id){var el=document.getElementById(id);return el&&el.value.trim().length>15;}).length;
+  var rated=Object.values(strengths).filter(function(v){return v!==null}).length;
+  var pct=Math.round(((filled+rated)/(textIds.length+4))*100);
+  document.getElementById('pbar').style.width=pct+'%';
+  document.getElementById('pct').textContent=pct+'%';
+  var fm=document.getElementById('f-firstmove').value.trim();
+  document.getElementById('out-firstmove').innerHTML=fm?fm:'<span class="fm-empty">Complete the field above</span>';
+}
+</script>
+</body>
+</html>

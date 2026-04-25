@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Section 9 Quiz — Building City Intelligence Systems</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=DM+Sans:wght@300;400;500;600&display=swap');
+:root{--teal-dark:#085041;--teal-mid:#0F6E56;--teal:#1D9E75;--teal-light:#5DCAA5;--teal-pale:#E1F5EE;--teal-faint:#F0FAF6;--correct:#0F6E56;--correct-pale:#E1F5EE;--correct-border:#5DCAA5;--wrong:#B91C1C;--wrong-pale:#FEF2F2;--wrong-border:#FECACA;--text:#1a1a1a;--text-mid:#3a3a3a;--text-muted:#777;--border:#E5E5E5;--bg:#FAFAF9;--card:#FFFFFF;--radius:12px;--radius-sm:8px;}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:15px;line-height:1.65}
+.quiz-wrap{max-width:680px;margin:0 auto;padding:40px 20px 80px}
+.quiz-header{text-align:center;margin-bottom:40px}
+.q-section-label{font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--teal-mid);margin-bottom:12px}
+.q-title{font-family:'Playfair Display',serif;font-size:28px;font-weight:700;color:var(--text);line-height:1.2;margin-bottom:10px}
+.q-desc{font-size:14px;color:var(--text-muted);line-height:1.6;max-width:500px;margin:0 auto}
+.progress-wrap{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px 20px;margin-bottom:28px;display:flex;align-items:center;gap:14px}
+.progress-outer{flex:1;height:6px;background:#E8EAE8;border-radius:3px;overflow:hidden}
+.progress-inner{height:100%;background:linear-gradient(90deg,var(--teal),var(--teal-light));border-radius:3px;transition:width .4s ease;width:0%}
+.progress-text{font-size:12px;font-weight:600;color:var(--teal-mid);white-space:nowrap}
+.score-display{font-size:12px;font-weight:600;color:var(--text-muted);white-space:nowrap}
+.q-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:28px;margin-bottom:16px;display:none;animation:slideIn .3s ease}
+.q-card.active{display:block}
+@keyframes slideIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.q-meta{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.q-num{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--teal-mid);background:var(--teal-pale);padding:3px 10px;border-radius:20px}
+.q-type{font-size:10px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--text-muted)}
+.q-text{font-family:'Playfair Display',serif;font-size:17px;font-weight:500;line-height:1.55;color:var(--text);margin-bottom:20px}
+.multi-note{font-size:12px;color:var(--text-muted);margin-bottom:10px;font-style:italic}
+.options{display:flex;flex-direction:column;gap:8px;margin-bottom:20px}
+.opt{display:flex;align-items:flex-start;gap:12px;padding:12px 14px;border:1px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;transition:all .15s;background:var(--card)}
+.opt:hover:not(.disabled){border-color:var(--teal-light);background:var(--teal-faint)}
+.opt.correct{border-color:var(--correct-border);background:var(--correct-pale)}
+.opt.wrong{border-color:var(--wrong-border);background:var(--wrong-pale)}
+.opt.disabled{cursor:default;opacity:.75}
+.opt-marker{width:22px;height:22px;border-radius:50%;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;font-size:11px;font-weight:700;color:var(--text-muted)}
+.opt.correct .opt-marker{border-color:var(--correct);background:var(--correct);color:#fff}
+.opt.wrong .opt-marker{border-color:var(--wrong);background:var(--wrong);color:#fff}
+.opt-text{font-size:14px;color:var(--text-mid);line-height:1.55;padding-top:1px}
+.tf-row{display:flex;gap:10px;margin-bottom:20px}
+.tf-btn{flex:1;padding:12px;border:1px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;font-size:14px;font-weight:600;text-align:center;transition:all .15s;background:var(--card);color:var(--text-muted)}
+.tf-btn:hover:not(.disabled){border-color:var(--teal-light);background:var(--teal-faint);color:var(--teal-dark)}
+.tf-btn.correct{border-color:var(--correct-border);background:var(--correct-pale);color:var(--correct)}
+.tf-btn.wrong{border-color:var(--wrong-border);background:var(--wrong-pale);color:var(--wrong)}
+.tf-btn.disabled{cursor:default}
+.match-grid{display:grid;gap:8px;margin-bottom:16px}
+.match-row{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:center}
+.match-left{padding:10px 12px;background:var(--teal-faint);border:1px solid var(--teal-pale);border-radius:var(--radius-sm);font-size:13px;font-weight:600;color:var(--teal-dark);text-align:right}
+.match-arrow{color:var(--text-muted);font-size:14px;text-align:center}
+.match-select{padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:12px;font-family:'DM Sans',sans-serif;background:var(--card);color:var(--text);outline:none;cursor:pointer;width:100%}
+.match-select.correct{border-color:var(--correct-border);background:var(--correct-pale);color:var(--correct)}
+.match-select.wrong{border-color:var(--wrong-border);background:var(--wrong-pale);color:var(--wrong)}
+.check-match-btn{padding:9px 20px;background:var(--teal);color:#fff;border:none;border-radius:var(--radius-sm);font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background .15s;margin-bottom:16px}
+.check-match-btn:hover{background:var(--teal-mid)}
+.check-match-btn:disabled{background:#ccc;cursor:default}
+.feedback-box{display:none;padding:16px 18px;border-radius:var(--radius-sm);margin-bottom:20px;font-size:13px;line-height:1.7}
+.feedback-box.correct{background:var(--correct-pale);border:1px solid var(--correct-border);color:var(--teal-dark)}
+.feedback-box.wrong{background:var(--wrong-pale);border:1px solid var(--wrong-border);color:#7A1F1F}
+.feedback-box .fb-verdict{font-weight:700;display:block;margin-bottom:4px}
+.q-nav{display:flex;justify-content:flex-end}
+.next-btn{padding:10px 24px;background:var(--teal);color:#fff;border:none;border-radius:var(--radius-sm);font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background .15s;display:none}
+.next-btn:hover{background:var(--teal-mid)}
+.results-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:40px 32px;text-align:center;display:none}
+.results-circle{width:100px;height:100px;border-radius:50%;background:linear-gradient(135deg,var(--teal),var(--teal-light));display:flex;align-items:center;justify-content:center;margin:0 auto 20px;box-shadow:0 8px 24px rgba(29,158,117,.25)}
+.results-pct{font-family:'Playfair Display',serif;font-size:30px;font-weight:700;color:#fff}
+.results-title{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--text);margin-bottom:8px}
+.results-sub{font-size:14px;color:var(--text-muted);line-height:1.6;margin-bottom:24px}
+.results-detail{display:flex;gap:16px;justify-content:center;margin-bottom:24px}
+.rd-box{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 20px;text-align:center}
+.rd-num{font-family:'Playfair Display',serif;font-size:24px;font-weight:700;color:var(--teal)}
+.rd-label{font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.07em;margin-top:2px}
+.retry-btn{padding:11px 28px;background:var(--teal);color:#fff;border:none;border-radius:var(--radius-sm);font-size:14px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif}
+.pass-badge{display:inline-block;padding:4px 14px;border-radius:20px;font-size:12px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;margin-bottom:16px}
+.pass-badge.pass{background:var(--correct-pale);color:var(--correct);border:1px solid var(--correct-border)}
+.pass-badge.fail{background:var(--wrong-pale);color:var(--wrong);border:1px solid var(--wrong-border)}
+.pdf-btn{display:inline-flex;align-items:center;gap:7px;background:#085041;color:#fff;border:none;border-radius:24px;padding:10px 24px;font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;margin-top:12px}
+</style>
+</head>
+<body>
+<div class="quiz-wrap">
+  <div class="quiz-header">
+    <p class="q-section-label">Building city intelligence systems · City Intelligence Mastercourse</p>
+    <h1 class="q-title">Building city intelligence systems</h1>
+    <p class="q-desc">Section 8 named the threats. Section 9 built the defences. This quiz tests whether you can apply the countermeasures to real scenarios — and recognise the difference between a governance architecture and four parallel governance measures. 10 questions.</p>
+  </div>
+  <div class="progress-wrap">
+    <div class="progress-outer"><div class="progress-inner" id="progress-bar"></div></div>
+    <span class="progress-text" id="progress-text">0 / 10</span>
+    <span class="score-display" id="score-display">Score: 0</span>
+  </div>
+
+  <div class="q-card active" id="q1">
+    <div class="q-meta"><span class="q-num">Question 1</span><span class="q-type">True / False</span></div>
+    <p class="q-text">"A city intelligence system is a data platform or dashboard that gives decision-makers access to real-time information about their city's performance."</p>
+    <div class="tf-row">
+      <button class="tf-btn" onclick="checkTF('q1',this,'True','False')">True</button>
+      <button class="tf-btn" onclick="checkTF('q1',this,'False','False')">False</button>
+    </div>
+    <div class="feedback-box" id="fb-q1"></div>
+    <div class="q-nav"><button class="next-btn" id="next-q1" onclick="nextQ(1,2)">Next question →</button></div>
+  </div>
+
+  <div class="q-card" id="q2">
+    <div class="q-meta"><span class="q-num">Question 2</span><span class="q-type">Match and sort</span></div>
+    <p class="q-text">Match each governance countermeasure to the implementation failure mode it is designed against.</p>
+    <div class="match-grid" id="match-q2">
+      <div class="match-row"><div class="match-left">Shared accountability framework</div><div class="match-arrow">→</div><select class="match-select" id="m2-1"><option value="">— select —</option><option>Mandate fragmentation</option><option>Metric substitution</option><option>Political cycle truncation</option><option>Institutional capture</option></select></div>
+      <div class="match-row"><div class="match-left">Shared outcome metric system</div><div class="match-arrow">→</div><select class="match-select" id="m2-2"><option value="">— select —</option><option>Mandate fragmentation</option><option>Metric substitution</option><option>Political cycle truncation</option><option>Institutional capture</option></select></div>
+      <div class="match-row"><div class="match-left">Transition-proofing protocol</div><div class="match-arrow">→</div><select class="match-select" id="m2-3"><option value="">— select —</option><option>Mandate fragmentation</option><option>Metric substitution</option><option>Political cycle truncation</option><option>Institutional capture</option></select></div>
+      <div class="match-row"><div class="match-left">Structural protection mechanism</div><div class="match-arrow">→</div><select class="match-select" id="m2-4"><option value="">— select —</option><option>Mandate fragmentation</option><option>Metric substitution</option><option>Political cycle truncation</option><option>Institutional capture</option></select></div>
+    </div>
+    <button class="check-match-btn" id="check-q2" onclick="checkMatch4('q2',['Mandate fragmentation','Metric substitution','Political cycle truncation','Institutional capture'])">Check answers</button>
+    <div class="feedback-box" id="fb-q2"></div>
+    <div class="q-nav"><button class="next-btn" id="next-q2" onclick="nextQ(2,3)">Next question →</button></div>
+  </div>
+
+  <div class="q-card" id="q3">
+    <div class="q-meta"><span class="q-num">Question 3</span><span class="q-type">Multiple choice</span></div>
+    <p class="q-text">A shared outcome metric must have three properties to function as a governance countermeasure. Which answer correctly names all three?</p>
+    <div class="options" id="opts-q3">
+      <div class="opt" data-v="A"><span class="opt-marker">A</span><span class="opt-text">Quantitative, published, and independently verified</span></div>
+      <div class="opt" data-v="B"><span class="opt-marker">B</span><span class="opt-text">Jointly produced (no single department can move it alone), structurally visible (in all departmental reporting), and designed at launch (before the strategy begins)</span></div>
+      <div class="opt" data-v="C"><span class="opt-marker">C</span><span class="opt-text">Agreed by senior leadership, tracked quarterly, and reported to the public</span></div>
+      <div class="opt" data-v="D"><span class="opt-marker">D</span><span class="opt-text">CII-aligned, pillar-specific, and independently evaluated</span></div>
+    </div>
+    <div class="feedback-box" id="fb-q3"></div>
+    <div class="q-nav"><button class="next-btn" id="next-q3" onclick="nextQ(3,4)">Next question →</button></div>
+  </div>
+
+  <div class="q-card" id="q4">
+    <div class="q-meta"><span class="q-num">Question 4</span><span class="q-type">Multiple choice</span></div>
+    <p class="q-text">A city has a strong diagnostic function — regular CII-based reports that accurately identify structural gaps. But three years of reports have not produced any strategic change. Which system component is most likely absent?</p>
+    <div class="options" id="opts-q4">
+      <div class="opt" data-v="A"><span class="opt-marker">A</span><span class="opt-text">The diagnostic function — the reports are not reaching the right people</span></div>
+      <div class="opt" data-v="B"><span class="opt-marker">B</span><span class="opt-text">The strategy function — there is no standing capacity to design compounding interventions and hold the thread across departmental boundaries</span></div>
+      <div class="opt" data-v="C"><span class="opt-marker">C</span><span class="opt-text">The governance function — the countermeasures are not in place</span></div>
+      <div class="opt" data-v="D"><span class="opt-marker">D</span><span class="opt-text">The learning function — the reports are not feeding back into the next diagnostic cycle</span></div>
+    </div>
+    <div class="feedback-box" id="fb-q4"></div>
+    <div class="q-nav"><button class="next-btn" id="next-q4" onclick="nextQ(4,5)">Next question →</button></div>
+  </div>
+
+  <div class="q-card" id="q5">
+    <div class="q-meta"><span class="q-num">Question 5</span><span class="q-type">Multiple choice</span></div>
+    <p class="q-text">A transition-proofing protocol has three elements. A city has two: a strategy logic document and a cross-administration anchor. The embedded metric is missing. What is the specific risk this creates?</p>
+    <div class="options" id="opts-q5">
+      <div class="opt" data-v="A"><span class="opt-marker">A</span><span class="opt-text">The strategy logic document becomes irrelevant without a metric to illustrate progress</span></div>
+      <div class="opt" data-v="B"><span class="opt-marker">B</span><span class="opt-text">The cross-administration anchor cannot be enforced without a metric to define what is being protected</span></div>
+      <div class="opt" data-v="C"><span class="opt-marker">C</span><span class="opt-text">The incoming administration will have no way to assess whether the strategy is working — the outcome tracking disappears at the transition because it was never embedded in baseline institutional reporting</span></div>
+      <div class="opt" data-v="D"><span class="opt-marker">D</span><span class="opt-text">The metric needs to be designed from scratch by the new administration, which introduces a redesign risk</span></div>
+    </div>
+    <div class="feedback-box" id="fb-q5"></div>
+    <div class="q-nav"><button class="next-btn" id="next-q5" onclick="nextQ(5,6)">Next question →</button></div>
+  </div>
+
+  <div class="q-card" id="q6">
+    <div class="q-meta"><span class="q-num">Question 6</span><span class="q-type">Multiple choice</span></div>
+    <p class="q-text">A city has all four governance countermeasures in place. But the learning function is absent — evaluations are produced but never integrated into the next diagnostic cycle. What is the practical consequence for the city intelligence system?</p>
+    <div class="options" id="opts-q6">
+      <div class="opt" data-v="A"><span class="opt-marker">A</span><span class="opt-text">The system will fail immediately — the learning function is essential for the other three components to operate</span></div>
+      <div class="opt" data-v="B"><span class="opt-marker">B</span><span class="opt-text">The system will function but not improve — each cycle starts from the same knowledge base rather than from a richer, more accurate one</span></div>
+      <div class="opt" data-v="C"><span class="opt-marker">C</span><span class="opt-text">The governance function will break down without the feedback loops the learning function provides</span></div>
+      <div class="opt" data-v="D"><span class="opt-marker">D</span><span class="opt-text">The diagnostic function will become redundant — without learning, diagnostics produce no new insights over time</span></div>
+    </div>
+    <div class="feedback-box" id="fb-q6"></div>
+    <div class="q-nav"><button class="next-btn" id="next-q6" onclick="nextQ(6,7)">Next question →</button></div>
+  </div>
+
+  <div class="q-card" id="q7">
+    <div class="q-meta"><span class="q-num">Question 7</span><span class="q-type">Multiple response</span></div>
+    <p class="q-text">Which of the following are characteristics of a governance architecture — as distinct from four parallel governance measures?</p>
+    <p class="multi-note">Select all that apply, then click Check.</p>
+    <div class="options" id="opts-q7">
+      <div class="opt multi-opt" onclick="toggleMulti(this)"><span class="opt-marker">□</span><span class="opt-text">Each countermeasure strengthens the effectiveness of at least one other countermeasure</span></div>
+      <div class="opt multi-opt" onclick="toggleMulti(this)"><span class="opt-marker">□</span><span class="opt-text">All four countermeasures were commissioned by the same person</span></div>
+      <div class="opt multi-opt" onclick="toggleMulti(this)"><span class="opt-marker">□</span><span class="opt-text">Removing one countermeasure would weaken the others — the system is structurally interdependent</span></div>
+      <div class="opt multi-opt" onclick="toggleMulti(this)"><span class="opt-marker">□</span><span class="opt-text">The countermeasures together produce information that improves each of them over time</span></div>
+      <div class="opt multi-opt" onclick="toggleMulti(this)"><span class="opt-marker">□</span><span class="opt-text">All four countermeasures were designed at the same time</span></div>
+    </div>
+    <button class="check-match-btn" id="check-q7" onclick="checkMulti('q7',['Each countermeasure strengthens the effectiveness of at least one other countermeasure','Removing one countermeasure would weaken the others — the system is structurally interdependent','The countermeasures together produce information that improves each of them over time'])">Check answers</button>
+    <div class="feedback-box" id="fb-q7"></div>
+    <div class="q-nav"><button class="next-btn" id="next-q7" onclick="nextQ(7,8)">Next question →</button></div>
+  </div>
+
+  <div class="q-card" id="q8">
+    <div class="q-meta"><span class="q-num">Question 8</span><span class="q-type">Multiple choice</span></div>
+    <p class="q-text">The structural protection mechanism requires separating the authority to design the structural element from the authority to manage the programmatic element. Why is this the design principle — and not simply requiring the implementing department to protect the structural element themselves?</p>
+    <div class="options" id="opts-q8">
+      <div class="opt" data-v="A"><span class="opt-marker">A</span><span class="opt-text">Because implementing departments lack the analytical capability to protect structural elements</span></div>
+      <div class="opt" data-v="B"><span class="opt-marker">B</span><span class="opt-text">Because the implementing department will, over time, redefine what "structural" means in ways that serve their mandate — and they will not be acting in bad faith when they do</span></div>
+      <div class="opt" data-v="C"><span class="opt-marker">C</span><span class="opt-text">Because government departments cannot be trusted to self-regulate</span></div>
+      <div class="opt" data-v="D"><span class="opt-marker">D</span><span class="opt-text">Because the structural element and the programmatic element require different budgets</span></div>
+    </div>
+    <div class="feedback-box" id="fb-q8"></div>
+    <div class="q-nav"><button class="next-btn" id="next-q8" onclick="nextQ(8,9)">Next question →</button></div>
+  </div>
+
+  <div class="q-card" id="q9">
+    <div class="q-meta"><span class="q-num">Question 9</span><span class="q-type">Multiple choice</span></div>
+    <p class="q-text">A city has a strong governance function (all four countermeasures in place) but a weak strategy function — there is no standing capacity to design compounding sequences across departmental boundaries. What is the most accurate description of this system's likely performance?</p>
+    <div class="options" id="opts-q9">
+      <div class="opt" data-v="A"><span class="opt-marker">A</span><span class="opt-text">The system will perform well — strong governance is the most important component</span></div>
+      <div class="opt" data-v="B"><span class="opt-marker">B</span><span class="opt-text">The governance function will protect whatever strategies exist, but those strategies will be parallel interventions rather than compounding sequences — the architecture will be well-governed but not intelligent</span></div>
+      <div class="opt" data-v="C"><span class="opt-marker">C</span><span class="opt-text">The governance function cannot operate without a strategy function providing it with something to protect</span></div>
+      <div class="opt" data-v="D"><span class="opt-marker">D</span><span class="opt-text">The system will fail — a missing strategy function makes the governance function redundant</span></div>
+    </div>
+    <div class="feedback-box" id="fb-q9"></div>
+    <div class="q-nav"><button class="next-btn" id="next-q9" onclick="nextQ(9,10)">Next question →</button></div>
+  </div>
+
+  <div class="q-card" id="q10">
+    <div class="q-meta"><span class="q-num">Question 10</span><span class="q-type">Multiple choice</span></div>
+    <p class="q-text">Section 9 ends with the question: "Which component is weakest in your city — and what is the first structural move that would begin to build it?" Why is this question the bridge between the course and Monday morning?</p>
+    <div class="options" id="opts-q10">
+      <div class="opt" data-v="A"><span class="opt-marker">A</span><span class="opt-text">Because it gives the learner a specific task to complete before returning to work</span></div>
+      <div class="opt" data-v="B"><span class="opt-marker">B</span><span class="opt-text">Because it summarises all nine sections into a single diagnostic question</span></div>
+      <div class="opt" data-v="C"><span class="opt-marker">C</span><span class="opt-text">Because it converts the course's full analytical arc — from diagnosing failure to building governance architecture — into a specific, structural, actionable first move in the learner's actual city or organisation</span></div>
+      <div class="opt" data-v="D"><span class="opt-marker">D</span><span class="opt-text">Because it tests whether the learner has retained the four system components</span></div>
+    </div>
+    <div class="feedback-box" id="fb-q10"></div>
+    <div class="q-nav"><button class="next-btn" id="next-q10" onclick="showResults()">See my results →</button></div>
+  </div>
+
+  <div class="results-card" id="results">
+    <div class="results-circle"><span class="results-pct" id="res-pct">—</span></div>
+    <span class="pass-badge" id="pass-badge">—</span>
+    <h2 class="results-title" id="res-title">—</h2>
+    <p class="results-sub" id="res-sub">—</p>
+    <div class="results-detail">
+      <div class="rd-box"><div class="rd-num" id="res-correct">—</div><div class="rd-label">Correct</div></div>
+      <div class="rd-box"><div class="rd-num">10</div><div class="rd-label">Questions</div></div>
+      <div class="rd-box"><div class="rd-num" id="res-score">—</div><div class="rd-label">Points</div></div>
+    </div>
+    <button class="retry-btn" onclick="retryQuiz()">Retake quiz</button>
+    <div style="margin-top:12px">
+      <button class="pdf-btn" onclick="window.print()">
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17v-6M9 14l3 3 3-3"/><rect x="3" y="3" width="18" height="14" rx="2"/><path d="M3 17h18v4H3z"/></svg>
+        Save results as PDF
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+var TOTAL=10;
+var state={answered:0,correct:0,points:0};
+var mcCorrect={'q3':'B','q4':'B','q5':'C','q6':'B','q8':'B','q9':'B','q10':'C'};
+var feedbacks={
+  'q1':'The correct answer is False. A city intelligence system is an institutional architecture — the connected set of capacities through which a city consistently converts what it knows into what it does, and learns from what it does. It has four components: a diagnostic function, a strategy function, a governance function, and a learning function. A data platform or dashboard is at most a tool that might support the diagnostic function — it is not the system itself.',
+  'q2':'The correct matching is: Shared accountability framework → Mandate fragmentation; Shared outcome metric system → Metric substitution; Transition-proofing protocol → Political cycle truncation; Structural protection mechanism → Institutional capture. Each countermeasure is specifically designed as a structural response to one failure mode — addressing the institutional mechanism that produces it rather than the symptom it creates.',
+  'q3':'The correct answer names all three properties: jointly produced, structurally visible, and designed at launch. A metric that any single department can move alone is a departmental output metric in disguise. A metric that only appears in the strategy owner\'s dashboard is invisible to the departments it needs to change. A metric designed after two years as an evaluation exercise does not shape the behaviour it was meant to measure — it only records the failure that has already occurred.',
+  'q4':'The correct answer is the strategy function. The diagnostic function is clearly working — the reports are accurate and regular. The problem is not communication: reports are reaching senior officials. The problem is structural: there is no standing capacity to convert diagnostic insight into compounding strategy design and hold that strategy across departmental boundaries. A city with an excellent diagnostic function and no strategy function produces excellent reports that don\'t change anything — which is precisely what this scenario describes.',
+  'q5':'The correct answer is that the incoming administration will have no way to assess whether the strategy is working because outcome tracking disappears at the transition. The embedded metric is what anchors the shared outcome to baseline institutional reporting. Without it, tracking of the compounding outcome depends on the continuing attention of the people who designed the strategy. When they leave, the metric tracking stops — and the incoming administration has no data on which to base a continuation decision.',
+  'q6':'The correct answer is that the system will function but not improve. The governance function protects what exists. The strategy function designs new sequences. The diagnostic function identifies new gaps. But without the learning function, each cycle begins from the same knowledge base — the same structural assumptions, the same diagnostic blind spots, the same strategic starting points. The system is stable but not self-improving. Over time, this means the system becomes increasingly misaligned with the city\'s evolving structural reality.',
+  'q7':'The three correct answers describe structural interdependence and systemic feedback — the defining properties of an architecture as distinct from a set of parallel measures. Shared commissioning and simultaneous design are operational features that may or may not be present in a genuine architecture. An architecture\'s defining property is not how it was created but how it functions: each element strengthening the others, the whole being structurally dependent on each part.',
+  'q8':'The correct answer is that the implementing department will redefine what "structural" means in ways that serve their mandate — and will not be acting in bad faith when they do. This is the central argument about institutional capture: it is a structural, not a motivational, problem. A department with genuine commitment to the strategy will still gradually optimise for its own mandate, deprioritise what is hard to measure, and amplify what is visible. The structural protection mechanism responds to this structural inevitability by separating the definition authority from the management authority.',
+  'q9':'The correct answer is that the governance function will protect whatever strategies exist, but those strategies will be parallel interventions rather than compounding sequences — the architecture will be well-governed but not intelligent. This is a precise description of a real pattern. Many well-governed cities have excellent accountability frameworks and rigorous reporting systems that protect parallel programmes very effectively. But without the strategy function, those programmes never compound. Good governance of the wrong thing produces institutional competence without systemic intelligence.',
+  'q10':'The correct answer is that the question converts the course\'s full analytical arc into a specific, structural, actionable first move in the learner\'s actual city or organisation. It is not a summary question. It is not a retention test. It is the moment the course crosses from analytical framework to applied practice. The entire sequence — from failure modes to governance architecture — has been building toward a learner who can now look at their own institutional context and name, precisely, the structural move that would begin to change it.'
+};
+
+function showFeedback(qId,isCorrect,p){
+  var el=document.getElementById('fb-'+qId);
+  el.style.display='block';
+  el.className='feedback-box '+(isCorrect?'correct':'wrong');
+  el.innerHTML='<span class="fb-verdict">'+(isCorrect?'✓ Correct':'✗ Not quite')+'</span>'+feedbacks[qId];
+  document.getElementById('next-'+qId).style.display='block';
+  state.answered++;
+  if(isCorrect){state.correct++;state.points+=(p||1);}
+  var pct=Math.round((state.answered/TOTAL)*100);
+  document.getElementById('progress-bar').style.width=pct+'%';
+  document.getElementById('progress-text').textContent=state.answered+' / '+TOTAL;
+  document.getElementById('score-display').textContent='Score: '+state.correct;
+}
+
+function checkTF(qId,btn,chosen,c){
+  document.getElementById(qId).querySelectorAll('.tf-btn').forEach(function(b){b.classList.add('disabled')});
+  btn.classList.add(chosen===c?'correct':'wrong');
+  showFeedback(qId,chosen===c,1);
+}
+
+function checkMC(qId,opt,chosen){
+  var c=mcCorrect[qId];
+  document.getElementById('opts-'+qId).querySelectorAll('.opt').forEach(function(o,i){
+    o.classList.add('disabled');o.onclick=null;
+    if(String.fromCharCode(65+i)===c) o.classList.add('correct');
+  });
+  if(chosen!==c) opt.classList.add('wrong');
+  var p=(qId==='q4'||qId==='q8'||qId==='q9'||qId==='q10')?2:1;
+  showFeedback(qId,chosen===c,p);
+}
+
+function toggleMulti(opt){
+  if(opt.classList.contains('disabled')) return;
+  opt.classList.toggle('selected');
+  opt.querySelector('.opt-marker').textContent=opt.classList.contains('selected')?'✓':'□';
+}
+
+function checkMulti(qId,correctList){
+  var opts=document.getElementById('opts-'+qId).querySelectorAll('.multi-opt');
+  var selected=[];
+  opts.forEach(function(o){if(o.classList.contains('selected'))selected.push(o.querySelector('.opt-text').textContent.trim())});
+  opts.forEach(function(o){
+    o.classList.add('disabled');o.onclick=null;
+    var txt=o.querySelector('.opt-text').textContent.trim();
+    if(correctList.includes(txt)) o.classList.add('correct');
+    else if(o.classList.contains('selected')) o.classList.add('wrong');
+  });
+  document.getElementById('check-'+qId).disabled=true;
+  var ok=correctList.every(function(c){return selected.includes(c)})&&selected.length===correctList.length;
+  showFeedback(qId,ok,2);
+}
+
+function checkMatch4(qId,correctAnswers){
+  var allCorrect=true;
+  for(var i=1;i<=4;i++){
+    var s=document.getElementById('m'+qId.slice(-1)+'-'+i);
+    s.disabled=true;
+    if(s.value===correctAnswers[i-1]) s.classList.add('correct');
+    else{s.classList.add('wrong');allCorrect=false;}
+  }
+  document.getElementById('check-'+qId).disabled=true;
+  showFeedback(qId,allCorrect,2);
+}
+
+function nextQ(c,n){
+  document.getElementById('q'+c).classList.remove('active');
+  document.getElementById('q'+n).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function showResults(){
+  document.getElementById('q10').classList.remove('active');
+  document.getElementById('results').style.display='block';
+  var pct=Math.round((state.correct/TOTAL)*100);
+  var pass=pct>=70;
+  document.getElementById('res-pct').textContent=pct+'%';
+  document.getElementById('pass-badge').textContent=pass?'PASSED':'KEEP GOING';
+  document.getElementById('pass-badge').className='pass-badge '+(pass?'pass':'fail');
+  document.getElementById('res-title').textContent=pass?'Well done.':'Keep working at it.';
+  document.getElementById('res-sub').textContent=pass?'You can apply the four countermeasures to real scenarios and you understand what makes them a governance architecture rather than four parallel measures. Sections 10 and 11 ask a different kind of question — about ethics, power, and what this work requires of the person doing it.':'Review the countermeasure designer and the system audit. The four countermeasures and the four system components are the core frameworks. Focus on the questions where you hesitated — they are the ones that point to the distinction between parallel measures and a genuine architecture.';
+  document.getElementById('res-correct').textContent=state.correct;
+  document.getElementById('res-score').textContent=state.points;
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function retryQuiz(){
+  state={answered:0,correct:0,points:0};
+  document.getElementById('progress-bar').style.width='0%';
+  document.getElementById('progress-text').textContent='0 / '+TOTAL;
+  document.getElementById('score-display').textContent='Score: 0';
+  document.getElementById('results').style.display='none';
+  document.querySelectorAll('.q-card').forEach(function(c){c.classList.remove('active')});
+  document.getElementById('q1').classList.add('active');
+  document.querySelectorAll('.feedback-box').forEach(function(f){f.style.display='none'});
+  document.querySelectorAll('.next-btn').forEach(function(b){b.style.display='none'});
+  document.querySelectorAll('.opt').forEach(function(o){o.className='opt'});
+  document.querySelectorAll('.tf-btn').forEach(function(b){b.className='tf-btn'});
+  document.querySelectorAll('.check-match-btn').forEach(function(b){b.disabled=false});
+  document.querySelectorAll('.match-select').forEach(function(s){s.value='';s.className='match-select';s.disabled=false});
+  document.querySelectorAll('.multi-opt').forEach(function(o){
+    o.classList.remove('selected','correct','wrong','disabled');
+    o.querySelector('.opt-marker').textContent='□';
+    o.onclick=function(){toggleMulti(this)};
+  });
+  bindAll();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function bindAll(){
+  for(var qId in mcCorrect){
+    (function(id){
+      document.getElementById('opts-'+id).querySelectorAll('.opt').forEach(function(o,i){
+        o.onclick=function(){checkMC(id,this,String.fromCharCode(65+i))};
+      });
+    })(qId);
+  }
+}
+bindAll();
+</script>
+</body>
+</html>
