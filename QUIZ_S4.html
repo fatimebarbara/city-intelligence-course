@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Section 4 Quiz — Diagnosing Your City</title>
+<title>Section 5 Quiz — Diagnosing Your City</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=DM+Sans:wght@300;400;500;600&display=swap');
 :root{--teal-dark:#085041;--teal-mid:#0F6E56;--teal:#1D9E75;--teal-light:#5DCAA5;--teal-pale:#E1F5EE;--teal-faint:#F0FAF6;--correct:#0F6E56;--correct-pale:#E1F5EE;--correct-border:#5DCAA5;--wrong:#B91C1C;--wrong-pale:#FEF2F2;--wrong-border:#FECACA;--text:#1a1a1a;--text-mid:#3a3a3a;--text-muted:#777;--border:#E5E5E5;--bg:#FAFAF9;--card:#FFFFFF;--radius:12px;--radius-sm:8px;}
@@ -82,9 +82,9 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 <body>
 <div class="quiz-wrap">
   <div class="quiz-header">
-    <p class="q-section-label">Section 4 · City Intelligence Mastercourse</p>
+    <p class="q-section-label">Section 5 · City Intelligence Mastercourse</p>
     <h1 class="q-title">Diagnosing your city</h1>
-    <p class="q-desc">Section 4 asked you to stop reading the CII and start using it. This quiz tests whether you can apply the diagnostic logic — reading a real profile, identifying health as infrastructure, distinguishing weak signals from crises. 10 questions.</p>
+    <p class="q-desc">Section 5 asked you to stop reading the CII and start using it. This quiz tests whether you can apply the diagnostic logic — reading a real profile, identifying health as infrastructure, distinguishing weak signals from crises. 10 questions.</p>
   </div>
   <div class="progress-wrap">
     <div class="progress-outer"><div class="progress-inner" id="progress-bar"></div></div>
@@ -105,7 +105,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 
   <div class="q-card" id="q2">
     <div class="q-meta"><span class="q-num">Question 2</span><span class="q-type">Multiple choice</span></div>
-    <p class="q-text">A city notices a small but consistent annual rise in avoidable mortality among working-age adults. The trend has been visible for four years but has not yet generated policy response. What does Section 4's diagnostic framework call this?</p>
+    <p class="q-text">A city notices a small but consistent annual rise in avoidable mortality among working-age adults. The trend has been visible for four years but has not yet generated policy response. What does Section 5's diagnostic framework call this?</p>
     <div class="options" id="opts-q2">
       <div class="opt" data-v="A"><span class="opt-marker">A</span><span class="opt-text">A structural gap — a missing connection between two pillars that should be aligned</span></div>
       <div class="opt" data-v="B"><span class="opt-marker">B</span><span class="opt-text">A weak signal — an early pattern visible in the data before it becomes a headline crisis</span></div>
@@ -153,7 +153,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 
   <div class="q-card" id="q6">
     <div class="q-meta"><span class="q-num">Question 6</span><span class="q-type">Multiple choice</span></div>
-    <p class="q-text">A city scores 0.79 on Regenerative and 0.41 on Healthy Society. Which attribution question most precisely applies the Section 4 diagnostic logic?</p>
+    <p class="q-text">A city scores 0.79 on Regenerative and 0.41 on Healthy Society. Which attribution question most precisely applies the Section 5 diagnostic logic?</p>
     <div class="options" id="opts-q6">
       <div class="opt" data-v="A"><span class="opt-marker">A</span><span class="opt-text">Why is the city investing in environmental restoration while neglecting health services?</span></div>
       <div class="opt" data-v="B"><span class="opt-marker">B</span><span class="opt-text">Which specific environmental improvements — in which districts — are not reaching the populations with the worst health outcomes, and what structural barrier is preventing the connection?</span></div>
@@ -196,7 +196,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 
   <div class="q-card" id="q9">
     <div class="q-meta"><span class="q-num">Question 9</span><span class="q-type">Multiple choice</span></div>
-    <p class="q-text">A researcher finds that cities with higher Integrator scores tend to have better Healthy Society outcomes. A policymaker responds: "This proves we need to invest in coordination infrastructure." What does the Section 4 diagnostic logic add?</p>
+    <p class="q-text">A researcher finds that cities with higher Integrator scores tend to have better Healthy Society outcomes. A policymaker responds: "This proves we need to invest in coordination infrastructure." What does the Section 5 diagnostic logic add?</p>
     <div class="options" id="opts-q9">
       <div class="opt" data-v="A"><span class="opt-marker">A</span><span class="opt-text">Nothing — the researcher's finding provides the attribution and the policymaker's response is correct</span></div>
       <div class="opt" data-v="B"><span class="opt-marker">B</span><span class="opt-text">The policymaker should commission further research before drawing any policy conclusions</span></div>
@@ -209,7 +209,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 
   <div class="q-card" id="q10">
     <div class="q-meta"><span class="q-num">Question 10</span><span class="q-type">Multiple choice</span></div>
-    <p class="q-text">Which of the following best describes the attribution question in the Section 4 diagnostic framework?</p>
+    <p class="q-text">Which of the following best describes the attribution question in the Section 5 diagnostic framework?</p>
     <div class="options" id="opts-q10">
       <div class="opt" data-v="A"><span class="opt-marker">A</span><span class="opt-text">A question that identifies who is responsible for the underperforming pillar</span></div>
       <div class="opt" data-v="B"><span class="opt-marker">B</span><span class="opt-text">A question that explains the CII's scoring methodology for each pillar</span></div>
@@ -340,7 +340,7 @@ function showResults(){
   document.getElementById('pass-badge').textContent=pass?'PASSED':'KEEP GOING';
   document.getElementById('pass-badge').className='pass-badge '+(pass?'pass':'fail');
   document.getElementById('res-title').textContent=pass?'Well done.':'Keep working at it.';
-  document.getElementById('res-sub').textContent=pass?'You can apply the diagnostic logic to a real profile. Your attribution question is ready. Bring it to Section 5 — where the diagnosis becomes a design.':'Review the diagnostic template and the 20-minute exercise. The three-step process — outlier, broken connection, attribution question — is the core skill. Work through it again with a real city in mind.';
+  document.getElementById('res-sub').textContent=pass?'You can apply the diagnostic logic to a real profile. Your attribution question is ready. Bring it to Section 6 — where the diagnosis becomes a design.':'Review the diagnostic template and the 20-minute exercise. The three-step process — outlier, broken connection, attribution question — is the core skill. Work through it again with a real city in mind.';
   document.getElementById('res-correct').textContent=state.correct;
   document.getElementById('res-score').textContent=state.points;
   window.scrollTo({top:0,behavior:'smooth'});
