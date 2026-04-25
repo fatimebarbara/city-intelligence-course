@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Section 4 · — The Four Conditions Self-Audit</title>
+<style>
+ :root {
+ --teal-dark: #085041; --teal-mid: #0F6E56; --teal: #1D9E75;
+ --teal-light: #5DCAA5; --teal-pale: #E1F5EE; --teal-faint: #F0FAF6;
+ --purple: #534AB7; --purple-pale: #EEEDFE; --purple-mid: #3C3489;
+ --amber: #BA7517; --amber-pale: #FAEEDA;
+ --blue: #185FA5; --blue-pale: #E6F1FB;
+ --coral: #D85A30; --coral-pale: #FAECE7;
+ --green: #3B6D11; --green-pale: #EAF3DE;
+ --text: #1a1a1a; --text-mid: #444; --text-muted: #6b6b6b;
+ --border: #e2e2e2; --border-light: #f0f0f0;
+ --bg: #ffffff; --bg-soft: #f8f9fa;
+ --radius: 10px; --radius-sm: 6px;
+ }
+ * { box-sizing: border-box; margin: 0; padding: 0; }
+ body { font-family: 'Helvetica Neue', Arial, sans-serif; color: var(--text); background: var(--bg); font-size: 15px; line-height: 1.65; }
+ .page { max-width: 760px; margin: 0 auto; padding: 48px 24px 80px; }
+ .bm-label { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; color: var(--teal-mid); background: var(--teal-pale); padding: 5px 14px; border-radius: 20px; margin-bottom: 18px; }
+ .bm-title { font-size: 28px; font-weight: 700; color: var(--text); line-height: 1.25; margin-bottom: 10px; letter-spacing: -.3px; font-family: 'Georgia', serif; }
+ .bm-sub { font-size: 14px; color: var(--text-muted); line-height: 1.65; max-width: 580px; margin-bottom: 12px; }
+ .audience-toggle { display: flex; gap: 8px; margin-bottom: 32px; }
+ .aud-btn { border: 1px solid var(--border); border-radius: 20px; padding: 7px 18px; font-size: 13px; font-weight: 500; cursor: pointer; background: var(--bg-soft); color: var(--text-muted); transition: all .15s; }
+ .aud-btn.active-pm { background: var(--teal-pale); color: var(--teal-dark); border-color: var(--teal-light); font-weight: 600; }
+ .aud-btn.active-rs { background: var(--purple-pale); color: var(--purple-mid); border-color: #AFA9EC; font-weight: 600; }
+ .sec-label { font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--text-muted); margin: 32px 0 14px; display: flex; align-items: center; gap: 10px; }
+ .sec-label::after { content: ''; flex: 1; height: 1px; background: var(--border-light); }
+ .divider { border: none; border-top: 1px solid var(--border-light); margin: 36px 0; }
+ .intro-note { background: var(--bg-soft); border: 1px solid var(--border-light); border-radius: var(--radius); padding: 16px 20px; font-size: 13px; color: var(--text-muted); line-height: 1.65; margin-bottom: 28px; }
+
+ /* Condition cards */
+ .condition { border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; margin-bottom: 20px; transition: border-color .2s; }
+ .condition.scored { border-color: var(--teal-light); }
+ .cond-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 12px; }
+ .cond-left { flex: 1; }
+ .cond-num { font-size: 10px; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; margin-bottom: 4px; }
+ .c1 .cond-num { color: var(--teal-mid); }
+ .c2 .cond-num { color: var(--blue); }
+ .c3 .cond-num { color: var(--purple); }
+ .c4 .cond-num { color: var(--amber); }
+ .cond-name { font-size: 18px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+ .cond-def { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+ .score-display { display: flex; flex-direction: column; align-items: center; min-width: 64px; }
+ .score-num { font-size: 28px; font-weight: 700; line-height: 1; }
+ .score-label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: .06em; margin-top: 2px; }
+ .c1 .score-num { color: var(--teal); }
+ .c2 .score-num { color: var(--blue); }
+ .c3 .score-num { color: var(--purple); }
+ .c4 .score-num { color: var(--amber); }
+
+ /* Audience context */
+ .aud-context { border-radius: var(--radius-sm); padding: 12px 14px; margin-bottom: 14px; font-size: 13px; line-height: 1.6; }
+ .aud-context.pm { background: var(--teal-faint); border-left: 3px solid var(--teal-light); color: var(--teal-dark); }
+ .aud-context.rs { background: #F5F0FF; border-left: 3px solid #AFA9EC; color: var(--purple-mid); }
+ .aud-context-label { font-size: 10px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; margin-bottom: 4px; }
+ .aud-context.pm .aud-context-label { color: var(--teal-mid); }
+ .aud-context.rs .aud-context-label { color: var(--purple); }
+
+ /* Statements */
+ .statements-label { font-size: 11px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 10px; }
+ .statement { display: flex; align-items: flex-start; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border-light); }
+ .statement:last-child { border-bottom: none; }
+ .stmt-text { flex: 1; font-size: 13px; color: var(--text-mid); line-height: 1.6; padding-top: 2px; }
+ .rating-row { display: flex; gap: 6px; flex-shrink: 0; }
+ .r-btn { width: 30px; height: 30px; border-radius: 50%; border: 1px solid var(--border); background: var(--bg-soft); font-size: 12px; font-weight: 600; cursor: pointer; transition: all .15s; color: var(--text-muted); display: flex; align-items: center; justify-content: center; }
+ .r-btn:hover { border-color: #aaa; background: var(--bg); color: var(--text); }
+ .r-btn.sel-1 { background: var(--coral-pale); border-color: #F0997B; color: #712B13; }
+ .r-btn.sel-2 { background: var(--amber-pale); border-color: #EF9F27; color: #633806; }
+ .r-btn.sel-3 { background: #FFF9E6; border-color: #FDE68A; color: #92400E; }
+ .r-btn.sel-4 { background: var(--teal-pale); border-color: var(--teal-light); color: var(--teal-dark); }
+ .r-btn.sel-5 { background: var(--green-pale); border-color: #97C459; color: var(--green); }
+ .rating-scale { display: flex; justify-content: flex-end; gap: 6px; padding-top: 6px; padding-bottom: 2px; }
+ .scale-label { font-size: 10px; color: var(--text-muted); width: 30px; text-align: center; }
+
+ /* Results */
+ .results-wrap { background: var(--bg-soft); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; margin-top: 32px; display: none; }
+ .results-title { font-size: 18px; font-weight: 700; font-family: 'Georgia', serif; margin-bottom: 20px; }
+ .radar-bars { margin-bottom: 24px; }
+ .bar-row { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+ .bar-label { font-size: 13px; font-weight: 600; min-width: 120px; }
+ .bar-outer { flex: 1; height: 10px; background: var(--border-light); border-radius: 5px; overflow: hidden; }
+ .bar-inner { height: 100%; border-radius: 5px; transition: width 1s ease; }
+ .bar-score { font-size: 13px; font-weight: 700; min-width: 40px; text-align: right; }
+ .c1-bar { background: var(--teal); }
+ .c2-bar { background: var(--blue); }
+ .c3-bar { background: var(--purple); }
+ .c4-bar { background: var(--amber); }
+ .results-interp { font-size: 14px; color: var(--text-mid); line-height: 1.75; margin-bottom: 20px; }
+ .priority-box { border-radius: var(--radius-sm); padding: 16px; margin-top: 16px; }
+ .priority-label { font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--teal-mid); margin-bottom: 6px; }
+ .priority-text { font-size: 14px; color: var(--text); line-height: 1.65; font-family: 'Georgia', serif; font-style: italic; }
+ .next-step { background: var(--teal-pale); border-radius: var(--radius-sm); padding: 16px; margin-top: 16px; }
+ .next-label { font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--teal-mid); margin-bottom: 6px; }
+ .next-text { font-size: 14px; color: var(--teal-dark); line-height: 1.65; }
+
+ .calc-btn { display: block; margin: 28px auto 0; background: var(--teal); color: #fff; border: none; border-radius: 24px; padding: 12px 32px; font-size: 14px; font-weight: 600; cursor: pointer; letter-spacing: .02em; transition: background .15s; }
+ .calc-btn:hover { background: var(--teal-mid); }
+ .calc-btn:disabled { background: var(--border); color: var(--text-muted); cursor: default; }
+
+ /* ===== PDF / PRINT ===== */
+ .pdf-btn-wrap{text-align:center;margin-top:32px;padding-top:24px;border-top:1px solid var(--border-light)}
+ .pdf-btn{display:inline-flex;align-items:center;gap:8px;background:var(--teal-dark);color:#fff;border:none;border-radius:24px;padding:11px 28px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Helvetica Neue',Arial,sans-serif;transition:background .15s;letter-spacing:.01em}
+ .pdf-btn:hover{background:var(--teal-mid)}
+ .pdf-btn svg{width:16px;height:16px;flex-shrink:0}
+ .pdf-hint{font-size:11px;color:var(--text-muted);margin-top:8px}
+ @media print{
+ .pdf-btn-wrap,.progress-row,.aud-toggle,.check-item,.ready-box,.forward-box,
+ .bm-label,button,.next-btn,.retry-btn,.results-detail,.pass-badge,
+ .tc-header .tc-toggle,.sev-btns,.check-match-btn,.submit-blank,
+ .gap-opt.disabled-opt,.psel-btn,.trap-btn,.nav-btn{display:none!important}
+ body{background:#fff!important;font-size:13px;line-height:1.6;color:#1a1a1a}
+ .page,.quiz-wrap{max-width:100%!important;padding:20px!important}
+ textarea,input[type=text],.blank-input{border:none!important;background:transparent!important;padding:4px 0!important;resize:none!important;min-height:0!important;font-size:13px!important;color:#1a1a1a!important}
+ .r-block,.seq-block,.canvas-section,.audit-block,.threat-card,.an-card,
+ .brief-out,.brief-row,.csum-row,.op-row,.summary-card,.seq-step{break-inside:avoid}
+ .tc-body{display:block!important}
+ .bm-title,.q-title{font-size:20px!important}
+ .r-q,.q-text{font-size:15px!important}
+ .results-circle{display:none!important}
+ .results-card{display:block!important;border:none!important;padding:0!important}
+ .results-title{font-size:18px!important}
+ .feedback-box{font-size:12px!important}
+ .opt.correct{background:#e8f5f0!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+ .opt.wrong{background:#fef2f2!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+ h1,h2,h3{break-after:avoid}
+ a[href]:after{content:''}
+ }
+</style>
+</head>
+<body>
+<div class="page">
+
+ <div class="bm-label">What city intelligence actually is · Four conditions self-audit</div>
+ <h1 class="bm-title">The four conditions self-audit</h1>
+ <p class="bm-sub">Assess which conditions for city intelligence are present in your own context — as a policymaker or researcher. Select your role to see the questions calibrated to your perspective.</p>
+
+ <div class="audience-toggle">
+ <button class="aud-btn active-pm" id="btn-pm" onclick="setAudience('pm')">I am a policymaker</button>
+ <button class="aud-btn" id="btn-rs" onclick="setAudience('rs')">I am a researcher</button>
+ </div>
+
+ <div class="intro-note" id="intro-note">
+ Rate each statement from 1 (strongly disagree) to 5 (strongly agree) based on your current institutional context. Be honest — the value of this audit is in the accuracy of your self-assessment, not in the score.
+ </div>
+
+ <!-- CONDITION 1: CIRCULATION -->
+ <div class="condition c1" id="cond1">
+ <div class="cond-header">
+ <div class="cond-left">
+ <p class="cond-num">Condition 01</p>
+ <p class="cond-name">Circulation</p>
+ <p class="cond-def">Information moves across the system — crossing departments, reaching decision-makers before a crisis, flowing between institutions and citizens.</p>
+ </div>
+ <div class="score-display"><span class="score-num" id="score1">—</span><span class="score-label">/ 5 avg</span></div>
+ </div>
+ <div class="aud-context pm" id="ctx1-pm">
+ <p class="aud-context-label">Policymaker context</p>
+ Think about how data and evidence move within your institution and between your institution and others. Does the right information reach the right people — at the right time?
+ </div>
+ <div class="aud-context rs" id="ctx1-rs" style="display:none">
+ <p class="aud-context-label">Researcher context</p>
+ Think about how your research outputs circulate. Do they reach the institutions and decision-makers who could act on them — or do they stop at publication?
+ </div>
+ <p class="statements-label">Rate each statement</p>
+ <div class="rating-scale"><span class="scale-label">1</span><span class="scale-label">2</span><span class="scale-label">3</span><span class="scale-label">4</span><span class="scale-label">5</span></div>
+ <div class="statement"><span class="stmt-text pm-stmt">Evidence produced in my institution regularly reaches the people with a mandate to act on it.</span><span class="stmt-text rs-stmt" style="display:none">My research outputs are accessed and used by non-academic audiences within 12 months of publication.</span><div class="rating-row" id="r1-1"><button class="r-btn" onclick="rate('r1-1',1)">1</button><button class="r-btn" onclick="rate('r1-1',2)">2</button><button class="r-btn" onclick="rate('r1-1',3)">3</button><button class="r-btn" onclick="rate('r1-1',4)">4</button><button class="r-btn" onclick="rate('r1-1',5)">5</button></div></div>
+ <div class="statement"><span class="stmt-text pm-stmt">Data from different departments in my institution can be combined and compared without significant barriers.</span><span class="stmt-text rs-stmt" style="display:none">There are clear, functional pathways between my research institution and the policy or governance actors in my field.</span><div class="rating-row" id="r1-2"><button class="r-btn" onclick="rate('r1-2',1)">1</button><button class="r-btn" onclick="rate('r1-2',2)">2</button><button class="r-btn" onclick="rate('r1-2',3)">3</button><button class="r-btn" onclick="rate('r1-2',4)">4</button><button class="r-btn" onclick="rate('r1-2',5)">5</button></div></div>
+ <div class="statement"><span class="stmt-text pm-stmt">When a problem emerges in one part of the system, the relevant information reaches the decision-makers quickly — before it becomes a crisis.</span><span class="stmt-text rs-stmt" style="display:none">Citizens or communities affected by the issues I research have meaningful input into what questions get asked.</span><div class="rating-row" id="r1-3"><button class="r-btn" onclick="rate('r1-3',1)">1</button><button class="r-btn" onclick="rate('r1-3',2)">2</button><button class="r-btn" onclick="rate('r1-3',3)">3</button><button class="r-btn" onclick="rate('r1-3',4)">4</button><button class="r-btn" onclick="rate('r1-3',5)">5</button></div></div>
+ </div>
+
+ <!-- CONDITION 2: FEEDBACK -->
+ <div class="condition c2" id="cond2">
+ <div class="cond-header">
+ <div class="cond-left">
+ <p class="cond-num">Condition 02</p>
+ <p class="cond-name">Feedback</p>
+ <p class="cond-def">The system listens to what its actions produce — integrating what it learns into the next cycle rather than starting from zero.</p>
+ </div>
+ <div class="score-display"><span class="score-num" id="score2">—</span><span class="score-label">/ 5 avg</span></div>
+ </div>
+ <div class="aud-context pm" id="ctx2-pm">
+ <p class="aud-context-label">Policymaker context</p>
+ Think about what happens after a policy or programme is implemented. Does your institution systematically learn from what it produces — or does it move to the next initiative without integrating the lesson?
+ </div>
+ <div class="aud-context rs" id="ctx2-rs" style="display:none">
+ <p class="aud-context-label">Researcher context</p>
+ Think about whether the findings from completed research genuinely influence the design of subsequent work — or whether each study effectively starts from scratch.
+ </div>
+ <p class="statements-label">Rate each statement</p>
+ <div class="rating-scale"><span class="scale-label">1</span><span class="scale-label">2</span><span class="scale-label">3</span><span class="scale-label">4</span><span class="scale-label">5</span></div>
+ <div class="statement"><span class="stmt-text pm-stmt">After major policy decisions, my institution systematically reviews whether the intended outcomes were achieved.</span><span class="stmt-text rs-stmt" style="display:none">My research programme is meaningfully shaped by findings from previous work — not just by funding availability or methodological preference.</span><div class="rating-row" id="r2-1"><button class="r-btn" onclick="rate('r2-1',1)">1</button><button class="r-btn" onclick="rate('r2-1',2)">2</button><button class="r-btn" onclick="rate('r2-1',3)">3</button><button class="r-btn" onclick="rate('r2-1',4)">4</button><button class="r-btn" onclick="rate('r2-1',5)">5</button></div></div>
+ <div class="statement"><span class="stmt-text pm-stmt">When a programme underperforms, the learning is documented and affects future decisions — rather than being quietly set aside.</span><span class="stmt-text rs-stmt" style="display:none">The field I work in has effective mechanisms for integrating findings across research groups — preventing duplication and building cumulative knowledge.</span><div class="rating-row" id="r2-2"><button class="r-btn" onclick="rate('r2-2',1)">1</button><button class="r-btn" onclick="rate('r2-2',2)">2</button><button class="r-btn" onclick="rate('r2-2',3)">3</button><button class="r-btn" onclick="rate('r2-2',4)">4</button><button class="r-btn" onclick="rate('r2-2',5)">5</button></div></div>
+ <div class="statement"><span class="stmt-text pm-stmt">Citizens and communities affected by our decisions have a structured way to tell us whether our interventions are actually working.</span><span class="stmt-text rs-stmt" style="display:none">When research I have been involved in has had limited impact, there has been a genuine attempt to understand why — and to adjust the approach.</span><div class="rating-row" id="r2-3"><button class="r-btn" onclick="rate('r2-3',1)">1</button><button class="r-btn" onclick="rate('r2-3',2)">2</button><button class="r-btn" onclick="rate('r2-3',3)">3</button><button class="r-btn" onclick="rate('r2-3',4)">4</button><button class="r-btn" onclick="rate('r2-3',5)">5</button></div></div>
+ </div>
+
+ <!-- CONDITION 3: ALIGNMENT -->
+ <div class="condition c3" id="cond3">
+ <div class="cond-header">
+ <div class="cond-left">
+ <p class="cond-num">Condition 03</p>
+ <p class="cond-name">Alignment</p>
+ <p class="cond-def">The people who know something are connected to the people who decide something — through deliberate pathways, not accidental proximity.</p>
+ </div>
+ <div class="score-display"><span class="score-num" id="score3">—</span><span class="score-label">/ 5 avg</span></div>
+ </div>
+ <div class="aud-context pm" id="ctx3-pm">
+ <p class="aud-context-label">Policymaker context</p>
+ Think about whether the evidence that exists — inside and outside your institution — is genuinely connected to the decisions being made. Not by chance. By design.
+ </div>
+ <div class="aud-context rs" id="ctx3-rs" style="display:none">
+ <p class="aud-context-label">Researcher context</p>
+ Think about the relationship between your research agenda and the decision cycles of the institutions you study or seek to inform. Are they aligned — or are they running on parallel, disconnected tracks?
+ </div>
+ <p class="statements-label">Rate each statement</p>
+ <div class="rating-scale"><span class="scale-label">1</span><span class="scale-label">2</span><span class="scale-label">3</span><span class="scale-label">4</span><span class="scale-label">5</span></div>
+ <div class="statement"><span class="stmt-text pm-stmt">The researchers, analysts, and experts who hold relevant knowledge are genuinely connected to the decision-making processes in my institution.</span><span class="stmt-text rs-stmt" style="display:none">My research questions are developed in dialogue with the institutions or communities whose decisions they are intended to inform.</span><div class="rating-row" id="r3-1"><button class="r-btn" onclick="rate('r3-1',1)">1</button><button class="r-btn" onclick="rate('r3-1',2)">2</button><button class="r-btn" onclick="rate('r3-1',3)">3</button><button class="r-btn" onclick="rate('r3-1',4)">4</button><button class="r-btn" onclick="rate('r3-1',5)">5</button></div></div>
+ <div class="statement"><span class="stmt-text pm-stmt">Decisions in my institution are rarely made without the relevant evidence being present in the room — in a form that can genuinely influence the outcome.</span><span class="stmt-text rs-stmt" style="display:none">My research outputs arrive at a point in the decision cycle when they can still influence the outcome — not after the decision has already been made.</span><div class="rating-row" id="r3-2"><button class="r-btn" onclick="rate('r3-2',1)">1</button><button class="r-btn" onclick="rate('r3-2',2)">2</button><button class="r-btn" onclick="rate('r3-2',3)">3</button><button class="r-btn" onclick="rate('r3-2',4)">4</button><button class="r-btn" onclick="rate('r3-2',5)">5</button></div></div>
+ <div class="statement"><span class="stmt-text pm-stmt">When different departments or institutions produce conflicting evidence, there is a clear and fair process for resolving it rather than ignoring it.</span><span class="stmt-text rs-stmt" style="display:none">I am aware of which specific decisions my research is most relevant to — and I actively design my communication to reach those decision-makers.</span><div class="rating-row" id="r3-3"><button class="r-btn" onclick="rate('r3-3',1)">1</button><button class="r-btn" onclick="rate('r3-3',2)">2</button><button class="r-btn" onclick="rate('r3-3',3)">3</button><button class="r-btn" onclick="rate('r3-3',4)">4</button><button class="r-btn" onclick="rate('r3-3',5)">5</button></div></div>
+ </div>
+
+ <!-- CONDITION 4: TIME HORIZON -->
+ <div class="condition c4" id="cond4">
+ <div class="cond-header">
+ <div class="cond-left">
+ <p class="cond-num">Condition 04</p>
+ <p class="cond-name">Time horizon</p>
+ <p class="cond-def">The system protects the long view — making decisions that compound over time rather than sacrificing structural capacity for short-term visibility.</p>
+ </div>
+ <div class="score-display"><span class="score-num" id="score4">—</span><span class="score-label">/ 5 avg</span></div>
+ </div>
+ <div class="aud-context pm" id="ctx4-pm">
+ <p class="aud-context-label">Policymaker context</p>
+ Think about the time horizons that actually govern decisions in your institution. Are long-term outcomes genuinely protected — or do reporting cycles, mandates, and political visibility consistently shorten the view?
+ </div>
+ <div class="aud-context rs" id="ctx4-rs" style="display:none">
+ <p class="aud-context-label">Researcher context</p>
+ Think about whether your research is designed to capture the long-term dynamics that produce outcomes — or whether funding cycles, publication incentives, and impact metrics are systematically shortening your analytical horizon.
+ </div>
+ <p class="statements-label">Rate each statement</p>
+ <div class="rating-scale"><span class="scale-label">1</span><span class="scale-label">2</span><span class="scale-label">3</span><span class="scale-label">4</span><span class="scale-label">5</span></div>
+ <div class="statement"><span class="stmt-text pm-stmt">Long-term investments in my institution — prevention, resilience, trust-building — are genuinely protected from short-term budget pressures.</span><span class="stmt-text rs-stmt" style="display:none">My research design can capture outcomes at the timescale at which they actually occur — not just within the project funding window.</span><div class="rating-row" id="r4-1"><button class="r-btn" onclick="rate('r4-1',1)">1</button><button class="r-btn" onclick="rate('r4-1',2)">2</button><button class="r-btn" onclick="rate('r4-1',3)">3</button><button class="r-btn" onclick="rate('r4-1',4)">4</button><button class="r-btn" onclick="rate('r4-1',5)">5</button></div></div>
+ <div class="statement"><span class="stmt-text pm-stmt">Strategic plans in my institution are genuinely built around long-term outcome timescales — not around mandate lengths or electoral cycles.</span><span class="stmt-text rs-stmt" style="display:none">The metrics used to evaluate my research impact are aligned with the long-term change I am trying to produce — not just with short-term outputs.</span><div class="rating-row" id="r4-2"><button class="r-btn" onclick="rate('r4-2',1)">1</button><button class="r-btn" onclick="rate('r4-2',2)">2</button><button class="r-btn" onclick="rate('r4-2',3)">3</button><button class="r-btn" onclick="rate('r4-2',4)">4</button><button class="r-btn" onclick="rate('r4-2',5)">5</button></div></div>
+ <div class="statement"><span class="stmt-text pm-stmt">My institution measures and tracks outcomes that will only become visible in 5–15 years — not just outputs that are deliverable within a reporting cycle.</span><span class="stmt-text rs-stmt" style="display:none">I actively design research with longitudinal components — tracking the same phenomena over time rather than taking one-off snapshots.</span><div class="rating-row" id="r4-3"><button class="r-btn" onclick="rate('r4-3',1)">1</button><button class="r-btn" onclick="rate('r4-3',2)">2</button><button class="r-btn" onclick="rate('r4-3',3)">3</button><button class="r-btn" onclick="rate('r4-3',4)">4</button><button class="r-btn" onclick="rate('r4-3',5)">5</button></div></div>
+ </div>
+
+ <button class="calc-btn" id="calc-btn" onclick="calculate()">See my results</button>
+
+ <div class="results-wrap" id="results">
+ <p class="results-title">Your four conditions profile</p>
+ <div class="radar-bars" id="radar-bars"></div>
+ <p class="results-interp" id="results-interp"></p>
+ <div class="priority-box" id="priority-box" style="background: var(--teal-faint); border: 1px solid var(--teal-pale); border-radius: var(--radius-sm);"></div>
+ <div class="next-step" id="next-step"></div>
+ </div>
+
+</div>
+<script>
+var audience = 'pm';
+var scores = {};
+
+function setAudience(aud) {
+ audience = aud;
+ document.getElementById('btn-pm').className = 'aud-btn' + (aud==='pm' ? ' active-pm' : '');
+ document.getElementById('btn-rs').className = 'aud-btn' + (aud==='rs' ? ' active-rs' : '');
+ ['1','2','3','4'].forEach(function(n) {
+ document.getElementById('ctx'+n+'-pm').style.display = aud==='pm' ? 'block' : 'none';
+ document.getElementById('ctx'+n+'-rs').style.display = aud==='rs' ? 'block' : 'none';
+ });
+ document.querySelectorAll('.pm-stmt').forEach(function(el){ el.style.display = aud==='pm'?'inline':'none'; });
+ document.querySelectorAll('.rs-stmt').forEach(function(el){ el.style.display = aud==='rs'?'inline':'none'; });
+ scores = {};
+ document.querySelectorAll('.score-num').forEach(function(el){ el.textContent='—'; });
+ document.querySelectorAll('.r-btn').forEach(function(el){ el.className='r-btn'; });
+ document.getElementById('results').style.display = 'none';
+}
+
+function rate(rowId, val) {
+ var btns = document.getElementById(rowId).querySelectorAll('.r-btn');
+ btns.forEach(function(b,i){ b.className = 'r-btn' + (i+1===val ? ' sel-'+val : ''); });
+ scores[rowId] = val;
+ ['1','2','3','4'].forEach(function(condNum) {
+ var keys = ['r'+condNum+'-1','r'+condNum+'-2','r'+condNum+'-3'];
+ var vals = keys.map(function(k){ return scores[k]||0; }).filter(function(v){ return v>0; });
+ if(vals.length > 0) {
+ var avg = (vals.reduce(function(a,b){return a+b;},0)/vals.length).toFixed(1);
+ document.getElementById('score'+condNum).textContent = avg;
+ document.getElementById('cond'+condNum).classList.add('scored');
+ }
+ });
+}
+
+function calculate() {
+ var condNames = ['Circulation','Feedback','Alignment','Time horizon'];
+ var condColors = ['c1-bar','c2-bar','c3-bar','c4-bar'];
+ var condAvgs = [];
+ for(var c=1;c<=4;c++) {
+ var keys = ['r'+c+'-1','r'+c+'-2','r'+c+'-3'];
+ var vals = keys.map(function(k){return scores[k]||0;});
+ var filled = vals.filter(function(v){return v>0;});
+ condAvgs.push(filled.length>0 ? vals.reduce(function(a,b){return a+b;},0)/3 : 0);
+ }
+ var barsHtml = condAvgs.map(function(avg,i){
+ var pct = Math.round((avg/5)*100);
+ var label = avg>=4?'Strong':avg>=3?'Developing':avg>=2?'Weak':'Critical gap';
+ return '<div class="bar-row"><span class="bar-label">'+condNames[i]+'</span><div class="bar-outer"><div class="bar-inner '+condColors[i]+'" style="width:'+pct+'%"></div></div><span class="bar-score">'+avg.toFixed(1)+' <span style="font-size:10px;font-weight:400;color:var(--text-muted)">'+label+'</span></span></div>';
+ }).join('');
+ document.getElementById('radar-bars').innerHTML = barsHtml;
+ var lowest = condAvgs.indexOf(Math.min.apply(null,condAvgs));
+ var highest = condAvgs.indexOf(Math.max.apply(null,condAvgs));
+ var overall = condAvgs.reduce(function(a,b){return a+b;},0)/4;
+ var interp = '';
+ if(overall >= 4) interp = 'Your context shows strong foundations for city intelligence across all four conditions. The challenge at this level is not building the conditions — it is maintaining them under pressure. Short-termism and misaligned incentives tend to erode strong systems gradually and quietly. The question to ask is: which of these conditions would be most vulnerable in a crisis?';
+ else if(overall >= 3) interp = 'Your context has a partial foundation for city intelligence. Some conditions are functioning — others are structurally weak. This is the most common profile: islands of intelligence in a system that hasn\'t yet built the connections between them. Progress here tends to be high-leverage: strengthening the weakest condition often unlocks the potential of the stronger ones.';
+ else interp = 'Your context faces significant structural gaps in the conditions for city intelligence. This is not a criticism of your institution — it reflects a systemic pattern that is common across urban systems globally. The conditions for intelligence are not natural defaults. They are built deliberately. The value of this audit is identifying where to begin.';
+ document.getElementById('results-interp').textContent = interp;
+ var priorityTexts = [
+ 'Your weakest condition is Circulation. Information is not moving effectively through your system. This is foundational — the other three conditions depend on it. Before investing in feedback mechanisms or alignment structures, the first question is: what is stopping information from flowing, and what is the smallest structural change that would unblock it?',
+ 'Your weakest condition is Feedback. Your system acts but does not learn systematically from what it produces. This means every cycle carries the costs of previous cycles without the benefit of their lessons. The first move is designing one concrete feedback loop: a decision that will be revisited in 6 months with structured learning from its outcomes.',
+ 'Your weakest condition is Alignment. Knowledge and decision-making are not connected by design. The people who know things and the people who decide things are operating on parallel tracks. The first move is identifying one specific decision currently being made and asking: who holds relevant knowledge that is not in the room — and why?',
+ 'Your weakest condition is Time horizon. Your system is governed by short cycles in a context where the most important outcomes compound over years. The first move is building a long-term cost case for one current decision: what is the 10-year cost of the short-horizon option versus the long-horizon option? Make that calculus visible.'
+ ];
+ document.getElementById('priority-box').innerHTML = '<p class="priority-label">Your priority condition</p><p class="priority-text">'+priorityTexts[lowest]+'</p>';
+ var nextTexts_pm = ['Build a data circulation map: identify three pieces of evidence that exist in your institution but never reach the decision-makers who need them. Ask why — and what one structural change would unblock the flow.','Design one feedback loop: take a decision that was made in the last 6 months and schedule a structured review. What did it produce? What was unexpected? What would you do differently?','Run an alignment audit: for the most important decision your institution will make in the next 90 days, list every person who holds relevant knowledge. Count how many of them are in the room.','Write a long-horizon memo: for one current investment decision, calculate the 10-year and 20-year cost of the short-horizon option. Share it with whoever controls the budget.'];
+ var nextTexts_rs = ['Map where your research stops circulating: identify the last three outputs you produced and trace exactly where they went. At what point did they stop moving — and why?','Design a feedback conversation: contact one policymaker or practitioner who used (or should have used) your last major finding. Ask them what they did with it, what they needed that wasn\'t there, and what would have made it more useful.','Audit your alignment: for your current research project, name the specific decision it is most relevant to. Is your timeline aligned with that decision cycle? If not, what would it take to realign?','Add a time dimension: review your current or next research design and ask — at what timescale do the outcomes I\'m studying actually compound? Is my measurement window long enough to capture that?'];
+ var nextArr = audience==='pm' ? nextTexts_pm : nextTexts_rs;
+ document.getElementById('next-step').innerHTML = '<p class="next-label">Your first move — '+condNames[lowest]+'</p><p class="next-text">'+nextArr[lowest]+'</p>';
+ document.getElementById('results').style.display = 'block';
+ setTimeout(function(){ document.getElementById('results').scrollIntoView({behavior:'smooth',block:'start'}); },100);
+}
+</script>
+
+ <div class="pdf-btn-wrap">
+ <button class="pdf-btn" onclick="window.print()">
+ <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17v-6M9 14l3 3 3-3"/><rect x="3" y="3" width="18" height="14" rx="2"/><path d="M3 17h18v4H3z"/></svg>
+ Save my answers as PDF
+ </button>
+ <p class="pdf-hint">Opens your browser's print dialog — choose "Save as PDF" as the destination</p>
+ </div>
+</body>
+</html>

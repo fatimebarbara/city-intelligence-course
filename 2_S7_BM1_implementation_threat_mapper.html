@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Section 8 · Implementation Threat Mapper</title>
+<style>
+ :root{
+ --teal-dark:#085041;--teal-mid:#0F6E56;--teal:#1D9E75;--teal-light:#5DCAA5;--teal-pale:#E1F5EE;--teal-faint:#F0FAF6;
+ --purple:#534AB7;--purple-pale:#EEEDFE;--purple-mid:#3C3489;
+ --amber:#BA7517;--amber-pale:#FAEEDA;--blue:#185FA5;--blue-pale:#E6F1FB;
+ --coral:#D85A30;--coral-pale:#FAECE7;--green:#3B6D11;--green-pale:#EAF3DE;
+ --warn:#B91C1C;--warn-pale:#FEF2F2;--warn-border:#FECACA;
+ --text:#1a1a1a;--text-mid:#444;--text-muted:#6b6b6b;
+ --border:#e2e2e2;--border-light:#f0f0f0;--bg:#fff;--bg-soft:#f8f9fa;
+ --radius:10px;--radius-sm:6px;
+ }
+ *{box-sizing:border-box;margin:0;padding:0}
+ body{font-family:'Helvetica Neue',Arial,sans-serif;color:var(--text);background:var(--bg);font-size:15px;line-height:1.65}
+ .page{max-width:760px;margin:0 auto;padding:48px 24px 80px}
+ .bm-label{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--teal-mid);background:var(--teal-pale);padding:5px 14px;border-radius:20px;margin-bottom:18px}
+ .bm-title{font-size:28px;font-weight:700;color:var(--text);line-height:1.25;margin-bottom:10px;letter-spacing:-.3px;font-family:'Georgia',serif}
+ .bm-sub{font-size:14px;color:var(--text-muted);line-height:1.65;max-width:580px;margin-bottom:20px}
+ .intro-note{background:var(--bg-soft);border:1px solid var(--border-light);border-radius:var(--radius);padding:16px 20px;font-size:13px;color:var(--text-muted);line-height:1.65;margin-bottom:28px}
+ .divider{border:none;border-top:1px solid var(--border-light);margin:28px 0}
+ .sec-head{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin:24px 0 12px;display:flex;align-items:center;gap:10px}
+ .sec-head::after{content:'';flex:1;height:1px;background:var(--border-light)}
+ textarea,input[type=text]{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 12px;font-family:'Helvetica Neue',Arial,sans-serif;font-size:14px;color:var(--text);line-height:1.6;resize:vertical;min-height:60px;outline:none;transition:border-color .15s}
+ textarea:focus,input[type=text]:focus{border-color:var(--teal-light)}
+ textarea::placeholder,input::placeholder{color:#b0b0b0}
+ .field-label{font-size:12px;font-weight:600;color:var(--text-mid);margin-bottom:5px;display:block}
+ .field-sub{font-size:12px;color:var(--text-muted);margin-bottom:6px;line-height:1.55}
+
+ /* Context */
+ .ctx-box{background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius);padding:18px;margin-bottom:24px}
+ .ctx-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+ .ctx-field{display:flex;flex-direction:column;gap:4px}
+
+ /* Threat cards */
+ .threat-card{border:1px solid var(--border);border-radius:var(--radius);margin-bottom:14px;overflow:hidden}
+ .tc-header{padding:16px 20px;display:flex;align-items:flex-start;gap:12px;cursor:pointer;transition:background .15s}
+ .tc-header:hover{background:var(--bg-soft)}
+ .tc-badge{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:3px 10px;border-radius:12px;white-space:nowrap;margin-top:2px;flex-shrink:0}
+ .fm1 .tc-badge{background:var(--blue-pale);color:var(--blue)}
+ .fm2 .tc-badge{background:var(--purple-pale);color:var(--purple)}
+ .fm3 .tc-badge{background:var(--amber-pale);color:var(--amber)}
+ .fm4 .tc-badge{background:var(--coral-pale);color:var(--coral)}
+ .tc-title-wrap{flex:1}
+ .tc-name{font-size:15px;font-weight:700;color:var(--text);margin-bottom:3px}
+ .tc-tagline{font-size:13px;color:var(--text-muted);line-height:1.5}
+ .tc-toggle{font-size:18px;color:var(--text-muted);transition:transform .2s;margin-top:2px}
+ .tc-body{display:none;padding:0 20px 20px}
+ .tc-body.open{display:block}
+
+ /* Signals */
+ .signals-box{background:var(--bg-soft);border-radius:var(--radius-sm);padding:14px;margin-bottom:14px}
+ .sb-title{font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--text-muted);margin-bottom:10px}
+ .signal-item{display:flex;align-items:flex-start;gap:8px;margin-bottom:7px;font-size:13px;color:var(--text-mid);line-height:1.5}
+ .signal-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:6px}
+ .fm1 .signal-dot{background:var(--blue)}
+ .fm2 .signal-dot{background:var(--purple)}
+ .fm3 .signal-dot{background:var(--amber)}
+ .fm4 .signal-dot{background:var(--coral)}
+
+ /* Severity */
+ .severity-row{display:flex;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+ .sev-label{font-size:12px;font-weight:600;color:var(--text-mid);white-space:nowrap}
+ .sev-btns{display:flex;gap:6px}
+ .sev-btn{border:1px solid var(--border);border-radius:14px;padding:4px 12px;font-size:12px;font-weight:600;cursor:pointer;background:var(--bg-soft);color:var(--text-muted);transition:all .15s;font-family:'Helvetica Neue',Arial,sans-serif}
+ .sev-btn:hover{background:var(--bg)}
+ .sev-btn.low.active{background:var(--green-pale);border-color:#97C459;color:var(--green)}
+ .sev-btn.med.active{background:var(--amber-pale);border-color:#E8C06A;color:var(--amber)}
+ .sev-btn.high.active{background:var(--warn-pale);border-color:var(--warn-border);color:var(--warn)}
+
+ /* Threat summary */
+ .threat-summary{background:var(--warn-pale);border:1px solid var(--warn-border);border-radius:var(--radius);padding:20px;margin-top:24px;display:none}
+ .ts-title{font-size:14px;font-weight:700;color:var(--warn);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+ .ts-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--warn-border)}
+ .ts-row:last-child{border-bottom:none}
+ .ts-name{font-size:13px;font-weight:600;color:var(--text);flex:1}
+ .ts-sev{font-size:11px;font-weight:700;padding:2px 8px;border-radius:10px}
+ .ts-sev.low{background:var(--green-pale);color:var(--green)}
+ .ts-sev.med{background:var(--amber-pale);color:var(--amber)}
+ .ts-sev.high{background:var(--warn-pale);color:var(--warn);border:1px solid var(--warn-border)}
+ .ts-primary{background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px;margin-top:12px;font-size:13px;color:var(--text-mid);line-height:1.65}
+
+ /* Progress */
+ .progress-row{display:flex;align-items:center;gap:12px;margin-bottom:24px}
+ .progress-label{font-size:12px;color:var(--text-muted);white-space:nowrap}
+ .progress-outer{flex:1;height:5px;background:var(--border-light);border-radius:3px;overflow:hidden}
+ .progress-inner{height:100%;background:var(--teal);border-radius:3px;transition:width .4s ease}
+ .progress-pct{font-size:12px;font-weight:700;color:var(--teal);min-width:36px;text-align:right}
+
+ @media(max-width:560px){.ctx-row{grid-template-columns:1fr}}
+
+ /* ===== PDF / PRINT ===== */
+ .pdf-btn-wrap{text-align:center;margin-top:32px;padding-top:24px;border-top:1px solid var(--border-light)}
+ .pdf-btn{display:inline-flex;align-items:center;gap:8px;background:var(--teal-dark);color:#fff;border:none;border-radius:24px;padding:11px 28px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Helvetica Neue',Arial,sans-serif;transition:background .15s;letter-spacing:.01em}
+ .pdf-btn:hover{background:var(--teal-mid)}
+ .pdf-btn svg{width:16px;height:16px;flex-shrink:0}
+ .pdf-hint{font-size:11px;color:var(--text-muted);margin-top:8px}
+ @media print{
+ .pdf-btn-wrap,.progress-row,.aud-toggle,.check-item,.ready-box,.forward-box,
+ .bm-label,button,.next-btn,.retry-btn,.results-detail,.pass-badge,
+ .tc-header .tc-toggle,.sev-btns,.check-match-btn,.submit-blank,
+ .gap-opt.disabled-opt,.psel-btn,.trap-btn,.nav-btn{display:none!important}
+ body{background:#fff!important;font-size:13px;line-height:1.6;color:#1a1a1a}
+ .page,.quiz-wrap{max-width:100%!important;padding:20px!important}
+ textarea,input[type=text],.blank-input{border:none!important;background:transparent!important;padding:4px 0!important;resize:none!important;min-height:0!important;font-size:13px!important;color:#1a1a1a!important}
+ .r-block,.seq-block,.canvas-section,.audit-block,.threat-card,.an-card,
+ .brief-out,.brief-row,.csum-row,.op-row,.summary-card,.seq-step{break-inside:avoid}
+ .tc-body{display:block!important}
+ .bm-title,.q-title{font-size:20px!important}
+ .r-q,.q-text{font-size:15px!important}
+ .results-circle{display:none!important}
+ .results-card{display:block!important;border:none!important;padding:0!important}
+ .results-title{font-size:18px!important}
+ .feedback-box{font-size:12px!important}
+ .opt.correct{background:#e8f5f0!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+ .opt.wrong{background:#fef2f2!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+ h1,h2,h3{break-after:avoid}
+ a[href]:after{content:''}
+ }
+</style>
+</head>
+<body>
+<div class="page">
+ <div class="bm-label">Why strategies fail in practice · Implementation threat mapper</div>
+ <h1 class="bm-title">Which failure mode will break your strategy?</h1>
+ <p class="bm-sub">Map your compounding sequence against the four implementation failure modes. For each one: read the structural signals, assess severity in your specific context, and identify your primary threat. Output: a named priority for Section 8's governance design.</p>
+ <div class="intro-note">This tool is designed to be used with the strategy you built in Section 7. Bring your three-step sequence and the institutional context it will enter. The failure modes are not abstract risks — each one has a recognisable institutional signature. Your job is to name which one you are most likely to see.</div>
+
+ <div class="progress-row">
+ <span class="progress-label">Mapping progress</span>
+ <div class="progress-outer"><div class="progress-inner" id="pbar" style="width:0%"></div></div>
+ <span class="progress-pct" id="pct">0%</span>
+ </div>
+
+ <p class="sec-head">Your strategy context</p>
+ <div class="ctx-box">
+ <div class="ctx-row">
+ <div class="ctx-field">
+ <label class="field-label">City / system</label>
+ <input type="text" id="f-city" placeholder="Name of city or policy area..." oninput="updateProgress()">
+ </div>
+ <div class="ctx-field">
+ <label class="field-label">How many departments does your sequence cross?</label>
+ <input type="text" id="f-depts" placeholder="e.g. Housing, Transport, Health, Education..." oninput="updateProgress()">
+ </div>
+ </div>
+ <div style="margin-top:12px">
+ <label class="field-label">Your sequence in one sentence</label>
+ <textarea id="f-seq" placeholder="Step 1 addresses [pillar] → unlocks → Step 2 addresses [pillar] → unlocks → Step 3 produces [compounding outcome]..." oninput="updateProgress()" style="min-height:52px"></textarea>
+ </div>
+ </div>
+
+ <p class="sec-head">Map each failure mode against your context</p>
+
+ <!-- FM1 Mandate fragmentation -->
+ <div class="threat-card fm1" id="fm1">
+ <div class="tc-header" onclick="toggleCard('fm1')">
+ <span class="tc-badge">Failure mode 01</span>
+ <div class="tc-title-wrap">
+ <p class="tc-name">Mandate fragmentation</p>
+ <p class="tc-tagline">No one owns the connection between steps — accountability stops at each departmental border</p>
+ </div>
+ <span class="tc-toggle" id="tog-fm1">▾</span>
+ </div>
+ <div class="tc-body" id="body-fm1">
+ <div class="signals-box">
+ <p class="sb-title">Institutional signals this failure mode is present</p>
+ <div class="signal-item"><div class="signal-dot"></div><span>Your sequence crosses departments that have no formal shared accountability mechanism — no joint reporting line, no shared budget, no cross-mandate performance review</span></div>
+ <div class="signal-item"><div class="signal-dot"></div><span>When you describe the sequence to each department head, each one engages with their step — but no one asks about the connection to the next step</span></div>
+ <div class="signal-item"><div class="signal-dot"></div><span>The strategy document exists, but no person has been assigned responsibility for the sequence as a whole — only for individual interventions</span></div>
+ <div class="signal-item"><div class="signal-dot"></div><span>Departments celebrate outputs independently — Step 1 is called a success before Step 2 has even been designed</span></div>
+ </div>
+ <div class="severity-row">
+ <span class="sev-label">Severity in your context:</span>
+ <div class="sev-btns">
+ <button class="sev-btn low" onclick="setSeverity('fm1','low',this)">Low</button>
+ <button class="sev-btn med" onclick="setSeverity('fm1','med',this)">Medium</button>
+ <button class="sev-btn high" onclick="setSeverity('fm1','high',this)">High</button>
+ </div>
+ </div>
+ <label class="field-label">How does this failure mode manifest in your specific context?</label>
+ <p class="field-sub">Which departments are most likely to fragment — and why? What is the institutional reason the connection between steps would break?</p>
+ <textarea id="f-fm1" placeholder="In my context, mandate fragmentation is most likely to appear at the transition between [step] and [step], because [institutional reason]. The departments involved are [names], and their accountability structures are [separated by / connected through]..." oninput="updateProgress()"></textarea>
+ </div>
+ </div>
+
+ <!-- FM2 Metric substitution -->
+ <div class="threat-card fm2" id="fm2">
+ <div class="tc-header" onclick="toggleCard('fm2')">
+ <span class="tc-badge">Failure mode 02</span>
+ <div class="tc-title-wrap">
+ <p class="tc-name">Metric substitution</p>
+ <p class="tc-tagline">Departments optimise for their own output metrics rather than the shared outcome — success on paper, failure in practice</p>
+ </div>
+ <span class="tc-toggle" id="tog-fm2">▾</span>
+ </div>
+ <div class="tc-body" id="body-fm2">
+ <div class="signals-box">
+ <p class="sb-title">Institutional signals this failure mode is present</p>
+ <div class="signal-item"><div class="signal-dot"></div><span>Each department in your sequence has its own performance framework with metrics that predate your strategy — and those metrics will be used to evaluate the departments regardless of your strategy's logic</span></div>
+ <div class="signal-item"><div class="signal-dot"></div><span>There is no shared outcome metric that all departments in the sequence are measured against — each reports separately on different data</span></div>
+ <div class="signal-item"><div class="signal-dot"></div><span>When you ask "how will we know the sequence is working?", the answers from different departments describe different outcomes that may be individually achievable without the strategy succeeding</span></div>
+ <div class="signal-item"><div class="signal-dot"></div><span>Previous cross-departmental programmes in your context were reported as successful while their structural objectives were not met — the outputs looked fine but nothing structurally changed</span></div>
+ </div>
+ <div class="severity-row">
+ <span class="sev-label">Severity in your context:</span>
+ <div class="sev-btns">
+ <button class="sev-btn low" onclick="setSeverity('fm2','low',this)">Low</button>
+ <button class="sev-btn med" onclick="setSeverity('fm2','med',this)">Medium</button>
+ <button class="sev-btn high" onclick="setSeverity('fm2','high',this)">High</button>
+ </div>
+ </div>
+ <label class="field-label">How does this failure mode manifest in your specific context?</label>
+ <p class="field-sub">What are the existing output metrics that are most likely to substitute for the shared outcome? What would "success" look like on paper if the sequence is actually failing?</p>
+ <textarea id="f-fm2" placeholder="In my context, metric substitution is most likely to appear as [departments reporting success on their own metrics while the shared outcome is not being achieved]. The existing metrics that would substitute are [metrics]. The shared outcome metric that would reveal the substitution is [outcome]..." oninput="updateProgress()"></textarea>
+ </div>
+ </div>
+
+ <!-- FM3 Political cycle truncation -->
+ <div class="threat-card fm3" id="fm3">
+ <div class="tc-header" onclick="toggleCard('fm3')">
+ <span class="tc-badge">Failure mode 03</span>
+ <div class="tc-title-wrap">
+ <p class="tc-name">Political cycle truncation</p>
+ <p class="tc-tagline">The sequence requires more time than the political cycle allows — the thread breaks at the transition</p>
+ </div>
+ <span class="tc-toggle" id="tog-fm3">▾</span>
+ </div>
+ <div class="tc-body" id="body-fm3">
+ <div class="signals-box">
+ <p class="sb-title">Institutional signals this failure mode is present</p>
+ <div class="signal-item"><div class="signal-dot"></div><span>Your compounding sequence requires more time than the current political mandate — there is likely to be a leadership transition before the compounding effect is visible in the data</span></div>
+ <div class="signal-item"><div class="signal-dot"></div><span>The strategy's most important outcome — the thing that makes it worth doing — will arrive after the people who designed it have left office or moved on</span></div>
+ <div class="signal-item"><div class="signal-dot"></div><span>There is no transition-proofing in the current design — no mechanism to ensure that an incoming administration inherits the sequence logic, not just the individual programmes</span></div>
+ <div class="signal-item"><div class="signal-dot"></div><span>In your context, incoming administrations routinely rebrand or redesign programmes inherited from the previous leadership</span></div>
+ </div>
+ <div class="severity-row">
+ <span class="sev-label">Severity in your context:</span>
+ <div class="sev-btns">
+ <button class="sev-btn low" onclick="setSeverity('fm3','low',this)">Low</button>
+ <button class="sev-btn med" onclick="setSeverity('fm3','med',this)">Medium</button>
+ <button class="sev-btn high" onclick="setSeverity('fm3','high',this)">High</button>
+ </div>
+ </div>
+ <label class="field-label">How does this failure mode manifest in your specific context?</label>
+ <p class="field-sub">What is the realistic time horizon of your sequence? What is the next expected transition point? What is the gap between them?</p>
+ <textarea id="f-fm3" placeholder="My sequence requires approximately [timeframe]. The next political or institutional transition is expected in [timeframe]. The gap is [gap]. The most vulnerable moment is [which step is most at risk of being abandoned at transition]..." oninput="updateProgress()"></textarea>
+ </div>
+ </div>
+
+ <!-- FM4 Institutional capture -->
+ <div class="threat-card fm4" id="fm4">
+ <div class="tc-header" onclick="toggleCard('fm4')">
+ <span class="tc-badge">Failure mode 04</span>
+ <div class="tc-title-wrap">
+ <p class="tc-name">Institutional capture</p>
+ <p class="tc-tagline">The structural intervention is gradually redesigned by the most powerful actor to serve their interests rather than the structural goal</p>
+ </div>
+ <span class="tc-toggle" id="tog-fm4">▾</span>
+ </div>
+ <div class="tc-body" id="body-fm4">
+ <div class="signals-box">
+ <p class="sb-title">Institutional signals this failure mode is present</p>
+ <div class="signal-item"><div class="signal-dot"></div><span>Your sequence requires a powerful institutional actor — a large department, a dominant service provider, or a well-resourced agency — to change the way it operates in ways that may not be in its immediate interest</span></div>
+ <div class="signal-item"><div class="signal-dot"></div><span>That actor controls access to the resources, data, or relationships your sequence depends on — giving them leverage over the design even if they are not formally in charge</span></div>
+ <div class="signal-item"><div class="signal-dot"></div><span>In previous cross-departmental programmes, the most powerful department typically ended up managing the programme and setting its terms — even when the programme was designed to serve a different objective</span></div>
+ <div class="signal-item"><div class="signal-dot"></div><span>The structural element of your intervention — the part that changes the architecture — is the hardest to measure and therefore the most vulnerable to being deprioritised in favour of the visible, measurable elements</span></div>
+ </div>
+ <div class="severity-row">
+ <span class="sev-label">Severity in your context:</span>
+ <div class="sev-btns">
+ <button class="sev-btn low" onclick="setSeverity('fm4','low',this)">Low</button>
+ <button class="sev-btn med" onclick="setSeverity('fm4','med',this)">Medium</button>
+ <button class="sev-btn high" onclick="setSeverity('fm4','high',this)">High</button>
+ </div>
+ </div>
+ <label class="field-label">How does this failure mode manifest in your specific context?</label>
+ <p class="field-sub">Who is the most powerful institutional actor your strategy depends on — and whose interest is most misaligned with the structural change it requires?</p>
+ <textarea id="f-fm4" placeholder="The most powerful institutional actor in my sequence is [actor/department]. Their interest is [interest]. The misalignment with my structural goal is [specific misalignment]. The way capture would most likely happen is [gradual mechanism — through staffing / budget / reporting / programme design]..." oninput="updateProgress()"></textarea>
+ </div>
+ </div>
+
+ <!-- Threat summary -->
+ <div class="threat-summary" id="threat-summary">
+ <p class="ts-title">⚠ Your implementation threat profile</p>
+ <div id="ts-list"></div>
+ <div class="ts-primary" id="ts-primary-text"></div>
+ </div>
+
+</div>
+<script>
+var severities={fm1:null,fm2:null,fm3:null,fm4:null};
+var fmNames={fm1:'Mandate fragmentation',fm2:'Metric substitution',fm3:'Political cycle truncation',fm4:'Institutional capture'};
+var openCards={fm1:false,fm2:false,fm3:false,fm4:false};
+
+function toggleCard(id){
+ openCards[id]=!openCards[id];
+ document.getElementById('body-'+id).classList.toggle('open',openCards[id]);
+ document.getElementById('tog-'+id).textContent=openCards[id]?'▴':'▾';
+}
+
+function setSeverity(fm,level,btn){
+ document.querySelectorAll('#'+fm+' .sev-btn').forEach(function(b){b.classList.remove('active')});
+ btn.classList.add('active');
+ severities[fm]=level;
+ updateSummary();
+ updateProgress();
+}
+
+function updateSummary(){
+ var hasAny=Object.values(severities).some(function(v){return v!==null});
+ var summary=document.getElementById('threat-summary');
+ summary.style.display=hasAny?'block':'none';
+ if(!hasAny) return;
+
+ var list=document.getElementById('ts-list');
+ list.innerHTML='';
+ var highFMs=[];
+ ['fm1','fm2','fm3','fm4'].forEach(function(fm){
+ if(severities[fm]===null) return;
+ var row=document.createElement('div');
+ row.className='ts-row';
+ row.innerHTML='<span class="ts-name">'+fmNames[fm]+'</span><span class="ts-sev '+severities[fm]+'">'+severities[fm].charAt(0).toUpperCase()+severities[fm].slice(1)+'</span>';
+ list.appendChild(row);
+ if(severities[fm]==='high') highFMs.push(fm);
+ });
+
+ var primary=document.getElementById('ts-primary-text');
+ if(highFMs.length===0){
+ primary.textContent='No high-severity threats identified yet. Continue assessing the remaining failure modes — or review the signals for each one against your specific institutional context.';
+ } else if(highFMs.length===1){
+ primary.innerHTML='<strong>Primary threat: '+fmNames[highFMs[0]]+'.</strong> This is your highest-priority governance design challenge for Section 8. The countermeasure you design must specifically address this failure mode before the strategy launches.';
+ } else {
+ var names=highFMs.map(function(f){return fmNames[f]}).join(' and ');
+ primary.innerHTML='<strong>Multiple high-severity threats: '+names+'.</strong> You are facing compound institutional risk. Section 8 will help you design governance countermeasures for each — but sequence your defences: address the failure mode that would break the chain earliest first.';
+ }
+}
+
+function updateProgress(){
+ var fields=['f-city','f-depts','f-seq','f-fm1','f-fm2','f-fm3','f-fm4'];
+ var filled=fields.filter(function(id){var el=document.getElementById(id);return el&&el.value.trim().length>15;}).length;
+ var rated=Object.values(severities).filter(function(v){return v!==null}).length;
+ var total=fields.length+4,done=filled+rated;
+ var pct=Math.round((done/total)*100);
+ document.getElementById('pbar').style.width=pct+'%';
+ document.getElementById('pct').textContent=pct+'%';
+}
+</script>
+
+ <div class="pdf-btn-wrap">
+ <button class="pdf-btn" onclick="window.print()">
+ <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17v-6M9 14l3 3 3-3"/><rect x="3" y="3" width="18" height="14" rx="2"/><path d="M3 17h18v4H3z"/></svg>
+ Save my answers as PDF
+ </button>
+ <p class="pdf-hint">Opens your browser's print dialog — choose "Save as PDF" as the destination</p>
+ </div>
+</body>
+</html>

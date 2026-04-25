@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Section 8 · End-of-Section Reflection</title>
+<style>
+ :root{
+ --teal-dark:#085041;--teal-mid:#0F6E56;--teal:#1D9E75;--teal-light:#5DCAA5;--teal-pale:#E1F5EE;--teal-faint:#F0FAF6;
+ --purple:#534AB7;--purple-pale:#EEEDFE;--purple-mid:#3C3489;
+ --amber:#BA7517;--amber-pale:#FAEEDA;--blue:#185FA5;--blue-pale:#E6F1FB;
+ --text:#1a1a1a;--text-mid:#444;--text-muted:#6b6b6b;
+ --border:#e2e2e2;--border-light:#f0f0f0;--bg:#fff;--bg-soft:#f8f9fa;
+ --radius:10px;--radius-sm:6px;
+ }
+ *{box-sizing:border-box;margin:0;padding:0}
+ body{font-family:'Helvetica Neue',Arial,sans-serif;color:var(--text);background:var(--bg);font-size:15px;line-height:1.65}
+ .page{max-width:760px;margin:0 auto;padding:48px 24px 80px}
+ .bm-label{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--teal-mid);background:var(--teal-pale);padding:5px 14px;border-radius:20px;margin-bottom:18px}
+ .bm-title{font-size:28px;font-weight:700;color:var(--text);line-height:1.25;margin-bottom:10px;letter-spacing:-.3px;font-family:'Georgia',serif}
+ .bm-sub{font-size:14px;color:var(--text-muted);line-height:1.65;max-width:580px;margin-bottom:20px}
+ .intro-note{background:var(--bg-soft);border:1px solid var(--border-light);border-radius:var(--radius);padding:16px 20px;font-size:13px;color:var(--text-muted);line-height:1.65;margin-bottom:32px}
+ .divider{border:none;border-top:1px solid var(--border-light);margin:32px 0}
+ .progress-row{display:flex;align-items:center;gap:12px;margin-bottom:32px}
+ .progress-label{font-size:12px;color:var(--text-muted);white-space:nowrap}
+ .progress-outer{flex:1;height:5px;background:var(--border-light);border-radius:3px;overflow:hidden}
+ .progress-inner{height:100%;background:var(--teal);border-radius:3px;transition:width .4s ease}
+ .progress-pct{font-size:12px;font-weight:700;color:var(--teal);min-width:36px;text-align:right}
+ .r-block{margin-bottom:28px}
+ .r-num{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:6px}
+ .r-q{font-size:16px;font-weight:600;color:var(--text);line-height:1.5;margin-bottom:10px;font-family:'Georgia',serif}
+ .r-why{font-size:13px;color:var(--text-muted);line-height:1.65;border-left:2px solid var(--border);padding-left:14px;margin-bottom:12px}
+ .r-aud{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+ .r-aud-card{border-radius:var(--radius-sm);padding:10px 12px;font-size:12px;line-height:1.55}
+ .r-aud-card.pm{background:var(--teal-faint);border:1px solid var(--teal-pale);color:var(--teal-dark)}
+ .r-aud-card.rs{background:#F5F0FF;border:1px solid #D8D4F8;color:var(--purple-mid)}
+ .r-aud-label{font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:3px;display:block;opacity:.8}
+ textarea{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px;font-family:'Helvetica Neue',Arial,sans-serif;font-size:14px;color:var(--text);line-height:1.65;resize:vertical;min-height:80px;transition:border-color .15s;outline:none}
+ textarea:focus{border-color:var(--teal-light)}
+ textarea::placeholder{color:#b0b0b0}
+ .journey-table{width:100%;border-collapse:collapse;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;font-size:13px;margin-bottom:28px}
+ .journey-table th{background:var(--bg-soft);padding:9px 13px;text-align:left;font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);border-bottom:1px solid var(--border)}
+ .journey-table td{padding:10px 13px;border-bottom:1px solid var(--border-light);vertical-align:top;font-size:13px}
+ .journey-table tr:last-child td{border-bottom:none}
+ .stag{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;margin-bottom:3px}
+ .s1{background:#FEF3C7;color:#92400E}.s2{background:var(--purple-pale);color:var(--purple-mid)}
+ .s3{background:var(--teal-pale);color:var(--teal-dark)}.s4{background:var(--blue-pale);color:#0C447C}
+ .s5{background:#EAF3DE;color:#27500A}.s6{background:#FAEEDA;color:#633806}
+ .s7{background:var(--purple-pale);color:var(--purple-mid)}.s8{background:var(--teal-pale);color:var(--teal-dark);opacity:.85}
+ .check-item{display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid var(--border-light)}
+ .check-item:last-child{border-bottom:none}
+ .check-item input[type="checkbox"]{width:17px;height:17px;cursor:pointer;flex-shrink:0;margin-top:1px;accent-color:var(--teal)}
+ .check-item label{font-size:14px;color:var(--text);line-height:1.55;cursor:pointer}
+ .ready-box{display:none;background:var(--teal-pale);border-radius:var(--radius);padding:28px 32px;text-align:center;margin-top:32px;border:1px solid var(--teal-light)}
+ .ready-text{font-size:15px;color:var(--teal-dark);line-height:1.7}
+ .forward-box{background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius);padding:22px 24px;margin-top:28px}
+ .forward-label{font-size:10px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px}
+ .forward-text{font-size:14px;color:var(--text-mid);line-height:1.75}
+ .forward-text strong{color:var(--text)}
+ @media(max-width:560px){.r-aud{grid-template-columns:1fr}}
+
+ /* ===== PDF / PRINT ===== */
+ .pdf-btn-wrap{text-align:center;margin-top:32px;padding-top:24px;border-top:1px solid var(--border-light)}
+ .pdf-btn{display:inline-flex;align-items:center;gap:8px;background:var(--teal-dark);color:#fff;border:none;border-radius:24px;padding:11px 28px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Helvetica Neue',Arial,sans-serif;transition:background .15s;letter-spacing:.01em}
+ .pdf-btn:hover{background:var(--teal-mid)}
+ .pdf-btn svg{width:16px;height:16px;flex-shrink:0}
+ .pdf-hint{font-size:11px;color:var(--text-muted);margin-top:8px}
+ @media print{
+ .pdf-btn-wrap,.progress-row,.aud-toggle,.check-item,.ready-box,.forward-box,
+ .bm-label,button,.next-btn,.retry-btn,.results-detail,.pass-badge,
+ .tc-header .tc-toggle,.sev-btns,.check-match-btn,.submit-blank,
+ .gap-opt.disabled-opt,.psel-btn,.trap-btn,.nav-btn{display:none!important}
+ body{background:#fff!important;font-size:13px;line-height:1.6;color:#1a1a1a}
+ .page,.quiz-wrap{max-width:100%!important;padding:20px!important}
+ textarea,input[type=text],.blank-input{border:none!important;background:transparent!important;padding:4px 0!important;resize:none!important;min-height:0!important;font-size:13px!important;color:#1a1a1a!important}
+ .r-block,.seq-block,.canvas-section,.audit-block,.threat-card,.an-card,
+ .brief-out,.brief-row,.csum-row,.op-row,.summary-card,.seq-step{break-inside:avoid}
+ .tc-body{display:block!important}
+ .bm-title,.q-title{font-size:20px!important}
+ .r-q,.q-text{font-size:15px!important}
+ .results-circle{display:none!important}
+ .results-card{display:block!important;border:none!important;padding:0!important}
+ .results-title{font-size:18px!important}
+ .feedback-box{font-size:12px!important}
+ .opt.correct{background:#e8f5f0!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+ .opt.wrong{background:#fef2f2!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+ h1,h2,h3{break-after:avoid}
+ a[href]:after{content:''}
+ }
+</style>
+</head>
+<body>
+<div class="page">
+ <div class="bm-label">Why strategies fail in practice · End-of-section reflection</div>
+ <h1 class="bm-title">The design-to-survival gap — synthesising your learning</h1>
+ <p class="bm-sub">Section 8 shifted the course from design to institutional reality. These five reflections test whether you can now read an institution diagnostically — not just analytically — and whether you are genuinely ready to design the governance architecture that Section 8 will ask you to build.</p>
+ <div class="intro-note">The most important shift Section 8 asks you to make is from asking "is this strategy correct?" to asking "will this strategy survive?" They are different questions. This section gives you the tools to answer the second one. These reflections test whether you have made that shift.</div>
+
+ <div class="progress-row">
+ <span class="progress-label">Completion</span>
+ <div class="progress-outer"><div class="progress-inner" id="pbar" style="width:0%"></div></div>
+ <span class="progress-pct" id="pct">0%</span>
+ </div>
+
+ <div class="r-block">
+ <p class="r-num">Reflection 01 — The failure mode you recognise</p>
+ <p class="r-q">Of the four implementation failure modes — mandate fragmentation, metric substitution, political cycle truncation, institutional capture — which one have you personally witnessed, experienced, or caused? Name the specific situation, the mechanism through which it operated, and what the actual cost was.</p>
+ <p class="r-why">This reflection is the most practically grounded in the section. The failure modes are not abstract risks — they are patterns that appear again and again in the same institutional contexts. Naming a specific experience, rather than a general agreement with the framework, is the test of whether the taxonomy is analytically useful or just conceptually agreeable.</p>
+ <div class="r-aud">
+ <div class="r-aud-card pm"><span class="r-aud-label">Policymaker</span>The most honest answer often involves a failure mode you contributed to — not one you observed from a distance. What decision, reporting structure, or accountability design on your part made a cross-boundary strategy harder to sustain?</div>
+ <div class="r-aud-card rs"><span class="r-aud-label">Researcher</span>The research answer often involves a study you designed or contributed to that operationalised substituted metrics — measuring the output rather than the structural outcome — without naming that choice explicitly.</div>
+ </div>
+ <textarea placeholder="The failure mode I have personally encountered is [failure mode]. It operated through [specific institutional mechanism]. The cost was [what did not happen, or what happened badly, as a result]..." oninput="u()"></textarea>
+ </div>
+
+ <div class="r-block">
+ <p class="r-num">Reflection 02 — Why good will is not enough</p>
+ <p class="r-q">Section 8 argues that implementation failure modes are structural, not motivational. They do not require bad actors, poor intentions, or inadequate evidence. They are the predictable outputs of institutional architectures that were not designed for cross-boundary strategies. Do you agree — and what does that mean for how you would normally try to address them?</p>
+ <p class="r-why">This is the conceptual crux of Section 8. If you believe failure modes are motivational — produced by unwillingness, ignorance, or political opposition — the remedies are communication, training, and advocacy. If you believe they are structural — produced by incentive misalignment, mandate design, and accountability architecture — the remedies are governance changes. The distinction determines the entire design logic of Section 8.</p>
+ <div class="r-aud">
+ <div class="r-aud-card pm"><span class="r-aud-label">Policymaker</span>Think about a past experience where better communication, stronger political will, or more evidence did not prevent a strategy from failing in implementation. What structural feature was producing the failure that these approaches could not address?</div>
+ <div class="r-aud-card rs"><span class="r-aud-label">Researcher</span>Consider the implementation failure literature in your field. How does it apportion causation between motivational and structural explanations? Does the Section 8 framework align with or challenge the dominant account?</div>
+ </div>
+ <textarea placeholder="I [agree / partially agree / disagree] that implementation failure modes are structural rather than motivational, because [specific reasoning from my experience or research context]. This changes how I would address them — instead of [previous approach], the correct response is [structural approach]..." oninput="u()"></textarea>
+ </div>
+
+ <div class="r-block">
+ <p class="r-num">Reflection 03 — The hardest failure mode to name in advance</p>
+ <p class="r-q">Of the four failure modes, which is the hardest to name before it has already broken the chain — and why? What makes it difficult to detect early, and what would a genuinely useful early-warning indicator look like?</p>
+ <p class="r-why">The asymmetry between failure modes matters for governance design. Some are detectable early (mandate fragmentation is often visible in the first joint meeting). Others compound silently for months before the signal appears (institutional capture often looks like programme improvement until the structural element has already been removed). Knowing which failure modes are hardest to detect early shapes which governance countermeasures need to be built before the strategy launches, rather than after the signal appears.</p>
+ <div class="r-aud">
+ <div class="r-aud-card pm"><span class="r-aud-label">Policymaker</span>In your institutional context, which failure mode is most likely to be invisible to you as the strategy owner — because it operates in the administrative or reporting layer rather than in the political or strategic layer you typically inhabit?</div>
+ <div class="r-aud-card rs"><span class="r-aud-label">Researcher</span>Which failure mode is most likely to be invisible in the data? If you were evaluating a strategy that had been subject to this failure mode, what would the data show — and what would it not show?</div>
+ </div>
+ <textarea placeholder="The hardest failure mode to detect early is [failure mode], because [specific reason — where it operates, how it compounds, what it looks like before it breaks the chain]. A genuinely useful early-warning indicator would be [specific, observable signal that would catch it before the chain breaks]..." oninput="u()"></textarea>
+ </div>
+
+ <div class="r-block">
+ <p class="r-num">Reflection 04 — The failure mode your institution produces most reliably</p>
+ <p class="r-q">Every institutional context has a dominant failure mode — the pattern it produces most reliably, for structural reasons specific to how it is organised. Which failure mode does your institution or research context produce most reliably? What feature of the institutional architecture produces it?</p>
+ <p class="r-why">This is the most uncomfortable question in Section 8 — because it asks you to name a structural feature of an institution you are part of as a source of predictable failure. Not a bad actor. Not an unlucky circumstance. A feature of the architecture that will produce the same failure mode again and again unless it is structurally changed.</p>
+ <div class="r-aud">
+ <div class="r-aud-card pm"><span class="r-aud-label">Policymaker</span>The structural feature is usually visible in how performance is measured and rewarded. Which failure mode does your institution's current performance architecture make most likely — and is anyone currently responsible for changing that architecture?</div>
+ <div class="r-aud-card rs"><span class="r-aud-label">Researcher</span>The structural feature in research contexts is often in how funding is allocated and evaluated. Which failure mode does your field's current funding and evaluation architecture make most likely for cross-disciplinary or cross-institutional work?</div>
+ </div>
+ <textarea placeholder="My institution most reliably produces [failure mode], because [specific structural feature — mandate design, performance framework, budget allocation, transition practices]. This feature produces the failure mode by [mechanism]. To change it would require [structural change at what level]..." oninput="u()"></textarea>
+ </div>
+
+ <div class="r-block">
+ <p class="r-num">Reflection 05 — The governance question Section 8 must answer for you</p>
+ <p class="r-q">Section 8 will ask you to design the governance architecture that protects your strategy. Based on your threat mapping and resistance audit: what is the single most important governance question Section 8 must answer for you? Not a general governance question — the specific structural design challenge that your sequence, in your context, most urgently needs a countermeasure for.</p>
+ <p class="r-why">This is the integration reflection. If you can name your governance question precisely — with the specific failure mode, the specific institutional mechanism, and the specific structural gap — Section 8's tools will be immediately applicable to your context. If the question is still general, Section 8 will feel like theory. The specificity of the question determines the practical value of the answer.</p>
+ <div class="r-aud">
+ <div class="r-aud-card pm"><span class="r-aud-label">Policymaker</span>Frame the question as a design brief: "How do I design [specific governance mechanism] to protect [specific step in the sequence] from [specific failure mode], given [specific institutional constraint]?"</div>
+ <div class="r-aud-card rs"><span class="r-aud-label">Researcher</span>Frame the question as a research hypothesis: "Cities with [specific governance feature] will show lower rates of [specific failure mode] in cross-boundary strategies — testable by [method] using [data]."</div>
+ </div>
+ <textarea style="min-height:100px;" placeholder="The governance question Section 8 must answer for me is: [specific question, framed as a design brief or research hypothesis]. This is the most urgent question because [specific reasoning from my threat map and resistance audit]..." oninput="u()"></textarea>
+ </div>
+
+ <div class="divider"></div>
+
+ <div style="overflow-x:auto;margin-bottom:28px">
+ <table class="journey-table">
+ <thead><tr><th>Dimension</th><th>Sections 5–7 — Design arc</th><th>Section 8 — Reality check</th></tr></thead>
+ <tbody>
+ <tr><td>The question</td><td><span class="s4">Diagnosing</span> What is the structural gap?<br><span class="s5">Intervention design</span> What does a structural intervention look like?<br><span class="s6">Sequencing</span> In what order?</td><td><span class="s7">Implementation</span> Why will this fail — and which failure mode is most dangerous in my context?</td></tr>
+ <tr><td>The focus</td><td>Strategy design and sequencing logic</td><td>Institutional architecture and resistance patterns</td></tr>
+ <tr><td>The output</td><td>A three-step compounding strategy</td><td>A named primary threat and specific early-warning indicators</td></tr>
+ <tr><td>Coming next</td><td colspan="2"><span class="s8">Governance</span> Building the governance architecture that makes strategies survive — four countermeasures, each designed against one failure mode</td></tr>
+ </tbody>
+ </table>
+ </div>
+
+ <p style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:16px">Before the Section 8 quiz — a final self-check</p>
+ <div id="cl">
+ <div class="check-item"><input type="checkbox" id="c1" onchange="u()"><label for="c1">I can name all four implementation failure modes and describe the institutional mechanism through which each one operates</label></div>
+ <div class="check-item"><input type="checkbox" id="c2" onchange="u()"><label for="c2">I have mapped my strategy against all four failure modes and identified my primary threat</label></div>
+ <div class="check-item"><input type="checkbox" id="c3" onchange="u()"><label for="c3">I can name at least two early-warning indicators for my primary threat — specific, observable signals that would catch it before it breaks the chain</label></div>
+ <div class="check-item"><input type="checkbox" id="c4" onchange="u()"><label for="c4">I can explain why better communication and political will are insufficient responses to structural failure modes</label></div>
+ <div class="check-item"><input type="checkbox" id="c5" onchange="u()"><label for="c5">I have a specific governance question for Section 8 — framed precisely enough to be answered by a specific governance design</label></div>
+ </div>
+
+ <div class="forward-box">
+ <p class="forward-label">Section 9 — Building city intelligence systems</p>
+ <p class="forward-text">Section 8 gave you the threat profile. <strong>Section 9 builds the defence.</strong> Four governance countermeasures — each designed against one implementation failure mode: a shared accountability framework (against mandate fragmentation), a shared outcome metric system (against metric substitution), a transition-proofing protocol (against political cycle truncation), and a structural protection mechanism (against institutional capture). Each countermeasure is designed to be built before the strategy launches — not after the failure mode has already broken the chain.</p>
+ </div>
+
+ <div class="ready-box" id="readyBox">
+ <p class="ready-text">You are ready for the Section 8 quiz.<br>Come with your threat profile and your governance question. The quiz will test whether you can recognise which failure mode is operating in a given scenario — and whether you know why communication alone cannot fix it.</p>
+ </div>
+</div>
+<script>
+function u(){
+ var t=document.querySelectorAll('textarea'),c=document.querySelectorAll('#cl input');
+ var tf=0;t.forEach(function(x){if(x.value.trim().length>25)tf++;});
+ var cf=0;c.forEach(function(x){if(x.checked)cf++;});
+ var total=t.length+c.length,done=tf+cf;
+ var pct=Math.round((done/total)*100);
+ document.getElementById('pbar').style.width=pct+'%';
+ document.getElementById('pct').textContent=pct+'%';
+ document.getElementById('readyBox').style.display=(pct>=75)?'block':'none';
+}
+</script>
+
+ <div class="pdf-btn-wrap">
+ <button class="pdf-btn" onclick="window.print()">
+ <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17v-6M9 14l3 3 3-3"/><rect x="3" y="3" width="18" height="14" rx="2"/><path d="M3 17h18v4H3z"/></svg>
+ Save my answers as PDF
+ </button>
+ <p class="pdf-hint">Opens your browser's print dialog — choose "Save as PDF" as the destination</p>
+ </div>
+</body>
+</html>

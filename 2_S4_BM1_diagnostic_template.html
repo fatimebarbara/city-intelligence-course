@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Section 6 · — City Diagnostic Template</title>
+<style>
+ :root{
+ --teal-dark:#085041;--teal-mid:#0F6E56;--teal:#1D9E75;--teal-light:#5DCAA5;--teal-pale:#E1F5EE;--teal-faint:#F0FAF6;
+ --purple:#534AB7;--purple-pale:#EEEDFE;--purple-mid:#3C3489;
+ --amber:#BA7517;--amber-pale:#FAEEDA;
+ --blue:#185FA5;--blue-pale:#E6F1FB;
+ --coral:#D85A30;--coral-pale:#FAECE7;
+ --green:#3B6D11;--green-pale:#EAF3DE;
+ --pink:#993556;--pink-pale:#FBEAF0;
+ --warn:#B91C1C;--warn-pale:#FEF2F2;
+ --text:#1a1a1a;--text-mid:#444;--text-muted:#6b6b6b;
+ --border:#e2e2e2;--border-light:#f0f0f0;--bg:#fff;--bg-soft:#f8f9fa;
+ --radius:10px;--radius-sm:6px;
+ }
+ *{box-sizing:border-box;margin:0;padding:0}
+ body{font-family:'Helvetica Neue',Arial,sans-serif;color:var(--text);background:var(--bg);font-size:15px;line-height:1.65}
+ .page{max-width:760px;margin:0 auto;padding:48px 24px 80px}
+ .bm-label{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--teal-mid);background:var(--teal-pale);padding:5px 14px;border-radius:20px;margin-bottom:18px}
+ .bm-title{font-size:28px;font-weight:700;color:var(--text);line-height:1.25;margin-bottom:10px;letter-spacing:-.3px;font-family:'Georgia',serif}
+ .bm-sub{font-size:14px;color:var(--text-muted);line-height:1.65;max-width:580px;margin-bottom:20px}
+ .intro-note{background:var(--bg-soft);border:1px solid var(--border-light);border-radius:var(--radius);padding:16px 20px;font-size:13px;color:var(--text-muted);line-height:1.65;margin-bottom:28px}
+ .divider{border:none;border-top:1px solid var(--border-light);margin:32px 0}
+ .sec-label{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin:28px 0 14px;display:flex;align-items:center;gap:10px}
+ .sec-label::after{content:'';flex:1;height:1px;background:var(--border-light)}
+
+ /* Audience toggle */
+ .aud-toggle{display:flex;gap:8px;margin-bottom:24px}
+ .aud-btn{border:1px solid var(--border);border-radius:20px;padding:7px 18px;font-size:13px;font-weight:500;cursor:pointer;background:var(--bg-soft);color:var(--text-muted);transition:all .15s}
+ .aud-btn.pm-active{background:var(--teal-pale);color:var(--teal-dark);border-color:var(--teal-light);font-weight:600}
+ .aud-btn.rs-active{background:var(--purple-pale);color:var(--purple-mid);border-color:#AFA9EC;font-weight:600}
+
+ /* Step navigation */
+ .step-nav{display:flex;gap:0;margin-bottom:28px;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+ .step-btn{flex:1;padding:12px 6px;text-align:center;cursor:pointer;background:var(--bg-soft);border:none;border-right:1px solid var(--border);transition:all .15s;font-family:'Helvetica Neue',Arial,sans-serif}
+ .step-btn:last-child{border-right:none}
+ .step-btn:hover{background:var(--bg)}
+ .step-btn.active{background:var(--teal);color:#fff}
+ .step-btn .sn{font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;display:block;margin-bottom:2px;opacity:.8}
+ .step-btn .sl{font-size:12px;font-weight:600;display:block;line-height:1.3}
+ .step-btn.active .sn{opacity:.85}
+
+ /* Progress */
+ .progress-row{display:flex;align-items:center;gap:12px;margin-bottom:24px}
+ .progress-label{font-size:12px;color:var(--text-muted);white-space:nowrap}
+ .progress-outer{flex:1;height:5px;background:var(--border-light);border-radius:3px;overflow:hidden}
+ .progress-inner{height:100%;background:var(--teal);border-radius:3px;transition:width .4s ease;width:0%}
+ .progress-pct{font-size:12px;font-weight:700;color:var(--teal);min-width:36px;text-align:right}
+
+ /* Steps */
+ .step-panel{display:none}
+ .step-panel.visible{display:block}
+ .step-header{margin-bottom:20px}
+ .sh-num{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:4px}
+ .sh-title{font-size:20px;font-weight:700;font-family:'Georgia',serif;color:var(--text);margin-bottom:8px}
+ .sh-why{font-size:13px;color:var(--text-muted);line-height:1.65}
+ .aud-ctx{border-radius:var(--radius-sm);padding:12px 14px;margin:12px 0;font-size:13px;line-height:1.6}
+ .aud-ctx.pm{background:var(--teal-faint);border-left:3px solid var(--teal-light);color:var(--teal-dark)}
+ .aud-ctx.rs{background:#F5F0FF;border-left:3px solid #AFA9EC;color:var(--purple-mid)}
+ .aud-ctx-label{font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px}
+ .aud-ctx.pm .aud-ctx-label{color:var(--teal-mid)}
+ .aud-ctx.rs .aud-ctx-label{color:var(--purple)}
+
+ /* Input components */
+ .field-group{margin-bottom:18px}
+ .field-label{font-size:12px;font-weight:600;color:var(--text-mid);margin-bottom:6px;display:block}
+ .field-sub{font-size:12px;color:var(--text-muted);margin-bottom:8px}
+ textarea,input[type=text]{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 12px;font-family:'Helvetica Neue',Arial,sans-serif;font-size:14px;color:var(--text);line-height:1.6;resize:vertical;outline:none;transition:border-color .15s}
+ textarea:focus,input[type=text]:focus{border-color:var(--teal-light)}
+ textarea::placeholder,input::placeholder{color:#b0b0b0}
+ textarea{min-height:72px}
+
+ /* Pillar score inputs */
+ .pillar-inputs{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+ .pillar-score-row{background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px}
+ .pscore-name{font-size:12px;font-weight:700;margin-bottom:4px}
+ .pscore-name.p1{color:var(--blue)} .pscore-name.p2{color:var(--purple)} .pscore-name.p3{color:var(--green)}
+ .pscore-name.p4{color:var(--coral)} .pscore-name.p5{color:var(--amber)} .pscore-name.p6{color:var(--pink)}
+ .score-input{display:flex;align-items:center;gap:8px}
+ .score-input input[type=range]{flex:1;height:4px;accent-color:var(--teal)}
+ .score-val{font-size:14px;font-weight:700;color:var(--teal);min-width:32px;text-align:right}
+ .pillar-viz{margin:16px 0}
+ .pviz-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+ .pviz-name{font-size:12px;font-weight:600;min-width:120px}
+ .pviz-bar-outer{flex:1;height:10px;background:var(--border-light);border-radius:5px;overflow:hidden}
+ .pviz-bar-inner{height:100%;border-radius:5px;transition:width .3s ease}
+ .pviz-val{font-size:12px;font-weight:700;min-width:32px;text-align:right}
+ .b-p1{background:var(--blue)} .b-p2{background:var(--purple)} .b-p3{background:var(--green)}
+ .b-p4{background:var(--coral)} .b-p5{background:var(--amber)} .b-p6{background:var(--pink)}
+ .v-p1{color:var(--blue)} .v-p2{color:var(--purple)} .v-p3{color:var(--green)}
+ .v-p4{color:var(--coral)} .v-p5{color:var(--amber)} .v-p6{color:var(--pink)}
+
+ /* Outlier detection */
+ .outlier-box{border-radius:var(--radius);padding:16px 18px;margin:12px 0;border:1px solid var(--border)}
+ .ob-label{font-size:10px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;margin-bottom:6px}
+ .ob-text{font-size:14px;color:var(--text);line-height:1.6;font-style:italic;font-family:'Georgia',serif}
+
+ /* Radio select */
+
+
+ /* Summary */
+ .summary-card{background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius);padding:22px;margin-bottom:14px}
+ .sc-label{font-size:10px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--teal-mid);margin-bottom:6px}
+ .sc-content{font-size:14px;color:var(--text);line-height:1.7;font-family:'Georgia',serif}
+ .sc-empty{color:var(--text-muted);font-style:italic;font-family:'Helvetica Neue',Arial,sans-serif}
+
+ /* Nav buttons */
+ .step-nav-btns{display:flex;justify-content:space-between;margin-top:24px}
+ .nav-btn{border:1px solid var(--border);border-radius:20px;padding:9px 22px;font-size:13px;font-weight:600;cursor:pointer;background:var(--bg-soft);color:var(--text);transition:all .15s;font-family:'Helvetica Neue',Arial,sans-serif}
+ .nav-btn.primary{background:var(--teal);color:#fff;border-color:var(--teal)}
+ .nav-btn:hover{background:var(--bg);border-color:#aaa}
+ .nav-btn.primary:hover{background:var(--teal-mid)}
+ .nav-btn:disabled{opacity:.35;cursor:default}
+
+
+ /* Gap grid */
+ .gap-grid{display:flex;flex-direction:column;gap:10px;margin-bottom:20px}
+ .gap-opt{display:flex;align-items:flex-start;gap:12px;border:1px solid var(--border);border-radius:var(--radius);padding:16px;cursor:pointer;transition:all .15s;background:var(--card, #fff)}
+ .gap-opt:hover{border-color:var(--teal-light);background:var(--teal-faint)}
+ .gap-opt.selected{border-color:var(--teal);background:var(--teal-faint)}
+ .gap-opt.disabled-opt{opacity:.45;cursor:default;pointer-events:none}
+ .gap-check{width:22px;height:22px;border-radius:4px;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--text-muted);flex-shrink:0;margin-top:2px;transition:all .15s;background:#fff}
+ .gap-opt.selected .gap-check{background:var(--teal);border-color:var(--teal);color:#fff}
+ .gap-body{flex:1}
+ .gap-pillars{display:flex;align-items:center;gap:6px;margin-bottom:7px;flex-wrap:wrap}
+ .gpill{font-size:11px;font-weight:700;padding:3px 10px;border-radius:12px}
+ .gpill.p1{background:var(--blue-pale);color:var(--blue)}
+ .gpill.p2{background:var(--purple-pale);color:var(--purple)}
+ .gpill.p3{background:var(--green-pale);color:var(--green)}
+ .gpill.p4{background:var(--coral-pale);color:var(--coral)}
+ .gpill.p5{background:var(--amber-pale);color:var(--amber)}
+ .gpill.p6{background:var(--pink-pale);color:var(--pink)}
+ .garrow{color:var(--text-muted);font-size:14px}
+ .gap-desc{font-size:13px;color:var(--text-mid);line-height:1.6;margin-bottom:8px}
+ .gap-example{font-size:12px;color:var(--text-muted);background:var(--bg-soft);border-radius:var(--radius-sm);padding:9px 11px;line-height:1.6;border-left:3px solid var(--teal-pale)}
+ .ge-label{font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--teal-mid);margin-right:6px}
+ @media(max-width:560px){.pillar-inputs{grid-template-columns:1fr}}
+
+ /* ===== PDF / PRINT ===== */
+ .pdf-btn-wrap{text-align:center;margin-top:32px;padding-top:24px;border-top:1px solid var(--border-light)}
+ .pdf-btn{display:inline-flex;align-items:center;gap:8px;background:var(--teal-dark);color:#fff;border:none;border-radius:24px;padding:11px 28px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Helvetica Neue',Arial,sans-serif;transition:background .15s;letter-spacing:.01em}
+ .pdf-btn:hover{background:var(--teal-mid)}
+ .pdf-btn svg{width:16px;height:16px;flex-shrink:0}
+ .pdf-hint{font-size:11px;color:var(--text-muted);margin-top:8px}
+ @media print{
+ .pdf-btn-wrap,.progress-row,.aud-toggle,.check-item,.ready-box,.forward-box,
+ .bm-label,button,.next-btn,.retry-btn,.results-detail,.pass-badge,
+ .tc-header .tc-toggle,.sev-btns,.check-match-btn,.submit-blank,
+ .gap-opt.disabled-opt,.psel-btn,.trap-btn,.nav-btn{display:none!important}
+ body{background:#fff!important;font-size:13px;line-height:1.6;color:#1a1a1a}
+ .page,.quiz-wrap{max-width:100%!important;padding:20px!important}
+ textarea,input[type=text],.blank-input{border:none!important;background:transparent!important;padding:4px 0!important;resize:none!important;min-height:0!important;font-size:13px!important;color:#1a1a1a!important}
+ .r-block,.seq-block,.canvas-section,.audit-block,.threat-card,.an-card,
+ .brief-out,.brief-row,.csum-row,.op-row,.summary-card,.seq-step{break-inside:avoid}
+ .tc-body{display:block!important}
+ .bm-title,.q-title{font-size:20px!important}
+ .r-q,.q-text{font-size:15px!important}
+ .results-circle{display:none!important}
+ .results-card{display:block!important;border:none!important;padding:0!important}
+ .results-title{font-size:18px!important}
+ .feedback-box{font-size:12px!important}
+ .opt.correct{background:#e8f5f0!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+ .opt.wrong{background:#fef2f2!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+ h1,h2,h3{break-after:avoid}
+ a[href]:after{content:''}
+ }
+</style>
+</head>
+<body>
+<div class="page">
+ <div class="bm-label">Diagnosing your city · City diagnostic template</div>
+ <h1 class="bm-title">City diagnostic template</h1>
+ <p class="bm-sub">A structured five-step diagnostic process — from reading your city's profile to identifying the binding constraint and formulating the attribution question. Select your role to see the template calibrated to your perspective.</p>
+ <div class="intro-note">This template is designed to be used with real CII data — either from the comparison group or from your own city's data if available. If you don't yet have specific scores, use estimated ranges based on what you know about your context. The process matters more than the precision of the numbers at this stage.</div>
+
+ <div class="aud-toggle">
+ <button class="aud-btn pm-active" id="btn-pm" onclick="setAud('pm')">I am a policymaker</button>
+ <button class="aud-btn" id="btn-rs" onclick="setAud('rs')">I am a researcher</button>
+ </div>
+
+ <div class="progress-row">
+ <span class="progress-label">Diagnostic progress</span>
+ <div class="progress-outer"><div class="progress-inner" id="pbar"></div></div>
+ <span class="progress-pct" id="pct">0%</span>
+ </div>
+
+ <div class="step-nav" id="step-nav">
+ <button class="step-btn active" onclick="goStep(1)" id="snav1"><span class="sn">Step 01</span><span class="sl">Context</span></button>
+ <button class="step-btn" onclick="goStep(2)" id="snav2"><span class="sn">Step 02</span><span class="sl">Profile</span></button>
+ <button class="step-btn" onclick="goStep(3)" id="snav3"><span class="sn">Step 03</span><span class="sl">Outlier</span></button>
+ <button class="step-btn" onclick="goStep(4)" id="snav4"><span class="sn">Step 04</span><span class="sl">Gap</span></button>
+ <button class="step-btn" onclick="goStep(5)" id="snav5"><span class="sn">Step 05</span><span class="sl">Attribution</span></button>
+ </div>
+
+ <!-- STEP 1 -->
+ <div class="step-panel visible" id="step1">
+ <div class="step-header">
+ <p class="sh-num">Step 01 — Context</p>
+ <h2 class="sh-title">Name your diagnostic subject</h2>
+ <p class="sh-why">Before reading any data, name what you are diagnosing and what you are trying to understand. A diagnosis without a question is just description. The question you bring to the data shapes what you will see in it.</p>
+ </div>
+ <div class="aud-ctx pm" id="ctx1-pm"><p class="aud-ctx-label">Policymaker</p>Think about a specific decision, programme, or policy area you are currently responsible for — or wish to improve. The more specific your context, the more useful the diagnosis.</div>
+ <div class="aud-ctx rs" id="ctx1-rs" style="display:none"><p class="aud-ctx-label">Researcher</p>Think about the city, urban system, or policy area you are currently studying. Name the research question that makes this diagnosis relevant to your work.</div>
+ <div class="field-group">
+ <label class="field-label">City or system you are diagnosing</label>
+ <input type="text" id="f-city" placeholder="e.g. Brussels, Barcelona, or a specific policy area..." oninput="updateProgress()">
+ </div>
+ <div class="field-group">
+ <label class="field-label pm-lbl">The decision or policy area this diagnosis is meant to inform</label>
+ <label class="field-label rs-lbl" style="display:none">The research question this diagnosis is meant to answer</label>
+ <textarea id="f-question" placeholder="Be specific — a diagnosis is only useful if it is connected to a decision or question that matters..." oninput="updateProgress()"></textarea>
+ </div>
+ <div class="field-group">
+ <label class="field-label">What outcome are you most concerned about?</label>
+ <p class="field-sub">The outcome that, if it doesn't improve, means this work has failed.</p>
+ <textarea id="f-outcome" placeholder="Name the outcome in human terms, not in indicator terms — what changes in people's lives if this works?" oninput="updateProgress()" style="min-height:56px"></textarea>
+ </div>
+ <div class="step-nav-btns"><div></div><button class="nav-btn primary" onclick="goStep(2)">Next: build the profile →</button></div>
+ </div>
+
+ <!-- STEP 2 -->
+ <div class="step-panel" id="step2">
+ <div class="step-header">
+ <p class="sh-num">Step 02 — Profile</p>
+ <h2 class="sh-title">Build or estimate your city's pillar profile</h2>
+ <p class="sh-why">Enter scores or estimates for each pillar. If you have real CII data, use it. If not, use your knowledge of your city to estimate relative performance on each dimension — the diagnostic logic works with informed estimates.</p>
+ </div>
+ <div class="aud-ctx pm" id="ctx2-pm"><p class="aud-ctx-label">Policymaker</p>You don't need precise scores — a relative assessment (strong / moderate / weak) converted to a 0–1 range is enough to begin the diagnostic logic. Strong ≈ 0.70–0.85, Moderate ≈ 0.50–0.65, Weak ≈ 0.30–0.45.</div>
+ <div class="aud-ctx rs" id="ctx2-rs" style="display:none"><p class="aud-ctx-label">Researcher</p>If you have access to comparable indicator data, use it to calibrate your estimates. Note which estimates are grounded in data and which are informed assumptions — this distinction will matter for your attribution analysis.</div>
+ <div class="pillar-inputs" id="pillar-inputs">
+ <div class="pillar-score-row"><p class="pscore-name p1">Foundational</p><div class="score-input"><input type="range" min="0" max="100" value="60" id="s1" oninput="updateViz();updateProgress()"><span class="score-val" id="sv1">0.60</span></div></div>
+ <div class="pillar-score-row"><p class="pscore-name p2">Innovator</p><div class="score-input"><input type="range" min="0" max="100" value="60" id="s2" oninput="updateViz();updateProgress()"><span class="score-val" id="sv2">0.60</span></div></div>
+ <div class="pillar-score-row"><p class="pscore-name p3">Integrator</p><div class="score-input"><input type="range" min="0" max="100" value="60" id="s3" oninput="updateViz();updateProgress()"><span class="score-val" id="sv3">0.60</span></div></div>
+ <div class="pillar-score-row"><p class="pscore-name p4">Regenerative</p><div class="score-input"><input type="range" min="0" max="100" value="60" id="s4" oninput="updateViz();updateProgress()"><span class="score-val" id="sv4">0.60</span></div></div>
+ <div class="pillar-score-row"><p class="pscore-name p5">Connected</p><div class="score-input"><input type="range" min="0" max="100" value="60" id="s5" oninput="updateViz();updateProgress()"><span class="score-val" id="sv5">0.60</span></div></div>
+ <div class="pillar-score-row"><p class="pscore-name p6">Healthy Society</p><div class="score-input"><input type="range" min="0" max="100" value="60" id="s6" oninput="updateViz();updateProgress()"><span class="score-val" id="sv6">0.60</span></div></div>
+ </div>
+ <div class="pillar-viz" id="pillar-viz">
+ <div class="pviz-row"><span class="pviz-name p1" style="color:var(--blue)">Foundational</span><div class="pviz-bar-outer"><div class="pviz-bar-inner b-p1" id="vb1" style="width:60%"></div></div><span class="pviz-val v-p1" id="vv1">0.60</span></div>
+ <div class="pviz-row"><span class="pviz-name p2" style="color:var(--purple)">Innovator</span><div class="pviz-bar-outer"><div class="pviz-bar-inner b-p2" id="vb2" style="width:60%"></div></div><span class="pviz-val v-p2" id="vv2">0.60</span></div>
+ <div class="pviz-row"><span class="pviz-name p3" style="color:var(--green)">Integrator</span><div class="pviz-bar-outer"><div class="pviz-bar-inner b-p3" id="vb3" style="width:60%"></div></div><span class="pviz-val v-p3" id="vv3">0.60</span></div>
+ <div class="pviz-row"><span class="pviz-name p4" style="color:var(--coral)">Regenerative</span><div class="pviz-bar-outer"><div class="pviz-bar-inner b-p4" id="vb4" style="width:60%"></div></div><span class="pviz-val v-p4" id="vv4">0.60</span></div>
+ <div class="pviz-row"><span class="pviz-name p5" style="color:var(--amber)">Connected</span><div class="pviz-bar-outer"><div class="pviz-bar-inner b-p5" id="vb5" style="width:60%"></div></div><span class="pviz-val v-p5" id="vv5">0.60</span></div>
+ <div class="pviz-row"><span class="pviz-name p6" style="color:var(--pink)">Healthy Society</span><div class="pviz-bar-outer"><div class="pviz-bar-inner b-p6" id="vb6" style="width:60%"></div></div><span class="pviz-val v-p6" id="vv6">0.60</span></div>
+ </div>
+ <div class="step-nav-btns">
+ <button class="nav-btn" onclick="goStep(1)">← Back</button>
+ <button class="nav-btn primary" onclick="goStep(3)">Next: identify the outlier →</button>
+ </div>
+ </div>
+
+ <!-- STEP 3 -->
+ <div class="step-panel" id="step3">
+ <div class="step-header">
+ <p class="sh-num">Step 03 — Outlier</p>
+ <h2 class="sh-title">Read the outlier pillar</h2>
+ <p class="sh-why">The pillar that diverges most from the city's average is where the most important structural story lives. Never start with the composite score — start with the outlier. High outliers are strengths that may be masking gaps. Low outliers are the system's most important diagnostic signal.</p>
+ </div>
+ <div class="aud-ctx pm" id="ctx3-pm"><p class="aud-ctx-label">Policymaker</p>The outlier pillar is not necessarily where you should act first — it is where you should look first. A low Healthy Society score in a city with strong economic pillars is a structural story, not a health sector problem.</div>
+ <div class="aud-ctx rs" id="ctx3-rs" style="display:none"><p class="aud-ctx-label">Researcher</p>The outlier pillar is your entry point for the attribution analysis. The question is not only what the outlier score is — but why the system is producing that divergence from the expected pattern.</div>
+ <div id="auto-outlier" style="background:var(--teal-faint);border:1px solid var(--teal-pale);border-radius:var(--radius-sm);padding:14px 16px;margin-bottom:16px;font-size:13px;color:var(--teal-dark)">
+ <strong>Based on your profile:</strong> <span id="outlier-text">adjust the sliders in Step 2 to see your outlier analysis.</span>
+ </div>
+ <div class="field-group">
+ <label class="field-label">Confirm your outlier pillar — and explain what it means for your context</label>
+ <p class="field-sub">Name the outlier and describe what pattern it reveals. Is this a structural gap, a historical underinvestment, or a systemic disconnect?</p>
+ <textarea id="f-outlier" placeholder="The outlier pillar in my context is... This matters because..." oninput="updateProgress()"></textarea>
+ </div>
+ <div class="field-group">
+ <label class="field-label">Is this outlier a surprise — or does it confirm something you already suspected?</label>
+ <textarea id="f-outlier-surprise" placeholder="If it confirms something: what prevented this from being addressed before? If it surprises: what does that reveal about your prior assumptions?" oninput="updateProgress()" style="min-height:56px"></textarea>
+ </div>
+ <div class="step-nav-btns">
+ <button class="nav-btn" onclick="goStep(2)">← Back</button>
+ <button class="nav-btn primary" onclick="goStep(4)">Next: detect the structural gap →</button>
+ </div>
+ </div>
+
+ <!-- STEP 4 -->
+ <div class="step-panel" id="step4">
+ <div class="step-header">
+ <p class="sh-num">Step 04 — Structural gap</p>
+ <h2 class="sh-title">Detect the broken connection</h2>
+ <p class="sh-why">A structural gap is not a weak score — it is a missing connection between pillars that should be performing in alignment. Identifying the gap tells you where structural change is needed, not just where performance is low.</p>
+ </div>
+ <div class="aud-ctx pm" id="ctx4-pm"><p class="aud-ctx-label">Policymaker</p>The structural gap is where policy design fails to produce outcomes because two systems that should be connected are operating in silos. Naming it precisely is the prerequisite for a structural intervention.</div>
+ <div class="aud-ctx rs" id="ctx4-rs" style="display:none"><p class="aud-ctx-label">Researcher</p>The structural gap is a hypothesis about a missing institutional or systemic connection. Your research can test whether the gap exists, what produces it, and what it would take to close it.</div>
+ <p style="font-size:13px;color:var(--text-muted);margin-bottom:6px;line-height:1.6">Select <strong>up to two</strong> pillar pairs whose performance diverges most unexpectedly in your context — the connection that should exist but doesn't.</p>
+ <p id="gap-limit-msg" style="font-size:12px;color:var(--teal-mid);margin-bottom:14px;min-height:18px;font-weight:600"></p>
+ <div class="gap-grid">
+
+ <label class="gap-opt" id="gopt-1" onclick="toggleGap(this,'Foundational → Healthy Society','gopt-1')">
+ <div class="gap-check" id="gchk-1">□</div>
+ <div class="gap-body">
+ <div class="gap-pillars"><span class="gpill p1">Foundational</span><span class="garrow">→</span><span class="gpill p6">Healthy Society</span></div>
+ <p class="gap-desc">People have basic capabilities but aren't living well. The city has invested in education, digital access, and social infrastructure — yet health outcomes and wellbeing indicators remain critically low.</p>
+ <div class="gap-example"><span class="ge-label">Example</span> A city with strong school enrolment and high digital access — but where avoidable mortality in peripheral districts is 40% above the national average. The Foundational investment exists; it is not reaching health outcomes.</div>
+ </div>
+ </label>
+
+ <label class="gap-opt" id="gopt-2" onclick="toggleGap(this,'Innovator → Integrator','gopt-2')">
+ <div class="gap-check" id="gchk-2">□</div>
+ <div class="gap-body">
+ <div class="gap-pillars"><span class="gpill p2">Innovator</span><span class="garrow">→</span><span class="gpill p3">Integrator</span></div>
+ <p class="gap-desc">The city generates knowledge and innovation but cannot coordinate it into policy. Research institutions and innovation hubs are thriving — but their outputs never enter the governance system.</p>
+ <div class="gap-example"><span class="ge-label">Example</span> A city with three universities and a high patent output — but where no formal mechanism connects research findings to budget decisions. Knowledge circulates among academics; it doesn't change what the city does.</div>
+ </div>
+ </label>
+
+ <label class="gap-opt" id="gopt-3" onclick="toggleGap(this,'Integrator → Healthy Society','gopt-3')">
+ <div class="gap-check" id="gchk-3">□</div>
+ <div class="gap-body">
+ <div class="gap-pillars"><span class="gpill p3">Integrator</span><span class="garrow">→</span><span class="gpill p6">Healthy Society</span></div>
+ <p class="gap-desc">The city's systems don't coordinate across health-relevant domains. Housing, transport, food, and social services each operate within their own mandate — and people who need all of them fall through the gaps between.</p>
+ <div class="gap-example"><span class="ge-label">Example</span> A city with well-run housing and transport departments, each hitting individual targets — but where chronic disease rates in specific districts keep rising because no department is accountable for the intersection between them.</div>
+ </div>
+ </label>
+
+ <label class="gap-opt" id="gopt-4" onclick="toggleGap(this,'Regenerative → Healthy Society','gopt-4')">
+ <div class="gap-check" id="gchk-4">□</div>
+ <div class="gap-body">
+ <div class="gap-pillars"><span class="gpill p4">Regenerative</span><span class="garrow">→</span><span class="gpill p6">Healthy Society</span></div>
+ <p class="gap-desc">Environmental conditions are producing health burdens that the health system is being asked to treat — rather than the environmental decisions being changed. The city may have a strong green agenda, but the burden is unevenly distributed.</p>
+ <div class="gap-example"><span class="ge-label">Example</span> A city on track for its carbon neutrality targets — with city-wide air quality improving — but where two industrial-adjacent districts have respiratory disease rates three times the city average. The aggregate Regenerative score looks fine. The district-level burden is invisible in it.</div>
+ </div>
+ </label>
+
+ <label class="gap-opt" id="gopt-5" onclick="toggleGap(this,'Foundational → Innovator','gopt-5')">
+ <div class="gap-check" id="gchk-5">□</div>
+ <div class="gap-body">
+ <div class="gap-pillars"><span class="gpill p1">Foundational</span><span class="garrow">→</span><span class="gpill p2">Innovator</span></div>
+ <p class="gap-desc">The population has the capabilities for an innovation economy — education levels are high, digital skills exist — but the city has not built the translation infrastructure that converts capability into economic activity.</p>
+ <div class="gap-example"><span class="ge-label">Example</span> A post-industrial city with high graduation rates and strong digital literacy — but where knowledge-intensive employment is flat and graduates leave. The human capital is there; the institutional pathway from capability to opportunity is not.</div>
+ </div>
+ </label>
+
+ <label class="gap-opt" id="gopt-6" onclick="toggleGap(this,'Connected → Foundational','gopt-6')">
+ <div class="gap-check" id="gchk-6">□</div>
+ <div class="gap-body">
+ <div class="gap-pillars"><span class="gpill p5">Connected</span><span class="garrow">→</span><span class="gpill p1">Foundational</span></div>
+ <p class="gap-desc">The city is open to the world — strong international networks, broadband infrastructure, high connectivity — but these benefits don't reach all its residents. Connection exists for some; exclusion persists for others.</p>
+ <div class="gap-example"><span class="ge-label">Example</span> A city ranking in the top ten in Europe for digital infrastructure — but where digital participation rates among adults over 60 and recent migrants are among the lowest in the comparison group. The infrastructure is there; the access pathway to it is broken for specific populations.</div>
+ </div>
+ </label>
+
+ </div>
+ <div class="field-group">
+ <label class="field-label">Describe how this structural gap manifests in your context</label>
+ <p class="field-sub">Not in indicator terms — in institutional, political, or systemic terms. What is missing? What should be connected that isn't?</p>
+ <textarea id="f-gap" placeholder="The gap between [pillar] and [pillar] appears in my context as..." oninput="updateProgress()"></textarea>
+ </div>
+ <div class="step-nav-btns">
+ <button class="nav-btn" onclick="goStep(3)">← Back</button>
+ <button class="nav-btn primary" onclick="goStep(5)">Next: formulate the attribution question →</button>
+ </div>
+ </div>
+
+ <!-- STEP 5 -->
+ <div class="step-panel" id="step5">
+ <div class="step-header">
+ <p class="sh-num">Step 05 — Attribution</p>
+ <h2 class="sh-title">Formulate the attribution question</h2>
+ <p class="sh-why">The attribution question is what transforms a CII reading into a diagnosis. It asks: which decisions, in which domains, are most likely producing the pattern I see? It is the bridge between the index and the intervention.</p>
+ </div>
+ <div class="aud-ctx pm" id="ctx5-pm"><p class="aud-ctx-label">Policymaker</p>Your attribution question should name a decision domain and a structural change — not an indicator to improve. It is the question that, if answered, would tell you exactly where to act.</div>
+ <div class="aud-ctx rs" id="ctx5-rs" style="display:none"><p class="aud-ctx-label">Researcher</p>Your attribution question should be testable and comparative — it should name the mechanism you are hypothesising and the evidence that would confirm or refute it.</div>
+ <div class="field-group">
+ <label class="field-label pm-lbl">Your attribution question — for policymaking</label>
+ <label class="field-label rs-lbl" style="display:none">Your attribution question — for research</label>
+ <p class="field-sub pm-sub">Complete the frame: "The [outlier pillar] gap in [city] is most likely produced by decisions in [domain] — specifically [structural mechanism]. If [structural change], the gap would [predicted impact]."</p>
+ <p class="field-sub rs-sub" style="display:none">Complete the frame: "The [pillar relationship] in [city] is most likely explained by [mechanism]. I would test this by [method], looking for [evidence]. The alternative explanation is [alternative] — I would distinguish between them by [approach]."</p>
+ <textarea id="f-attribution" placeholder="Write your attribution question here..." oninput="updateProgress()" style="min-height:100px"></textarea>
+ </div>
+ <div class="field-group">
+ <label class="field-label">What is the first move your diagnosis points to?</label>
+ <p class="field-sub">One specific, structural, achievable action. Not a study. Not a meeting. A change.</p>
+ <textarea id="f-firstmove" placeholder="The first move this diagnosis suggests is..." oninput="updateProgress()" style="min-height:56px"></textarea>
+ </div>
+
+ <div class="divider"></div>
+
+ <p style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:14px">Your diagnostic summary</p>
+ <div class="summary-card"><p class="sc-label">City / system</p><p class="sc-content" id="sum-city"><span class="sc-empty">Complete Step 1 to see your summary</span></p></div>
+ <div class="summary-card"><p class="sc-label">The question</p><p class="sc-content" id="sum-question"><span class="sc-empty">—</span></p></div>
+ <div class="summary-card"><p class="sc-label">Outlier pillar</p><p class="sc-content" id="sum-outlier"><span class="sc-empty">—</span></p></div>
+ <div class="summary-card"><p class="sc-label">Structural gap</p><p class="sc-content" id="sum-gap"><span class="sc-empty">—</span></p></div>
+ <div class="summary-card"><p class="sc-label">Attribution question</p><p class="sc-content" id="sum-attr"><span class="sc-empty">—</span></p></div>
+ <div class="summary-card" style="background:var(--teal-faint);border-color:var(--teal-pale)"><p class="sc-label" style="color:var(--teal-mid)">First move</p><p class="sc-content" id="sum-move"><span class="sc-empty">—</span></p></div>
+
+ <div class="step-nav-btns"><button class="nav-btn" onclick="goStep(4)">← Back</button><div></div></div>
+ </div>
+</div>
+<script>
+var aud='pm', selGap='', currentStep=1;
+var pillars=['Foundational','Innovator','Integrator','Regenerative','Connected','Healthy Society'];
+
+function setAud(a){
+ aud=a;
+ document.getElementById('btn-pm').className='aud-btn'+(a==='pm'?' pm-active':'');
+ document.getElementById('btn-rs').className='aud-btn'+(a==='rs'?' rs-active':'');
+ for(var i=1;i<=5;i++){
+ var pm=document.getElementById('ctx'+i+'-pm');
+ var rs=document.getElementById('ctx'+i+'-rs');
+ if(pm) pm.style.display=a==='pm'?'block':'none';
+ if(rs) rs.style.display=a==='rs'?'block':'none';
+ }
+ document.querySelectorAll('.pm-lbl').forEach(function(e){e.style.display=a==='pm'?'block':'none'});
+ document.querySelectorAll('.rs-lbl').forEach(function(e){e.style.display=a==='rs'?'block':'none'});
+ document.querySelectorAll('.pm-sub').forEach(function(e){e.style.display=a==='pm'?'block':'none'});
+ document.querySelectorAll('.rs-sub').forEach(function(e){e.style.display=a==='rs'?'block':'none'});
+}
+
+function goStep(n){
+ currentStep=n;
+ for(var i=1;i<=5;i++){
+ document.getElementById('step'+i).classList.toggle('visible',i===n);
+ var btn=document.getElementById('snav'+i);
+ btn.classList.toggle('active',i===n);
+ }
+ updateSummary();
+ updateOutlierAnalysis();
+ window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function updateViz(){
+ for(var i=1;i<=6;i++){
+ var v=document.getElementById('s'+i).value;
+ document.getElementById('sv'+i).textContent=(v/100).toFixed(2);
+ document.getElementById('vb'+i).style.width=v+'%';
+ document.getElementById('vv'+i).textContent=(v/100).toFixed(2);
+ }
+ updateOutlierAnalysis();
+}
+
+function updateOutlierAnalysis(){
+ var vals=[];
+ for(var i=1;i<=6;i++) vals.push(parseFloat(document.getElementById('s'+i).value));
+ var avg=vals.reduce(function(a,b){return a+b},0)/6;
+ var minV=Math.min.apply(null,vals), maxV=Math.max.apply(null,vals);
+ var minI=vals.indexOf(minV), maxI=vals.indexOf(maxV);
+ var gap=(maxV-minV)/100;
+ var txt='';
+ if(gap>0.2){
+ txt='Your profile shows a significant divergence. <strong>'+pillars[maxI]+'</strong> is your strongest pillar ('+((maxV/100).toFixed(2))+') while <strong>'+pillars[minI]+'</strong> is your most critical gap ('+((minV/100).toFixed(2))+'). A gap of '+(gap.toFixed(2))+' between your highest and lowest pillar is a meaningful structural signal. Start your analysis here.';
+ } else if(gap>0.1){
+ txt='Your profile is relatively balanced, with a moderate divergence between <strong>'+pillars[maxI]+'</strong> ('+((maxV/100).toFixed(2))+') and <strong>'+pillars[minI]+'</strong> ('+((minV/100).toFixed(2))+'). Moderate divergences often hide structural tensions worth examining — look at whether these two pillars should be performing more similarly.';
+ } else {
+ txt='Your profile shows relatively even performance across pillars. Examine the absolute level of each pillar, not just the relative differences. Even balanced low performance is a diagnostic signal — it may indicate a structural constraint affecting the entire system.';
+ }
+ document.getElementById('outlier-text').innerHTML=txt;
+}
+
+var selGaps=[];
+function toggleGap(el,val,optId){
+ if(el.classList.contains('disabled-opt')) return;
+ var idx=selGaps.indexOf(val);
+ if(idx>-1){
+ // deselect
+ selGaps.splice(idx,1);
+ el.classList.remove('selected');
+ document.getElementById(optId.replace('gopt','gchk')).textContent='□';
+ } else {
+ if(selGaps.length>=2){
+ document.getElementById('gap-limit-msg').textContent='Maximum two gaps selected — deselect one to choose another.';
+ return;
+ }
+ selGaps.push(val);
+ el.classList.add('selected');
+ document.getElementById(optId.replace('gopt','gchk')).textContent='✓';
+ }
+ // update disabled state
+ document.querySelectorAll('.gap-opt').forEach(function(o){
+ o.classList.remove('disabled-opt');
+ });
+ if(selGaps.length>=2){
+ document.querySelectorAll('.gap-opt:not(.selected)').forEach(function(o){
+ o.classList.add('disabled-opt');
+ });
+ document.getElementById('gap-limit-msg').textContent='2 gaps selected. Deselect one to change your choice.';
+ } else {
+ document.getElementById('gap-limit-msg').textContent='';
+ }
+ selGap=selGaps.join(' + ');
+ updateProgress();
+}
+
+function updateProgress(){
+ var filled=0, total=7;
+ if(document.getElementById('f-city').value.trim().length>2) filled++;
+ if(document.getElementById('f-question').value.trim().length>20) filled++;
+ if(document.getElementById('f-outcome').value.trim().length>10) filled++;
+ if(document.getElementById('f-outlier').value.trim().length>20) filled++;
+ if(selGap) filled++;
+ if(document.getElementById('f-gap').value.trim().length>20) filled++;
+ if(document.getElementById('f-attribution').value.trim().length>30) filled++;
+ var pct=Math.round((filled/total)*100);
+ document.getElementById('pbar').style.width=pct+'%';
+ document.getElementById('pct').textContent=pct+'%';
+ updateSummary();
+}
+
+function updateSummary(){
+ var city=document.getElementById('f-city').value.trim()||null;
+ var q=document.getElementById('f-question').value.trim()||null;
+ var o=document.getElementById('f-outlier').value.trim()||null;
+ var a=document.getElementById('f-attribution').value.trim()||null;
+ var m=document.getElementById('f-firstmove').value.trim()||null;
+ function set(id,val){
+ document.getElementById(id).innerHTML=val?val:'<span class="sc-empty">—</span>';
+ }
+ set('sum-city',city); set('sum-question',q); set('sum-outlier',o);
+ set('sum-gap',selGap||null); set('sum-attr',a); set('sum-move',m);
+}
+
+updateViz();
+</script>
+
+ <div class="pdf-btn-wrap">
+ <button class="pdf-btn" onclick="window.print()">
+ <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17v-6M9 14l3 3 3-3"/><rect x="3" y="3" width="18" height="14" rx="2"/><path d="M3 17h18v4H3z"/></svg>
+ Save my answers as PDF
+ </button>
+ <p class="pdf-hint">Opens your browser's print dialog — choose "Save as PDF" as the destination</p>
+ </div>
+</body>
+</html>

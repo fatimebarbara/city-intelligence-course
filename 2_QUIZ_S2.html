@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Section 4 Quiz — City Intelligence and Its Four Conditions</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=DM+Sans:wght@300;400;500;600&display=swap');
+:root{--teal-dark:#085041;--teal-mid:#0F6E56;--teal:#1D9E75;--teal-light:#5DCAA5;--teal-pale:#E1F5EE;--teal-faint:#F0FAF6;--correct:#0F6E56;--correct-pale:#E1F5EE;--correct-border:#5DCAA5;--wrong:#B91C1C;--wrong-pale:#FEF2F2;--wrong-border:#FECACA;--text:#1a1a1a;--text-mid:#3a3a3a;--text-muted:#777;--border:#E5E5E5;--bg:#FAFAF9;--card:#FFFFFF;--radius:12px;--radius-sm:8px;}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:15px;line-height:1.65}
+.quiz-wrap{max-width:680px;margin:0 auto;padding:40px 20px 80px}
+.quiz-header{text-align:center;margin-bottom:40px}
+.q-section-label{font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--teal-mid);margin-bottom:12px}
+.q-title{font-family:'Playfair Display',serif;font-size:28px;font-weight:700;color:var(--text);line-height:1.2;margin-bottom:10px}
+.q-desc{font-size:14px;color:var(--text-muted);line-height:1.6;max-width:500px;margin:0 auto}
+.progress-wrap{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px 20px;margin-bottom:28px;display:flex;align-items:center;gap:14px}
+.progress-outer{flex:1;height:6px;background:#E8EAE8;border-radius:3px;overflow:hidden}
+.progress-inner{height:100%;background:linear-gradient(90deg,var(--teal),var(--teal-light));border-radius:3px;transition:width .4s ease;width:0%}
+.progress-text{font-size:12px;font-weight:600;color:var(--teal-mid);white-space:nowrap}
+.score-display{font-size:12px;font-weight:600;color:var(--text-muted);white-space:nowrap}
+.q-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:28px;margin-bottom:16px;display:none;animation:slideIn .3s ease}
+.q-card.active{display:block}
+@keyframes slideIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.q-meta{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.q-num{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--teal-mid);background:var(--teal-pale);padding:3px 10px;border-radius:20px}
+.q-type{font-size:10px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--text-muted)}
+.q-text{font-family:'Playfair Display',serif;font-size:17px;font-weight:500;line-height:1.55;color:var(--text);margin-bottom:20px}
+.multi-note{font-size:12px;color:var(--text-muted);margin-bottom:10px;font-style:italic}
+.options{display:flex;flex-direction:column;gap:8px;margin-bottom:20px}
+.opt{display:flex;align-items:flex-start;gap:12px;padding:12px 14px;border:1px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;transition:all .15s;background:var(--card)}
+.opt:hover:not(.disabled){border-color:var(--teal-light);background:var(--teal-faint)}
+.opt.selected{border-color:var(--teal);background:var(--teal-faint)}
+.opt.correct{border-color:var(--correct-border);background:var(--correct-pale)}
+.opt.wrong{border-color:var(--wrong-border);background:var(--wrong-pale)}
+.opt.disabled{cursor:default;opacity:.75}
+.opt-marker{width:22px;height:22px;border-radius:50%;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;font-size:11px;font-weight:700;color:var(--text-muted);transition:all .15s}
+.opt.correct .opt-marker{border-color:var(--correct);background:var(--correct);color:#fff}
+.opt.wrong .opt-marker{border-color:var(--wrong);background:var(--wrong);color:#fff}
+.opt-text{font-size:14px;color:var(--text-mid);line-height:1.55;padding-top:1px}
+.tf-row{display:flex;gap:10px;margin-bottom:20px}
+.tf-btn{flex:1;padding:12px;border:1px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;font-size:14px;font-weight:600;text-align:center;transition:all .15s;background:var(--card);color:var(--text-muted)}
+.tf-btn:hover:not(.disabled){border-color:var(--teal-light);background:var(--teal-faint);color:var(--teal-dark)}
+.tf-btn.correct{border-color:var(--correct-border);background:var(--correct-pale);color:var(--correct)}
+.tf-btn.wrong{border-color:var(--wrong-border);background:var(--wrong-pale);color:var(--wrong)}
+.tf-btn.disabled{cursor:default}
+.match-grid{display:grid;gap:8px;margin-bottom:20px}
+.match-row{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:center}
+.match-left{padding:10px 12px;background:var(--teal-faint);border:1px solid var(--teal-pale);border-radius:var(--radius-sm);font-size:13px;font-weight:600;color:var(--teal-dark);text-align:right}
+.match-arrow{color:var(--text-muted);font-size:14px;text-align:center}
+.match-select{padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:13px;font-family:'DM Sans',sans-serif;background:var(--card);color:var(--text);outline:none;cursor:pointer;width:100%}
+.match-select.correct{border-color:var(--correct-border);background:var(--correct-pale);color:var(--correct)}
+.match-select.wrong{border-color:var(--wrong-border);background:var(--wrong-pale);color:var(--wrong)}
+.check-match-btn{padding:9px 20px;background:var(--teal);color:#fff;border:none;border-radius:var(--radius-sm);font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background .15s;margin-bottom:16px}
+.check-match-btn:hover{background:var(--teal-mid)}
+.check-match-btn:disabled{background:#ccc;cursor:default}
+.blank-input{width:100%;padding:11px 14px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:14px;font-family:'DM Sans',sans-serif;color:var(--text);background:var(--card);outline:none;margin-bottom:16px;transition:border-color .15s}
+.blank-input:focus{border-color:var(--teal-light)}
+.blank-input.correct{border-color:var(--correct-border);background:var(--correct-pale)}
+.blank-input.wrong{border-color:var(--wrong-border);background:var(--wrong-pale)}
+.submit-blank{padding:9px 20px;background:var(--teal);color:#fff;border:none;border-radius:var(--radius-sm);font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background .15s;margin-bottom:16px}
+.submit-blank:hover{background:var(--teal-mid)}
+.feedback-box{display:none;padding:16px 18px;border-radius:var(--radius-sm);margin-bottom:20px;font-size:13px;line-height:1.7}
+.feedback-box.correct{background:var(--correct-pale);border:1px solid var(--correct-border);color:var(--teal-dark)}
+.feedback-box.wrong{background:var(--wrong-pale);border:1px solid var(--wrong-border);color:#7A1F1F}
+.feedback-box .fb-verdict{font-weight:700;display:block;margin-bottom:4px;font-size:13px}
+.q-nav{display:flex;justify-content:flex-end}
+.next-btn{padding:10px 24px;background:var(--teal);color:#fff;border:none;border-radius:var(--radius-sm);font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background .15s;display:none}
+.next-btn:hover{background:var(--teal-mid)}
+.results-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:40px 32px;text-align:center;display:none}
+.results-circle{width:100px;height:100px;border-radius:50%;background:linear-gradient(135deg,var(--teal),var(--teal-light));display:flex;align-items:center;justify-content:center;margin:0 auto 20px;box-shadow:0 8px 24px rgba(29,158,117,.25)}
+.results-pct{font-family:'Playfair Display',serif;font-size:30px;font-weight:700;color:#fff}
+.results-title{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--text);margin-bottom:8px}
+.results-sub{font-size:14px;color:var(--text-muted);line-height:1.6;margin-bottom:24px}
+.results-detail{display:flex;gap:16px;justify-content:center;margin-bottom:24px}
+.rd-box{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 20px;text-align:center}
+.rd-num{font-family:'Playfair Display',serif;font-size:24px;font-weight:700;color:var(--teal)}
+.rd-label{font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.07em;margin-top:2px}
+.retry-btn{padding:11px 28px;background:var(--teal);color:#fff;border:none;border-radius:var(--radius-sm);font-size:14px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background .15s}
+.retry-btn:hover{background:var(--teal-mid)}
+.pass-badge{display:inline-block;padding:4px 14px;border-radius:20px;font-size:12px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;margin-bottom:16px}
+.pass-badge.pass{background:var(--correct-pale);color:var(--correct);border:1px solid var(--correct-border)}
+.pass-badge.fail{background:var(--wrong-pale);color:var(--wrong);border:1px solid var(--wrong-border)}
+
+ /* ===== PDF / PRINT ===== */
+ .pdf-btn-wrap{text-align:center;margin-top:32px;padding-top:24px;border-top:1px solid var(--border-light)}
+ .pdf-btn{display:inline-flex;align-items:center;gap:8px;background:var(--teal-dark);color:#fff;border:none;border-radius:24px;padding:11px 28px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Helvetica Neue',Arial,sans-serif;transition:background .15s;letter-spacing:.01em}
+ .pdf-btn:hover{background:var(--teal-mid)}
+ .pdf-btn svg{width:16px;height:16px;flex-shrink:0}
+ .pdf-hint{font-size:11px;color:var(--text-muted);margin-top:8px}
+ @media print{
+ .pdf-btn-wrap,.progress-row,.aud-toggle,.check-item,.ready-box,.forward-box,
+ .bm-label,button,.next-btn,.retry-btn,.results-detail,.pass-badge,
+ .tc-header .tc-toggle,.sev-btns,.check-match-btn,.submit-blank,
+ .gap-opt.disabled-opt,.psel-btn,.trap-btn,.nav-btn{display:none!important}
+ body{background:#fff!important;font-size:13px;line-height:1.6;color:#1a1a1a}
+ .page,.quiz-wrap{max-width:100%!important;padding:20px!important}
+ textarea,input[type=text],.blank-input{border:none!important;background:transparent!important;padding:4px 0!important;resize:none!important;min-height:0!important;font-size:13px!important;color:#1a1a1a!important}
+ .r-block,.seq-block,.canvas-section,.audit-block,.threat-card,.an-card,
+ .brief-out,.brief-row,.csum-row,.op-row,.summary-card,.seq-step{break-inside:avoid}
+ .tc-body{display:block!important}
+ .bm-title,.q-title{font-size:20px!important}
+ .r-q,.q-text{font-size:15px!important}
+ .results-circle{display:none!important}
+ .results-card{display:block!important;border:none!important;padding:0!important}
+ .results-title{font-size:18px!important}
+ .feedback-box{font-size:12px!important}
+ .opt.correct{background:#e8f5f0!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+ .opt.wrong{background:#fef2f2!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+ h1,h2,h3{break-after:avoid}
+ a[href]:after{content:''}
+ }
+</style>
+</head>
+<body>
+<div class="quiz-wrap">
+ <div class="quiz-header">
+ <p class="q-section-label">What city intelligence actually is · City Intelligence Mastercourse</p>
+ <h1 class="q-title">Understanding city intelligence and its four conditions</h1>
+ <p class="q-desc">Section 2 asked you to recognise how systems fail. Section 3 asked something harder: what a system needs to succeed. This quiz tests whether you can hold that distinction clearly. 10 questions.</p>
+ </div>
+ <div class="progress-wrap">
+ <div class="progress-outer"><div class="progress-inner" id="progress-bar"></div></div>
+ <span class="progress-text" id="progress-text">0 / 10</span>
+ <span class="score-display" id="score-display">Score: 0</span>
+ </div>
+
+ <!-- Q1 T/F -->
+ <div class="q-card active" id="q1">
+ <div class="q-meta"><span class="q-num">Question 1</span><span class="q-type">True / False</span></div>
+ <p class="q-text">"A city that invests heavily in data collection, digital infrastructure, and smart city technology will, by definition, become more intelligent over time."</p>
+ <div class="tf-row">
+ <button class="tf-btn" onclick="checkTF('q1',this,'True','False')">True</button>
+ <button class="tf-btn" onclick="checkTF('q1',this,'False','False')">False</button>
+ </div>
+ <div class="feedback-box" id="fb-q1"></div>
+ <div class="q-nav"><button class="next-btn" id="next-q1" onclick="nextQ(1,2)">Next question →</button></div>
+ </div>
+
+ <!-- Q2 MC -->
+ <div class="q-card" id="q2">
+ <div class="q-meta"><span class="q-num">Question 2</span><span class="q-type">Multiple choice</span></div>
+ <p class="q-text">Which of the following best captures the definition of city intelligence introduced in this section?</p>
+ <div class="options" id="opts-q2">
+ <div class="opt" data-v="A"><span class="opt-marker">A</span><span class="opt-text">The volume and quality of data a city collects about itself</span></div>
+ <div class="opt" data-v="B"><span class="opt-marker">B</span><span class="opt-text">The sophistication of the digital tools a city uses to manage services</span></div>
+ <div class="opt" data-v="C"><span class="opt-marker">C</span><span class="opt-text">A city's capacity to use what it knows — through connected systems of information flow, decision-making, and feedback</span></div>
+ <div class="opt" data-v="D"><span class="opt-marker">D</span><span class="opt-text">The speed at which a city can respond to emerging crises</span></div>
+ </div>
+ <div class="feedback-box" id="fb-q2"></div>
+ <div class="q-nav"><button class="next-btn" id="next-q2" onclick="nextQ(2,3)">Next question →</button></div>
+ </div>
+
+ <!-- Q3 Match -->
+ <div class="q-card" id="q3">
+ <div class="q-meta"><span class="q-num">Question 3</span><span class="q-type">Match and sort</span></div>
+ <p class="q-text">Match each layer of the city intelligence concept map to its correct description.</p>
+ <div class="match-grid" id="match-q3">
+ <div class="match-row"><div class="match-left">Data & information</div><div class="match-arrow">→</div><select class="match-select" id="m3-1"><option value="">— select —</option><option>What the system knows</option><option>Who interprets and decides</option><option>What the system does</option><option>What changes in people's lives</option></select></div>
+ <div class="match-row"><div class="match-left">Governance & institutions</div><div class="match-arrow">→</div><select class="match-select" id="m3-2"><option value="">— select —</option><option>What the system knows</option><option>Who interprets and decides</option><option>What the system does</option><option>What changes in people's lives</option></select></div>
+ <div class="match-row"><div class="match-left">Decision & action</div><div class="match-arrow">→</div><select class="match-select" id="m3-3"><option value="">— select —</option><option>What the system knows</option><option>Who interprets and decides</option><option>What the system does</option><option>What changes in people's lives</option></select></div>
+ <div class="match-row"><div class="match-left">Outcomes & impact</div><div class="match-arrow">→</div><select class="match-select" id="m3-4"><option value="">— select —</option><option>What the system knows</option><option>Who interprets and decides</option><option>What the system does</option><option>What changes in people's lives</option></select></div>
+ </div>
+ <button class="check-match-btn" id="check-q3" onclick="checkMatch('q3',['What the system knows','Who interprets and decides','What the system does','What changes in people\'s lives'])">Check answers</button>
+ <div class="feedback-box" id="fb-q3"></div>
+ <div class="q-nav"><button class="next-btn" id="next-q3" onclick="nextQ(3,4)">Next question →</button></div>
+ </div>
+
+ <!-- Q4 MC -->
+ <div class="q-card" id="q4">
+ <div class="q-meta"><span class="q-num">Question 4</span><span class="q-type">Multiple choice</span></div>
+ <p class="q-text">A city health department produces rigorous quarterly reports distributed to all senior officials. No formal process exists for reviewing them before budget decisions are made. Which break point does this describe?</p>
+ <div class="options" id="opts-q4">
+ <div class="opt" data-v="A"><span class="opt-marker">A</span><span class="opt-text">Data that is never interpreted — the break between data and governance</span></div>
+ <div class="opt" data-v="B"><span class="opt-marker">B</span><span class="opt-text">Interpretation that never becomes action — the break between governance and decision</span></div>
+ <div class="opt" data-v="C"><span class="opt-marker">C</span><span class="opt-text">Action without measurable impact — the break between decision and outcome</span></div>
+ <div class="opt" data-v="D"><span class="opt-marker">D</span><span class="opt-text">The broken feedback loop — the break between outcome and data</span></div>
+ </div>
+ <div class="feedback-box" id="fb-q4"></div>
+ <div class="q-nav"><button class="next-btn" id="next-q4" onclick="nextQ(4,5)">Next question →</button></div>
+ </div>
+
+ <!-- Q5 Blank -->
+ <div class="q-card" id="q5">
+ <div class="q-meta"><span class="q-num">Question 5</span><span class="q-type">Fill in the blank</span></div>
+ <p class="q-text">Complete the sentence: "Intelligence is not a property of any single layer — it is ______ of the connections between them."</p>
+ <input type="text" class="blank-input" id="blank-q5" placeholder="Type your answer..." />
+ <button class="submit-blank" onclick="checkBlank('q5',['an emergent property','emergent property'])">Submit</button>
+ <div class="feedback-box" id="fb-q5"></div>
+ <div class="q-nav"><button class="next-btn" id="next-q5" onclick="nextQ(5,6)">Next question →</button></div>
+ </div>
+
+ <!-- Q6 MC -->
+ <div class="q-card" id="q6">
+ <div class="q-meta"><span class="q-num">Question 6</span><span class="q-type">Multiple choice</span></div>
+ <p class="q-text">A researcher publishes a landmark study showing air quality is causing childhood respiratory disease. It is widely cited. Three years later, the same city commissions a new study on the same question. Which condition for city intelligence is most absent?</p>
+ <div class="options" id="opts-q6">
+ <div class="opt" data-v="A"><span class="opt-marker">A</span><span class="opt-text">Circulation — the research never reached policymakers</span></div>
+ <div class="opt" data-v="B"><span class="opt-marker">B</span><span class="opt-text">Feedback — research findings were not integrated into the next decision cycle</span></div>
+ <div class="opt" data-v="C"><span class="opt-marker">C</span><span class="opt-text">Alignment — researchers and decision-makers were not working on the same question</span></div>
+ <div class="opt" data-v="D"><span class="opt-marker">D</span><span class="opt-text">Time horizon — the city is prioritising short-term outcomes</span></div>
+ </div>
+ <div class="feedback-box" id="fb-q6"></div>
+ <div class="q-nav"><button class="next-btn" id="next-q6" onclick="nextQ(6,7)">Next question →</button></div>
+ </div>
+
+ <!-- Q7 Multi -->
+ <div class="q-card" id="q7">
+ <div class="q-meta"><span class="q-num">Question 7</span><span class="q-type">Multiple response</span></div>
+ <p class="q-text">Which of the following are conditions for city intelligence identified in this section?</p>
+ <p class="multi-note">Select all that apply, then click Check.</p>
+ <div class="options" id="opts-q7">
+ <div class="opt multi-opt" onclick="toggleMulti(this)"><span class="opt-marker">□</span><span class="opt-text">Circulation</span></div>
+ <div class="opt multi-opt" onclick="toggleMulti(this)"><span class="opt-marker">□</span><span class="opt-text">Political will</span></div>
+ <div class="opt multi-opt" onclick="toggleMulti(this)"><span class="opt-marker">□</span><span class="opt-text">Feedback</span></div>
+ <div class="opt multi-opt" onclick="toggleMulti(this)"><span class="opt-marker">□</span><span class="opt-text">Technological infrastructure</span></div>
+ <div class="opt multi-opt" onclick="toggleMulti(this)"><span class="opt-marker">□</span><span class="opt-text">Alignment</span></div>
+ <div class="opt multi-opt" onclick="toggleMulti(this)"><span class="opt-marker">□</span><span class="opt-text">Time horizon</span></div>
+ <div class="opt multi-opt" onclick="toggleMulti(this)"><span class="opt-marker">□</span><span class="opt-text">Adequate funding</span></div>
+ </div>
+ <button class="check-match-btn" id="check-q7" onclick="checkMulti('q7',['Circulation','Feedback','Alignment','Time horizon'])">Check answers</button>
+ <div class="feedback-box" id="fb-q7"></div>
+ <div class="q-nav"><button class="next-btn" id="next-q7" onclick="nextQ(7,8)">Next question →</button></div>
+ </div>
+
+ <!-- Q8 MC -->
+ <div class="q-card" id="q8">
+ <div class="q-meta"><span class="q-num">Question 8</span><span class="q-type">Multiple choice</span></div>
+ <p class="q-text">A city director says: "Let's move on — we have the next programme to launch" after mixed results from a 3-year mobility reform. Which response best reflects city intelligence?</p>
+ <div class="options" id="opts-q8">
+ <div class="opt" data-v="A"><span class="opt-marker">A</span><span class="opt-text">Agree — momentum matters more than reflection in urban governance</span></div>
+ <div class="opt" data-v="B"><span class="opt-marker">B</span><span class="opt-text">Suggest commissioning a new evaluation study before moving on</span></div>
+ <div class="opt" data-v="C"><span class="opt-marker">C</span><span class="opt-text">Insist on a structured review that feeds specific findings into the design of the next programme before it launches</span></div>
+ <div class="opt" data-v="D"><span class="opt-marker">D</span><span class="opt-text">Propose publishing the results to maintain public trust and accountability</span></div>
+ </div>
+ <div class="feedback-box" id="fb-q8"></div>
+ <div class="q-nav"><button class="next-btn" id="next-q8" onclick="nextQ(8,9)">Next question →</button></div>
+ </div>
+
+ <!-- Q9 MC -->
+ <div class="q-card" id="q9">
+ <div class="q-meta"><span class="q-num">Question 9</span><span class="q-type">Multiple choice</span></div>
+ <p class="q-text">A policymaker says: "The problem is that researchers don't communicate clearly enough." A researcher responds: "The problem is that policymakers don't create the conditions to use evidence." What is the most accurate assessment?</p>
+ <div class="options" id="opts-q9">
+ <div class="opt" data-v="A"><span class="opt-marker">A</span><span class="opt-text">The policymaker is right — communication is the primary barrier to evidence use</span></div>
+ <div class="opt" data-v="B"><span class="opt-marker">B</span><span class="opt-text">The researcher is right — structural conditions determine whether evidence is ever used</span></div>
+ <div class="opt" data-v="C"><span class="opt-marker">C</span><span class="opt-text">Both are partially right — the structural conditions must exist before communication can matter</span></div>
+ <div class="opt" data-v="D"><span class="opt-marker">D</span><span class="opt-text">Both are wrong — the real problem is the quality of the evidence itself</span></div>
+ </div>
+ <div class="feedback-box" id="fb-q9"></div>
+ <div class="q-nav"><button class="next-btn" id="next-q9" onclick="nextQ(9,10)">Next question →</button></div>
+ </div>
+
+ <!-- Q10 MC -->
+ <div class="q-card" id="q10">
+ <div class="q-meta"><span class="q-num">Question 10</span><span class="q-type">Multiple choice</span></div>
+ <p class="q-text">Which of the following is the most accurate description of what city intelligence actually is?</p>
+ <div class="options" id="opts-q10">
+ <div class="opt" data-v="A"><span class="opt-marker">A</span><span class="opt-text">A digital infrastructure that allows real-time monitoring of city systems</span></div>
+ <div class="opt" data-v="B"><span class="opt-marker">B</span><span class="opt-text">A static property of well-governed cities with high institutional capacity</span></div>
+ <div class="opt" data-v="C"><span class="opt-marker">C</span><span class="opt-text">An emergent property of systems where information circulates, decisions are made with feedback, knowledge and action are aligned, and the long view is protected</span></div>
+ <div class="opt" data-v="D"><span class="opt-marker">D</span><span class="opt-text">A measurement framework for comparing cities on standardised indicators</span></div>
+ </div>
+ <div class="feedback-box" id="fb-q10"></div>
+ <div class="q-nav"><button class="next-btn" id="next-q10" onclick="showResults()">See my results →</button></div>
+ </div>
+
+ <div class="results-card" id="results">
+ <div class="results-circle"><span class="results-pct" id="res-pct">—</span></div>
+ <span class="pass-badge" id="pass-badge">—</span>
+ <h2 class="results-title" id="res-title">—</h2>
+ <p class="results-sub" id="res-sub">—</p>
+ <div class="results-detail">
+ <div class="rd-box"><div class="rd-num" id="res-correct">—</div><div class="rd-label">Correct</div></div>
+ <div class="rd-box"><div class="rd-num">10</div><div class="rd-label">Questions</div></div>
+ <div class="rd-box"><div class="rd-num" id="res-score">—</div><div class="rd-label">Points</div></div>
+ </div>
+ <button class="retry-btn" onclick="retryQuiz()">Retake quiz</button>
+ <div style="margin-top:12px">
+ <button class="pdf-btn" onclick="window.print()" style="display:inline-flex;align-items:center;gap:8px;background:#085041;color:#fff;border:none;border-radius:24px;padding:10px 24px;font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif">
+ <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17v-6M9 14l3 3 3-3"/><rect x="3" y="3" width="18" height="14" rx="2"/><path d="M3 17h18v4H3z"/></svg>
+ Save results as PDF
+ </button>
+ <p style="font-size:11px;color:#777;margin-top:6px">Opens print dialog — choose "Save as PDF"</p>
+ </div>
+ </div>
+</div>
+<script>
+var TOTAL=10;
+var state={answered:0,correct:0,points:0};
+var correct={'q2':'C','q4':'B','q6':'B','q8':'C','q9':'C','q10':'C'};
+var pts={'q2':1,'q3':2,'q4':1,'q5':1,'q6':1,'q7':2,'q8':2,'q9':2,'q10':1};
+var feedbacks={
+ 'q1':'The correct answer is False. Data abundance does not produce intelligence automatically. This is the central argument of Section 3. A city can have more data, more dashboards, and more digital tools and still lack intelligence in how its systems function. Intelligence depends on how systems function — how information flows, how decisions are made, how feedback is integrated.',
+ 'q2':'The correct answer is a city\'s capacity to use what it knows — through connected systems of information flow, decision-making, and feedback. Volume of data (option A), technological sophistication (option B), and crisis response speed (option D) are real urban capacities — but none of them defines city intelligence. Intelligence is about how a system uses what it knows, not how much it knows.',
+ 'q3':'The correct matching is: Data & information → What the system knows; Governance & institutions → Who interprets and decides; Decision & action → What the system does; Outcomes & impact → What changes in people\'s lives. This sequence matters: intelligence requires all four layers to be connected, not just present. A break at any transition prevents the system from learning.',
+ 'q4':'The correct answer is interpretation that never becomes action — the break between governance and decision. The data layer is functioning (reports are distributed). Governance has access. But there is no formal mechanism connecting awareness to the decision cycle. The break is not in data production or in outcome measurement — it is in the pathway from interpretation to action.',
+ 'q5':'The correct answer is an emergent property. Intelligence is not built into any single layer, however strong. It appears — or fails to appear — when the layers are genuinely connected. A city with excellent data, competent governance, decisive action, and outcome measurement still produces no intelligence if those layers operate in parallel rather than in sequence.',
+ 'q6':'The correct answer is Feedback — research findings were not integrated into the next decision cycle. The research circulated (circulation is not the primary failure). The research question was relevant (alignment is not the main issue). But the findings were never integrated into the institutional cycle — so the system started from zero again three years later. Feedback is the mechanism through which a system learns.',
+ 'q7':'The four correct answers are Circulation, Feedback, Alignment, and Time horizon. Political will, technological infrastructure, and adequate funding are genuinely important for urban governance — but they are inputs. The four conditions describe how a system processes those inputs. A city can have all the political will and technology in the world and still fail to be intelligent if these four conditions are absent.',
+ 'q8':'The correct answer is insisting on a structured review that feeds specific findings into the next programme design. Moving on without review breaks the feedback loop. Commissioning a new evaluation study misses the point — evaluation only matters if it changes what comes next. Publishing results addresses accountability but not learning. The intelligent response closes the feedback loop in a structured way that directly shapes the next design.',
+ 'q9':'The correct answer is that both are partially right — the structural conditions must exist before communication can matter. Better communication does matter: inaccessible evidence fails regardless of quality. But communication improvements are wasted if the structural pathway between knowledge and decision doesn\'t exist. Both constraints are real. The structural one must be addressed first.',
+ 'q10':'The correct answer describes city intelligence as an emergent property of systems where all four conditions are present. It is not digital infrastructure (option A), not a static property of well-governed cities (option B), and not a measurement framework (option D). Intelligence emerges from the quality of connections between layers — not from any single layer\'s performance.'
+};
+
+function showFeedback(qId,isCorrect){
+ var el=document.getElementById('fb-'+qId);
+ el.style.display='block';
+ el.className='feedback-box '+(isCorrect?'correct':'wrong');
+ el.innerHTML='<span class="fb-verdict">'+(isCorrect?'✓ Correct':'✗ Not quite')+'</span>'+feedbacks[qId];
+ document.getElementById('next-'+qId).style.display='block';
+ state.answered++;
+ if(isCorrect){state.correct++;state.points+=(pts[qId]||1);}
+ updateProgress();
+}
+
+function updateProgress(){
+ var pct=Math.round((state.answered/TOTAL)*100);
+ document.getElementById('progress-bar').style.width=pct+'%';
+ document.getElementById('progress-text').textContent=state.answered+' / '+TOTAL;
+ document.getElementById('score-display').textContent='Score: '+state.correct;
+}
+
+function checkTF(qId,btn,chosen,c){
+ document.getElementById(qId).querySelectorAll('.tf-btn').forEach(function(b){b.classList.add('disabled')});
+ btn.classList.add(chosen===c?'correct':'wrong');
+ showFeedback(qId,chosen===c);
+}
+
+function checkMC(qId,opt,chosen){
+ var c=correct[qId];
+ document.getElementById('opts-'+qId).querySelectorAll('.opt').forEach(function(o,i){
+ o.classList.add('disabled');o.onclick=null;
+ if(String.fromCharCode(65+i)===c) o.classList.add('correct');
+ });
+ opt.classList.remove('correct');
+ if(chosen!==c) opt.classList.add('wrong');
+ showFeedback(qId,chosen===c);
+}
+
+function toggleMulti(opt){
+ if(opt.classList.contains('disabled')) return;
+ opt.classList.toggle('selected');
+ opt.querySelector('.opt-marker').textContent=opt.classList.contains('selected')?'✓':'□';
+}
+
+function checkMulti(qId,correctList){
+ var opts=document.getElementById('opts-'+qId).querySelectorAll('.multi-opt');
+ var selected=[];
+ opts.forEach(function(o){if(o.classList.contains('selected'))selected.push(o.querySelector('.opt-text').textContent.trim())});
+ opts.forEach(function(o){
+ o.classList.add('disabled');o.onclick=null;
+ var txt=o.querySelector('.opt-text').textContent.trim();
+ if(correctList.includes(txt)) o.classList.add('correct');
+ else if(o.classList.contains('selected')) o.classList.add('wrong');
+ });
+ document.getElementById('check-'+qId).disabled=true;
+ var allCorrect=correctList.every(function(c){return selected.includes(c)})&&selected.length===correctList.length;
+ showFeedback(qId,allCorrect);
+}
+
+function checkMatch(qId,correctAnswers){
+ var n=correctAnswers.length;
+ var allCorrect=true;
+ for(var i=1;i<=n;i++){
+ var s=document.getElementById('m'+qId.slice(-1)+'-'+i);
+ s.disabled=true;
+ if(s.value===correctAnswers[i-1]) s.classList.add('correct');
+ else{s.classList.add('wrong');allCorrect=false;}
+ }
+ document.getElementById('check-'+qId).disabled=true;
+ showFeedback(qId,allCorrect);
+}
+
+function checkBlank(qId,acceptedAnswers){
+ var input=document.getElementById('blank-'+qId);
+ var val=input.value.trim().toLowerCase();
+ var ok=acceptedAnswers.some(function(a){return val===a.toLowerCase()||val.includes(a.toLowerCase().split(' ')[0])});
+ input.classList.add(ok?'correct':'wrong');
+ input.disabled=true;
+ document.querySelector('#'+qId+' .submit-blank').disabled=true;
+ showFeedback(qId,ok);
+}
+
+function nextQ(c,n){
+ document.getElementById('q'+c).classList.remove('active');
+ document.getElementById('q'+n).classList.add('active');
+ window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function showResults(){
+ document.getElementById('q10').classList.remove('active');
+ document.getElementById('results').style.display='block';
+ var pct=Math.round((state.correct/TOTAL)*100);
+ var pass=pct>=70;
+ document.getElementById('res-pct').textContent=pct+'%';
+ document.getElementById('pass-badge').textContent=pass?'PASSED':'KEEP GOING';
+ document.getElementById('pass-badge').className='pass-badge '+(pass?'pass':'fail');
+ document.getElementById('res-title').textContent=pass?'Well done.':'Keep working at it.';
+ document.getElementById('res-sub').textContent=pass?'You have a strong grasp of what city intelligence is — and what it requires structurally. Carry the four conditions forward as a diagnostic lens into Section 4.':'Review the concept map and the four conditions self-audit. The distinction between intelligence as a property of individual layers versus an emergent property of connections is the key insight to consolidate.';
+ document.getElementById('res-correct').textContent=state.correct;
+ document.getElementById('res-score').textContent=state.points;
+ window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function retryQuiz(){
+ state={answered:0,correct:0,points:0};
+ updateProgress();
+ document.getElementById('results').style.display='none';
+ document.querySelectorAll('.q-card').forEach(function(c){c.classList.remove('active')});
+ document.getElementById('q1').classList.add('active');
+ document.querySelectorAll('.feedback-box').forEach(function(f){f.style.display='none'});
+ document.querySelectorAll('.next-btn').forEach(function(b){b.style.display='none'});
+ document.querySelectorAll('.opt').forEach(function(o){o.className='opt'});
+ document.querySelectorAll('.tf-btn').forEach(function(b){b.className='tf-btn'});
+ document.querySelectorAll('.blank-input').forEach(function(i){i.value='';i.className='blank-input';i.disabled=false});
+ document.querySelectorAll('.submit-blank').forEach(function(b){b.disabled=false});
+ document.querySelectorAll('.match-select').forEach(function(s){s.value='';s.className='match-select';s.disabled=false});
+ document.querySelectorAll('.check-match-btn').forEach(function(b){b.disabled=false});
+ document.querySelectorAll('.multi-opt').forEach(function(o){
+ o.classList.remove('selected','correct','wrong','disabled');
+ o.querySelector('.opt-marker').textContent='□';
+ o.onclick=function(){toggleMulti(this)};
+ });
+ bindAll();
+ window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function bindAll(){
+ var mcMap={'q2':'C','q4':'B','q6':'B','q8':'C','q9':'C','q10':'C'};
+ for(var qId in mcMap){
+ (function(id){
+ document.getElementById('opts-'+id).querySelectorAll('.opt').forEach(function(o,i){
+ o.onclick=function(){checkMC(id,this,String.fromCharCode(65+i))};
+ });
+ })(qId);
+ }
+}
+bindAll();
+</script>
+</body>
+</html>

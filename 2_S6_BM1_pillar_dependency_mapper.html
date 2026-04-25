@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Section 8 · Pillar Dependency Mapper</title>
+<style>
+ :root{
+ --teal-dark:#085041;--teal-mid:#0F6E56;--teal:#1D9E75;--teal-light:#5DCAA5;--teal-pale:#E1F5EE;--teal-faint:#F0FAF6;
+ --purple:#534AB7;--purple-pale:#EEEDFE;--purple-mid:#3C3489;
+ --amber:#BA7517;--amber-pale:#FAEEDA;--blue:#185FA5;--blue-pale:#E6F1FB;
+ --coral:#D85A30;--coral-pale:#FAECE7;--green:#3B6D11;--green-pale:#EAF3DE;
+ --pink:#993556;--pink-pale:#FBEAF0;
+ --text:#1a1a1a;--text-mid:#444;--text-muted:#6b6b6b;
+ --border:#e2e2e2;--border-light:#f0f0f0;--bg:#fff;--bg-soft:#f8f9fa;
+ --radius:10px;--radius-sm:6px;
+ }
+ *{box-sizing:border-box;margin:0;padding:0}
+ body{font-family:'Helvetica Neue',Arial,sans-serif;color:var(--text);background:var(--bg);font-size:15px;line-height:1.65}
+ .page{max-width:760px;margin:0 auto;padding:48px 24px 80px}
+ .bm-label{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--teal-mid);background:var(--teal-pale);padding:5px 14px;border-radius:20px;margin-bottom:18px}
+ .bm-title{font-size:28px;font-weight:700;color:var(--text);line-height:1.25;margin-bottom:10px;letter-spacing:-.3px;font-family:'Georgia',serif}
+ .bm-sub{font-size:14px;color:var(--text-muted);line-height:1.65;max-width:580px;margin-bottom:20px}
+ .intro-note{background:var(--bg-soft);border:1px solid var(--border-light);border-radius:var(--radius);padding:16px 20px;font-size:13px;color:var(--text-muted);line-height:1.65;margin-bottom:28px}
+ .divider{border:none;border-top:1px solid var(--border-light);margin:28px 0}
+ .sec-head{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin:24px 0 12px;display:flex;align-items:center;gap:10px}
+ .sec-head::after{content:'';flex:1;height:1px;background:var(--border-light)}
+
+ /* Score sliders */
+ .pillar-scores{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px}
+ .ps-row{background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px}
+ .ps-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+ .ps-name{font-size:12px;font-weight:700}
+ .ps-val{font-size:14px;font-weight:700}
+ .ps-name.p1{color:var(--blue)} .ps-name.p2{color:var(--purple)} .ps-name.p3{color:var(--green)}
+ .ps-name.p4{color:var(--coral)} .ps-name.p5{color:var(--amber)} .ps-name.p6{color:var(--pink)}
+ .ps-val.p1{color:var(--blue)} .ps-val.p2{color:var(--purple)} .ps-val.p3{color:var(--green)}
+ .ps-val.p4{color:var(--coral)} .ps-val.p5{color:var(--amber)} .ps-val.p6{color:var(--pink)}
+ input[type=range]{width:100%;height:4px;accent-color:var(--teal)}
+
+ /* Dependency map */
+ .dep-map{background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:20px}
+ .dep-map-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:14px}
+ .dep-layers{display:flex;flex-direction:column;gap:10px}
+ .dep-layer{display:flex;align-items:center;gap:10px}
+ .dep-layer-label{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);min-width:72px;text-align:right}
+ .dep-pillars{display:flex;gap:8px;flex-wrap:wrap}
+ .dep-pill{padding:6px 14px;border-radius:20px;font-size:12px;font-weight:700;border:1.5px solid;transition:all .3s;cursor:default;position:relative}
+ .dep-pill.p1{background:var(--blue-pale);border-color:var(--blue);color:var(--blue)}
+ .dep-pill.p2{background:var(--purple-pale);border-color:var(--purple);color:var(--purple)}
+ .dep-pill.p3{background:var(--green-pale);border-color:var(--green);color:var(--green)}
+ .dep-pill.p4{background:var(--coral-pale);border-color:var(--coral);color:var(--coral)}
+ .dep-pill.p5{background:var(--amber-pale);border-color:var(--amber);color:var(--amber)}
+ .dep-pill.p6{background:var(--pink-pale);border-color:var(--pink);color:var(--pink)}
+ .dep-pill.blocking{box-shadow:0 0 0 3px rgba(186,117,23,.4);border-color:var(--amber)}
+ .dep-pill.critical-weak{box-shadow:0 0 0 3px rgba(185,28,28,.3);opacity:.7}
+ .dep-arrow{font-size:18px;color:var(--text-muted);text-align:center;margin:2px 0 2px 80px}
+
+ /* Analysis cards */
+ .analysis-grid{display:grid;gap:12px;margin-bottom:20px}
+ .an-card{border-radius:var(--radius);padding:16px 18px;border:1px solid var(--border)}
+ .an-card.blocker{background:#FFF8F0;border-color:#F5C84B}
+ .an-card.unlock{background:var(--teal-faint);border-color:var(--teal-pale)}
+ .an-card.strong{background:var(--green-pale);border-color:#97C459}
+ .an-label{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:5px}
+ .an-card.blocker .an-label{color:var(--amber)}
+ .an-card.unlock .an-label{color:var(--teal-mid)}
+ .an-card.strong .an-label{color:var(--green)}
+ .an-text{font-size:13px;line-height:1.65;color:var(--text-mid)}
+ .an-text strong{color:var(--text)}
+
+ /* Sequence builder */
+ .seq-steps{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
+ .seq-step{display:flex;align-items:flex-start;gap:12px;background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px}
+ .seq-step-num{width:24px;height:24px;border-radius:50%;background:var(--teal);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+ .seq-step-body{flex:1}
+ .seq-step-label{font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--teal-mid);margin-bottom:4px}
+ textarea{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:9px 12px;font-family:'Helvetica Neue',Arial,sans-serif;font-size:14px;color:var(--text);line-height:1.6;resize:vertical;min-height:60px;outline:none;transition:border-color .15s}
+ textarea:focus{border-color:var(--teal-light)}
+ textarea::placeholder{color:#b0b0b0}
+
+ /* Aud toggle */
+ .aud-toggle{display:flex;gap:8px;margin-bottom:16px}
+ .aud-btn{border:1px solid var(--border);border-radius:20px;padding:6px 16px;font-size:12px;font-weight:500;cursor:pointer;background:var(--bg-soft);color:var(--text-muted);transition:all .15s;font-family:'Helvetica Neue',Arial,sans-serif}
+ .aud-btn.pm-active{background:var(--teal-pale);color:var(--teal-dark);border-color:var(--teal-light);font-weight:600}
+ .aud-btn.rs-active{background:var(--purple-pale);color:var(--purple-mid);border-color:#AFA9EC;font-weight:600}
+ .aud-ctx{border-radius:var(--radius-sm);padding:11px 13px;margin-bottom:14px;font-size:13px;line-height:1.6}
+ .aud-ctx.pm{background:var(--teal-faint);border-left:3px solid var(--teal-light);color:var(--teal-dark)}
+ .aud-ctx.rs{background:#F5F0FF;border-left:3px solid #AFA9EC;color:var(--purple-mid)}
+ .aud-ctx-label{font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:3px;display:block}
+
+ .legend-row{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:16px}
+ .legend-item{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-muted)}
+ .legend-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0}
+
+ @media(max-width:560px){.pillar-scores{grid-template-columns:1fr}}
+
+ /* ===== PDF / PRINT ===== */
+ .pdf-btn-wrap{text-align:center;margin-top:32px;padding-top:24px;border-top:1px solid var(--border-light)}
+ .pdf-btn{display:inline-flex;align-items:center;gap:8px;background:var(--teal-dark);color:#fff;border:none;border-radius:24px;padding:11px 28px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Helvetica Neue',Arial,sans-serif;transition:background .15s;letter-spacing:.01em}
+ .pdf-btn:hover{background:var(--teal-mid)}
+ .pdf-btn svg{width:16px;height:16px;flex-shrink:0}
+ .pdf-hint{font-size:11px;color:var(--text-muted);margin-top:8px}
+ @media print{
+ .pdf-btn-wrap,.progress-row,.aud-toggle,.check-item,.ready-box,.forward-box,
+ .bm-label,button,.next-btn,.retry-btn,.results-detail,.pass-badge,
+ .tc-header .tc-toggle,.sev-btns,.check-match-btn,.submit-blank,
+ .gap-opt.disabled-opt,.psel-btn,.trap-btn,.nav-btn{display:none!important}
+ body{background:#fff!important;font-size:13px;line-height:1.6;color:#1a1a1a}
+ .page,.quiz-wrap{max-width:100%!important;padding:20px!important}
+ textarea,input[type=text],.blank-input{border:none!important;background:transparent!important;padding:4px 0!important;resize:none!important;min-height:0!important;font-size:13px!important;color:#1a1a1a!important}
+ .r-block,.seq-block,.canvas-section,.audit-block,.threat-card,.an-card,
+ .brief-out,.brief-row,.csum-row,.op-row,.summary-card,.seq-step{break-inside:avoid}
+ .tc-body{display:block!important}
+ .bm-title,.q-title{font-size:20px!important}
+ .r-q,.q-text{font-size:15px!important}
+ .results-circle{display:none!important}
+ .results-card{display:block!important;border:none!important;padding:0!important}
+ .results-title{font-size:18px!important}
+ .feedback-box{font-size:12px!important}
+ .opt.correct{background:#e8f5f0!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+ .opt.wrong{background:#fef2f2!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+ h1,h2,h3{break-after:avoid}
+ a[href]:after{content:''}
+ }
+</style>
+</head>
+<body>
+<div class="page">
+ <div class="bm-label">From one intervention to a strategy · Pillar dependency mapper</div>
+ <h1 class="bm-title">Which pillar do you start with?</h1>
+ <p class="bm-sub">Enter your city's pillar profile and the mapper shows you the dependency structure — which pillars are blocking others, which are ready to unlock, and what your structural starting point for sequencing should be.</p>
+ <div class="intro-note">Use real CII data if you have it, or your informed estimates. The mapper uses the dependency relationships between pillars — not just absolute scores — so relative performance matters as much as absolute levels.</div>
+
+ <p class="sec-head">Step 1 — Enter your city's pillar profile</p>
+ <div class="pillar-scores">
+ <div class="ps-row"><div class="ps-top"><span class="ps-name p1">Foundational</span><span class="ps-val p1" id="sv1">0.60</span></div><input type="range" min="10" max="95" value="60" id="sl1" oninput="update()"></div>
+ <div class="ps-row"><div class="ps-top"><span class="ps-name p2">Innovator</span><span class="ps-val p2" id="sv2">0.60</span></div><input type="range" min="10" max="95" value="60" id="sl2" oninput="update()"></div>
+ <div class="ps-row"><div class="ps-top"><span class="ps-name p3">Integrator</span><span class="ps-val p3" id="sv3">0.60</span></div><input type="range" min="10" max="95" value="60" id="sl3" oninput="update()"></div>
+ <div class="ps-row"><div class="ps-top"><span class="ps-name p4">Regenerative</span><span class="ps-val p4" id="sv4">0.60</span></div><input type="range" min="10" max="95" value="60" id="sl4" oninput="update()"></div>
+ <div class="ps-row"><div class="ps-top"><span class="ps-name p5">Connected</span><span class="ps-val p5" id="sv5">0.60</span></div><input type="range" min="10" max="95" value="60" id="sl5" oninput="update()"></div>
+ <div class="ps-row"><div class="ps-top"><span class="ps-name p6">Healthy Society</span><span class="ps-val p6" id="sv6">0.60</span></div><input type="range" min="10" max="95" value="60" id="sl6" oninput="update()"></div>
+ </div>
+
+ <p class="sec-head">Step 2 — Dependency structure</p>
+ <div class="legend-row">
+ <div class="legend-item"><div class="legend-dot" style="background:var(--amber)"></div> Blocking constraint — weak and limiting others</div>
+ <div class="legend-item"><div class="legend-dot" style="background:var(--teal)"></div> Ready to unlock — strong enough to build on</div>
+ <div class="legend-item"><div class="legend-dot" style="background:#aaa"></div> Constrained — limited by a pillar below it</div>
+ </div>
+ <div class="dep-map">
+ <p class="dep-map-title">CII pillar hierarchy — dependencies flow upward</p>
+ <div class="dep-layers">
+ <div class="dep-layer"><span class="dep-layer-label">Accountability</span><div class="dep-pillars"><div class="dep-pill p6" id="dp6">Healthy Society</div></div></div>
+ <div class="dep-arrow">↑ reflects all</div>
+ <div class="dep-layer"><span class="dep-layer-label">Capacity</span><div class="dep-pillars"><div class="dep-pill p2" id="dp2">Innovator</div><div class="dep-pill p3" id="dp3">Integrator</div><div class="dep-pill p4" id="dp4">Regenerative</div><div class="dep-pill p5" id="dp5">Connected</div></div></div>
+ <div class="dep-arrow">↑ enables</div>
+ <div class="dep-layer"><span class="dep-layer-label">Floor</span><div class="dep-pillars"><div class="dep-pill p1" id="dp1">Foundational</div></div></div>
+ </div>
+ </div>
+
+ <p class="sec-head">Step 3 — Structural analysis</p>
+ <div class="analysis-grid" id="analysis-grid">
+ <div class="an-card blocker" id="an-blocker"><p class="an-label">Blocking constraint</p><p class="an-text" id="an-blocker-text">—</p></div>
+ <div class="an-card unlock" id="an-unlock"><p class="an-label">Structural starting point</p><p class="an-text" id="an-unlock-text">—</p></div>
+ <div class="an-card strong" id="an-strong"><p class="an-label">Strongest foundation to build from</p><p class="an-text" id="an-strong-text">—</p></div>
+ </div>
+
+ <p class="sec-head">Step 4 — Your sequencing logic</p>
+ <div class="aud-toggle">
+ <button class="aud-btn pm-active" id="btn-pm" onclick="setAud('pm')">I am a policymaker</button>
+ <button class="aud-btn" id="btn-rs" onclick="setAud('rs')">I am a researcher</button>
+ </div>
+ <div class="aud-ctx pm" id="ctx-pm"><span class="aud-ctx-label">Policymaker</span>Name the sequence of interventions you would propose — starting from the structural constraint identified above. For each step, name which pillar it addresses and what it unlocks.</div>
+ <div class="aud-ctx rs" id="ctx-rs" style="display:none"><span class="aud-ctx-label">Researcher</span>Name the sequence as a comparative hypothesis — which pillar trajectory would you predict for your city, and what evidence would confirm or disconfirm the sequencing logic?</div>
+
+ <div class="seq-steps">
+ <div class="seq-step"><div class="seq-step-num">1</div><div class="seq-step-body"><p class="seq-step-label">First intervention — addresses the blocking constraint</p><textarea placeholder="Pillar: [name] · Intervention: [structural change] · What it unlocks: [next pillar or condition]..." oninput="updateProgress()"></textarea></div></div>
+ <div class="seq-step"><div class="seq-step-num">2</div><div class="seq-step-body"><p class="seq-step-label">Second intervention — builds on what the first unlocked</p><textarea placeholder="Pillar: [name] · Intervention: [structural change] · What it unlocks: [next pillar or condition]..." oninput="updateProgress()"></textarea></div></div>
+ <div class="seq-step"><div class="seq-step-num">3</div><div class="seq-step-body"><p class="seq-step-label">Third intervention — the compounding effect</p><textarea placeholder="Pillar: [name] · Intervention: [structural change] · What the sequence produces that none of the three interventions would produce alone..." oninput="updateProgress()"></textarea></div></div>
+ </div>
+
+ <div id="continuity-risk" style="display:none;background:#FFF8F0;border:1px solid #F5C84B;border-radius:var(--radius-sm);padding:12px 14px;margin-bottom:14px;font-size:13px;color:#7A4C00;line-height:1.6">
+ <strong>Continuity risk to address:</strong> Your profile shows a significant gap between the floor and capacity pillars. A compounding sequence depends on continuity of investment and accountability across the chain. Name who is accountable for maintaining the thread between Step 1 and Step 2 in your context.
+ </div>
+
+ <div style="background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px;font-size:13px;color:var(--text-muted);line-height:1.6">
+ <strong style="color:var(--text)">The compounding test:</strong> Read your three steps together. Does each one raise the probability of success of the next? If the steps are independent — if removing one doesn't affect the others — the sequence is parallel, not compounding. Redesign until the chain of dependency is visible.
+ </div>
+
+</div>
+<script>
+var aud='pm';
+var names=['Foundational','Innovator','Integrator','Regenerative','Connected','Healthy Society'];
+var pClasses=['p1','p2','p3','p4','p5','p6'];
+
+function setAud(a){
+ aud=a;
+ document.getElementById('btn-pm').className='aud-btn'+(a==='pm'?' pm-active':'');
+ document.getElementById('btn-rs').className='aud-btn'+(a==='rs'?' rs-active':'');
+ document.getElementById('ctx-pm').style.display=a==='pm'?'block':'none';
+ document.getElementById('ctx-rs').style.display=a==='rs'?'block':'none';
+}
+
+function getVals(){
+ var v=[];
+ for(var i=1;i<=6;i++) v.push(parseInt(document.getElementById('sl'+i).value));
+ return v;
+}
+
+function update(){
+ var v=getVals();
+ for(var i=1;i<=6;i++){
+ document.getElementById('sv'+i).textContent=(v[i-1]/100).toFixed(2);
+ }
+ updateDepsViz(v);
+ updateAnalysis(v);
+}
+
+function updateDepsViz(v){
+ // Foundational is floor (p1=v[0])
+ // Capacity pillars p2-p5 (v[1]-v[4]) depend on Foundational
+ // Healthy Society p6 (v[5]) reflects all
+ var floorWeak=v[0]<45;
+ var capAvg=(v[1]+v[2]+v[3]+v[4])/4;
+
+ for(var i=1;i<=6;i++){
+ var el=document.getElementById('dp'+i);
+ el.className='dep-pill '+pClasses[i-1];
+ var score=v[i-1];
+ if(i===1){
+ if(score<45) el.classList.add('blocking');
+ } else if(i===6){
+ // healthy society just shows
+ } else {
+ if(floorWeak && score<55) el.classList.add('critical-weak');
+ else if(score>=65) el.classList.add('ready');
+ }
+ }
+}
+
+function updateAnalysis(v){
+ var fnd=v[0], inn=v[1], intg=v[2], reg=v[3], con=v[4], hs=v[5];
+ var capAvg=(inn+intg+reg+con)/4;
+ var minI=0, minV=v[0];
+ for(var i=1;i<6;i++){if(v[i]<minV){minV=v[i];minI=i;}}
+ var maxI=0, maxV=v[0];
+ for(var i=1;i<6;i++){if(v[i]>maxV){maxV=v[i];maxI=i;}}
+
+ // Blocker analysis
+ var blockerText='';
+ if(fnd<45){
+ blockerText='<strong>Foundational is your binding constraint</strong> at '+(fnd/100).toFixed(2)+'. This is the structural floor — every capacity pillar above it is limited by this gap. Starting anywhere else will reach a ceiling set by Foundational weakness. Your sequence must begin here.';
+ } else if(minV<45){
+ blockerText='<strong>'+names[minI]+'</strong> is your weakest pillar at '+(minV/100).toFixed(2)+'. Given that Foundational is adequate, this is your most significant structural gap. Capacity pillars that depend on this connection are likely underperforming relative to their potential.';
+ } else {
+ blockerText='No single pillar is critically weak in your profile. Your blocking constraint is likely relational — examine which two pillars show the largest unexpected divergence. That divergence is your structural starting point.';
+ }
+ document.getElementById('an-blocker-text').innerHTML=blockerText;
+
+ // Unlock analysis
+ var unlockText='';
+ if(fnd>=65 && capAvg<55){
+ unlockText='Your Foundational pillar is strong ('+(fnd/100).toFixed(2)+') but capacity pillars are underperforming relative to the floor that exists. <strong>This is an unlock opportunity</strong> — the conditions for capacity development are in place, but the translation infrastructure has not been built. Your first intervention should target the capacity pillar most directly constrained by the missing translation.';
+ } else if(fnd<55){
+ unlockText='<strong>Strengthening Foundational is your unlock</strong>. At '+(fnd/100).toFixed(2)+', it is limiting the development trajectory of all capacity pillars. An intervention that closes the Foundational gap unlocks the potential that already exists but cannot be fully expressed.';
+ } else {
+ unlockText='Your profile shows <strong>'+names[maxI]+'</strong> as your strongest pillar ('+(maxV/100).toFixed(2)+'). Your structural starting point is to use this strength as a bridgehead — identify which adjacent pillar it most directly enables and design the first sequence step to activate that connection.';
+ }
+ document.getElementById('an-unlock-text').innerHTML=unlockText;
+
+ // Strong foundation
+ var strongText='';
+ var strong=[];
+ for(var i=0;i<5;i++){if(v[i]>=65)strong.push(names[i]);}
+ if(strong.length===0){
+ strongText='No pillar currently exceeds 0.65 — your city is operating below the threshold needed for compounding effects. The priority is establishing at least one strong pillar that can serve as a structural anchor for the sequence.';
+ } else {
+ strongText='<strong>'+strong.join(', ')+'</strong> '+(strong.length===1?'is':'are')+' performing above 0.65. '+(strong.includes('Foundational')?'Foundational strength means the floor is solid — sequence can build upward with confidence.':'Build from these pillars — they are your strategic anchor for the compounding sequence.');
+ }
+ document.getElementById('an-strong-text').innerHTML=strongText;
+
+ // Continuity risk
+ var gap=Math.abs(fnd-capAvg);
+ document.getElementById('continuity-risk').style.display=gap>25?'block':'none';
+}
+
+function updateProgress(){}
+
+update();
+</script>
+
+ <div class="pdf-btn-wrap">
+ <button class="pdf-btn" onclick="window.print()">
+ <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17v-6M9 14l3 3 3-3"/><rect x="3" y="3" width="18" height="14" rx="2"/><path d="M3 17h18v4H3z"/></svg>
+ Save my answers as PDF
+ </button>
+ <p class="pdf-hint">Opens your browser's print dialog — choose "Save as PDF" as the destination</p>
+ </div>
+</body>
+</html>

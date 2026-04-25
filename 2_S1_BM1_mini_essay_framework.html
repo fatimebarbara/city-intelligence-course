@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Section 2 · Why cities fail — The five failure modes</title>
+<style>
+  :root {
+    --teal-dark: #085041;
+    --teal-mid: #0F6E56;
+    --teal: #1D9E75;
+    --teal-light: #5DCAA5;
+    --teal-pale: #E1F5EE;
+    --teal-faint: #F0FAF6;
+    --purple: #534AB7;
+    --purple-pale: #EEEDFE;
+    --coral: #D85A30;
+    --coral-pale: #FAECE7;
+    --amber: #BA7517;
+    --amber-pale: #FAEEDA;
+    --blue: #185FA5;
+    --blue-pale: #E6F1FB;
+    --pink: #993556;
+    --pink-pale: #FBEAF0;
+    --green: #3B6D11;
+    --green-pale: #EAF3DE;
+    --text: #1a1a1a;
+    --text-mid: #444;
+    --text-muted: #6b6b6b;
+    --border: #e2e2e2;
+    --border-light: #f0f0f0;
+    --bg: #ffffff;
+    --bg-soft: #f8f9fa;
+    --radius: 10px;
+    --radius-sm: 6px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Georgia', 'Times New Roman', serif;
+    color: var(--text);
+    background: var(--bg);
+    font-size: 16px;
+    line-height: 1.75;
+  }
+  .page { max-width: 740px; margin: 0 auto; padding: 48px 24px 80px; }
+
+  /* Header */
+  .bm-header { margin-bottom: 40px; }
+  .bm-label {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 11px; font-weight: 600; letter-spacing: .09em; text-transform: uppercase;
+    color: var(--teal-mid); background: var(--teal-pale);
+    padding: 5px 14px; border-radius: 20px; margin-bottom: 18px;
+  }
+  .bm-title {
+    font-size: 30px; font-weight: 700; color: var(--text);
+    line-height: 1.25; margin-bottom: 12px; letter-spacing: -.3px;
+  }
+  .bm-subtitle {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 15px; color: var(--text-muted); line-height: 1.65;
+    max-width: 580px;
+  }
+
+  /* Divider */
+  .divider { border: none; border-top: 1px solid var(--border-light); margin: 36px 0; }
+
+  /* Section labels */
+  .sec-label {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+    color: var(--teal-mid); margin-bottom: 20px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .sec-label::after { content: ''; flex: 1; height: 1px; background: var(--teal-pale); }
+
+  /* Essay */
+  .essay-block { margin-bottom: 28px; }
+  .essay-heading {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+    color: var(--teal); margin-bottom: 10px;
+  }
+  .essay-text { font-size: 16px; color: var(--text-mid); line-height: 1.8; }
+  .essay-text + .essay-text { margin-top: 14px; }
+
+  .pull-quote {
+    border-left: 3px solid var(--teal);
+    padding: 16px 20px;
+    margin: 28px 0;
+    background: var(--teal-faint);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  }
+  .pull-quote p {
+    font-size: 17px; font-style: italic; color: var(--teal-dark);
+    line-height: 1.6; font-weight: 500;
+  }
+
+  /* Chain diagram */
+  .chain-wrap {
+    background: var(--bg-soft); border-radius: var(--radius);
+    border: 1px solid var(--border); padding: 24px; margin: 28px 0;
+  }
+  .chain-label {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 11px; font-weight: 600; letter-spacing: .07em; text-transform: uppercase;
+    color: var(--text-muted); margin-bottom: 16px;
+  }
+  .chain-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .chain-node {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    background: var(--bg); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 7px 14px;
+    font-size: 13px; font-weight: 500; color: var(--text); white-space: nowrap;
+  }
+  .chain-broken {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    background: #FFF0ED; border: 1px solid #F5C4B3;
+    border-radius: var(--radius-sm); padding: 7px 14px;
+    font-size: 13px; font-weight: 500; color: #993C1D;
+    text-decoration: line-through; opacity: .75; white-space: nowrap;
+  }
+  .chain-arrow { color: var(--text-muted); font-size: 16px; }
+  .chain-note {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 12px; color: var(--text-muted); line-height: 1.6; margin-top: 14px;
+  }
+
+  /* Framework cards */
+  .fm-intro {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 14px; color: var(--text-muted); line-height: 1.65; margin-bottom: 20px;
+  }
+  .fm-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+  .fm-card {
+    background: var(--bg); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 18px;
+    position: relative; overflow: hidden;
+    transition: box-shadow .2s;
+  }
+  .fm-card:hover { box-shadow: 0 2px 12px rgba(0,0,0,.07); }
+  .fm-card::before {
+    content: ''; position: absolute; top: 0; left: 0;
+    width: 4px; height: 100%;
+  }
+  .fm-card.c1::before { background: var(--pink); }
+  .fm-card.c2::before { background: var(--amber); }
+  .fm-card.c3::before { background: var(--blue); }
+  .fm-card.c4::before { background: var(--green); }
+  .fm-card.c5::before { background: var(--purple); }
+  .fm-num {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 10px; font-weight: 700; letter-spacing: .09em; text-transform: uppercase;
+    color: var(--text-muted); margin-bottom: 5px;
+  }
+  .fm-name {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 7px;
+  }
+  .fm-desc { font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 13px; color: var(--text-mid); line-height: 1.6; }
+  .fm-tag {
+    display: inline-block; margin-top: 10px;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 10px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
+    padding: 3px 9px; border-radius: 12px;
+  }
+  .fm-card.c1 .fm-tag { background: var(--pink-pale); color: var(--pink); }
+  .fm-card.c2 .fm-tag { background: var(--amber-pale); color: var(--amber); }
+  .fm-card.c3 .fm-tag { background: var(--blue-pale); color: var(--blue); }
+  .fm-card.c4 .fm-tag { background: var(--green-pale); color: var(--green); }
+  .fm-card.c5 .fm-tag { background: var(--purple-pale); color: var(--purple); }
+  .fm-card.full { grid-column: 1 / -1; }
+
+  /* Diagnostic scenarios */
+  .diag-intro {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 14px; color: var(--text-muted); line-height: 1.65; margin-bottom: 24px;
+  }
+  .scenario {
+    border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 22px; margin-bottom: 16px; background: var(--bg);
+    transition: border-color .2s;
+  }
+  .scenario.answered { border-color: var(--border); }
+  .sc-letter {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+    color: var(--teal); margin-bottom: 8px;
+  }
+  .sc-q { font-size: 14px; color: var(--text-mid); line-height: 1.7; margin-bottom: 16px; }
+  .btn-row { display: flex; gap: 7px; flex-wrap: wrap; }
+  .opt-btn {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    background: var(--bg-soft); border: 1px solid var(--border);
+    border-radius: 20px; padding: 6px 14px;
+    font-size: 12px; font-weight: 500; color: var(--text-mid);
+    cursor: pointer; transition: all .15s;
+  }
+  .opt-btn:hover:not(:disabled) { background: var(--teal-pale); border-color: var(--teal-light); color: var(--teal-dark); }
+  .opt-btn:disabled { cursor: default; }
+  .opt-btn.correct { background: var(--teal-pale); border-color: var(--teal); color: var(--teal-dark); font-weight: 600; }
+  .opt-btn.wrong { background: #FFF0ED; border-color: #F5C4B3; color: #993C1D; }
+  .feedback {
+    display: none; margin-top: 14px; padding: 14px 16px;
+    border-radius: var(--radius-sm); font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 13px; line-height: 1.65;
+  }
+  .feedback.correct { background: var(--teal-pale); color: var(--teal-dark); border: 1px solid var(--teal-light); }
+  .feedback.wrong { background: #FFF0ED; color: #7A2E10; border: 1px solid #F5C4B3; }
+
+  /* Reflection cards */
+  .refl-card {
+    border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 22px; margin-bottom: 14px;
+  }
+  .refl-num {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+    color: var(--teal); margin-bottom: 8px;
+  }
+  .refl-q {
+    font-size: 15px; font-weight: 600; color: var(--text);
+    line-height: 1.55; margin-bottom: 10px;
+  }
+  .refl-hint {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 13px; color: var(--text-muted); line-height: 1.6;
+    border-left: 2px solid var(--border); padding-left: 12px;
+  }
+
+  /* CTA */
+  .cta-box {
+    background: var(--teal-pale); border-radius: var(--radius);
+    padding: 28px 32px; text-align: center; margin-top: 40px;
+  }
+  .cta-text {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 15px; color: var(--teal-dark); line-height: 1.7; margin-bottom: 16px;
+  }
+
+  @media (max-width: 560px) {
+    .fm-grid { grid-template-columns: 1fr; }
+    .bm-title { font-size: 24px; }
+  }
+
+  /* ===== PDF / PRINT ===== */
+  .pdf-btn-wrap{text-align:center;margin-top:32px;padding-top:24px;border-top:1px solid var(--border-light)}
+  .pdf-btn{display:inline-flex;align-items:center;gap:8px;background:var(--teal-dark);color:#fff;border:none;border-radius:24px;padding:11px 28px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Helvetica Neue',Arial,sans-serif;transition:background .15s;letter-spacing:.01em}
+  .pdf-btn:hover{background:var(--teal-mid)}
+  .pdf-btn svg{width:16px;height:16px;flex-shrink:0}
+  .pdf-hint{font-size:11px;color:var(--text-muted);margin-top:8px}
+  @media print{
+    .pdf-btn-wrap,.progress-row,.aud-toggle,.check-item,.ready-box,.forward-box,
+    .bm-label,button,.next-btn,.nav-btn{display:none!important}
+    body{background:#fff!important;font-size:13px;line-height:1.6;color:#1a1a1a}
+    .page{max-width:100%!important;padding:20px!important}
+    textarea,input[type=text]{border:none!important;background:transparent!important;padding:4px 0!important;resize:none!important;min-height:0!important;font-size:13px!important;color:#1a1a1a!important}
+    .r-block,.canvas-section{break-inside:avoid}
+    .bm-title{font-size:20px!important}
+    .r-q{font-size:15px!important}
+    h1,h2{break-after:avoid}
+    a[href]:after{content:''}
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="bm-header">
+    <div class="bm-label">Why cities fail · The five failure modes — reading + framework</div>
+    <h1 class="bm-title">Why cities fail despite good data</h1>
+    <p class="bm-subtitle">A mini-essay, visual framework, and diagnostic scenarios — for policymakers and researchers working at the edge of data and decision-making.</p>
+  </div>
+
+  <hr class="divider">
+
+  <!-- MINI-ESSAY -->
+  <div class="sec-label">Mini-essay</div>
+
+  <div class="essay-block">
+    <p class="essay-heading">The paradox</p>
+    <p class="essay-text">Cities today are more measured than ever. We track mobility, pollution, health, housing. We build dashboards, indicators, reports. And yet, despite this data abundance, many cities are not becoming healthier, more resilient, or more inclusive. This is not a failure of measurement. It is a failure of translation — the system's inability to turn knowledge into action.</p>
+  </div>
+
+  <div class="pull-quote">
+    <p>"The issue is not the absence of knowledge. It is the system's ability to turn that knowledge into action."</p>
+  </div>
+
+  <div class="essay-block">
+    <p class="essay-heading">The broken chain</p>
+    <p class="essay-text">We assume a simple chain: data leads to decisions, and decisions lead to impact. In practice, this chain breaks at multiple points. Data exists — but it is fragmented across systems. Insights are produced — but they are not translated into policy action. Decisions are made — but they are not aligned with long-term outcomes.</p>
+    <p class="essay-text">What this creates is subtle but critical: the illusion of intelligence. A system that looks informed but does not act intelligently.</p>
+  </div>
+
+  <div class="chain-wrap">
+    <p class="chain-label">The assumed chain vs. the broken reality</p>
+    <div class="chain-row">
+      <div class="chain-node">Data exists</div>
+      <span class="chain-arrow">→</span>
+      <div class="chain-broken">Clear decisions</div>
+      <span class="chain-arrow">→</span>
+      <div class="chain-broken">Systemic impact</div>
+    </div>
+    <p class="chain-note">The chain breaks because data is fragmented, insights are not translated, and decisions respond to short-term pressures rather than long-term outcomes.</p>
+  </div>
+
+  <div class="essay-block">
+    <p class="essay-heading">What this means for you</p>
+    <p class="essay-text">If you are a policymaker, you may recognise this as the gap between analysis and implementation. If you are a researcher, you may recognise it as the gap between evidence and impact. In both cases, the capability you are building in this course is the same: the ability to recognise when a system is data-rich but intelligence-poor — and to do something about it.</p>
+  </div>
+
+  <hr class="divider">
+
+  <!-- FRAMEWORK -->
+  <div class="sec-label">Visual framework — the five failure modes</div>
+  <p class="fm-intro">These are not isolated problems. They are structural patterns that appear across cities, institutions, and policy areas. Recognising them is the first step to building real city intelligence.</p>
+
+  <div class="fm-grid">
+    <div class="fm-card c1">
+      <p class="fm-num">Failure mode 01</p>
+      <p class="fm-name">Fragmentation</p>
+      <p class="fm-desc">Data exists but is spread across departments, sectors, and systems that do not communicate with each other. The city is measured in silos.</p>
+      <span class="fm-tag">Structural</span>
+    </div>
+    <div class="fm-card c2">
+      <p class="fm-num">Failure mode 02</p>
+      <p class="fm-name">Over-measurement</p>
+      <p class="fm-desc">Too many indicators, too many dashboards — but no clear prioritisation of what actually matters for decisions and outcomes.</p>
+      <span class="fm-tag">Cognitive</span>
+    </div>
+    <div class="fm-card c3">
+      <p class="fm-num">Failure mode 03</p>
+      <p class="fm-name">Translation gap</p>
+      <p class="fm-desc">Insights are produced — often at high quality — but they are not translated into decisions or policy action. Evidence and implementation remain separate worlds.</p>
+      <span class="fm-tag">Institutional</span>
+    </div>
+    <div class="fm-card c4">
+      <p class="fm-num">Failure mode 04</p>
+      <p class="fm-name">Misaligned incentives</p>
+      <p class="fm-desc">Decisions are shaped by political cycles, institutional constraints, or short-term pressures rather than long-term urban outcomes.</p>
+      <span class="fm-tag">Political</span>
+    </div>
+    <div class="fm-card c5 full">
+      <p class="fm-num">Failure mode 05</p>
+      <p class="fm-name">Short-termism</p>
+      <p class="fm-desc">Systems react to immediate pressures instead of building long-term resilience. The most costly failures are those that are invisible in the short run — and catastrophic in the long one.</p>
+      <span class="fm-tag">Temporal</span>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- DIAGNOSTIC SCENARIOS -->
+  <div class="sec-label">Diagnose the failure mode</div>
+  <p class="diag-intro">Read each scenario. Identify which failure mode is most likely at work. There may be more than one — but choose the dominant pattern.</p>
+
+  <div class="scenario" id="sc1">
+    <p class="sc-letter">Scenario A</p>
+    <p class="sc-q">A mid-sized European city commissions a comprehensive health report every two years. The reports are rigorous and widely cited in academic circles. City council meetings rarely reference them. The department head who receives them has no mandate to act on findings.</p>
+    <div class="btn-row">
+      <button class="opt-btn" onclick="check('sc1',this,'Fragmentation','Translation gap')">Fragmentation</button>
+      <button class="opt-btn" onclick="check('sc1',this,'Over-measurement','Translation gap')">Over-measurement</button>
+      <button class="opt-btn" onclick="check('sc1',this,'Translation gap','Translation gap')">Translation gap</button>
+      <button class="opt-btn" onclick="check('sc1',this,'Misaligned incentives','Translation gap')">Misaligned incentives</button>
+      <button class="opt-btn" onclick="check('sc1',this,'Short-termism','Translation gap')">Short-termism</button>
+    </div>
+    <div class="feedback" id="fb-sc1"></div>
+  </div>
+
+  <div class="scenario" id="sc2">
+    <p class="sc-letter">Scenario B</p>
+    <p class="sc-q">A national government sets up 14 separate urban monitoring systems over a decade — each managed by a different ministry, each using different definitions of "city," different time intervals, and incompatible data formats. A cross-ministry report has never been produced.</p>
+    <div class="btn-row">
+      <button class="opt-btn" onclick="check('sc2',this,'Fragmentation','Fragmentation')">Fragmentation</button>
+      <button class="opt-btn" onclick="check('sc2',this,'Over-measurement','Fragmentation')">Over-measurement</button>
+      <button class="opt-btn" onclick="check('sc2',this,'Translation gap','Fragmentation')">Translation gap</button>
+      <button class="opt-btn" onclick="check('sc2',this,'Misaligned incentives','Fragmentation')">Misaligned incentives</button>
+      <button class="opt-btn" onclick="check('sc2',this,'Short-termism','Fragmentation')">Short-termism</button>
+    </div>
+    <div class="feedback" id="fb-sc2"></div>
+  </div>
+
+  <div class="scenario" id="sc3">
+    <p class="sc-letter">Scenario C</p>
+    <p class="sc-q">Six months before an election, a mayor announces a high-profile urban renewal project in a visible central district. The city's own planning data indicates that the highest infrastructure deficit — and the greatest long-term risk — is in peripheral neighbourhoods with lower media coverage.</p>
+    <div class="btn-row">
+      <button class="opt-btn" onclick="check('sc3',this,'Fragmentation','Misaligned incentives')">Fragmentation</button>
+      <button class="opt-btn" onclick="check('sc3',this,'Over-measurement','Misaligned incentives')">Over-measurement</button>
+      <button class="opt-btn" onclick="check('sc3',this,'Translation gap','Misaligned incentives')">Translation gap</button>
+      <button class="opt-btn" onclick="check('sc3',this,'Misaligned incentives','Misaligned incentives')">Misaligned incentives</button>
+      <button class="opt-btn" onclick="check('sc3',this,'Short-termism','Misaligned incentives')">Short-termism</button>
+    </div>
+    <div class="feedback" id="fb-sc3"></div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- REFLECTION -->
+  <div class="sec-label">Synthesis reflection</div>
+
+  <div class="refl-card">
+    <p class="refl-num">Reflection 01</p>
+    <p class="refl-q">Think of a decision in your city or institution that did not produce the expected outcome, despite good data being available. Which of the five failure modes was most present?</p>
+    <p class="refl-hint">Be specific: name the decision, the data that existed, and the point at which the chain broke.</p>
+  </div>
+  <div class="refl-card">
+    <p class="refl-num">Reflection 02</p>
+    <p class="refl-q">In your current role, at which stage of the data-to-impact chain do you have the most influence? And where does your influence end?</p>
+    <p class="refl-hint">Researchers: consider where your evidence lands and who receives it. Policymakers: consider which insights reach you and in what form.</p>
+  </div>
+  <div class="refl-card">
+    <p class="refl-num">Reflection 03</p>
+    <p class="refl-q">Of the five failure modes, which one is most underestimated in your city or field? Why does it stay invisible?</p>
+    <p class="refl-hint">Is it invisible because it is structural, political, or because we have normalised it? What would it take to make it visible?</p>
+  </div>
+
+  <div class="cta-box">
+    <p class="cta-text">You are now ready for the quiz on failure modes and decision distortions.<br>Use the framework — and trust your judgment.</p>
+  </div>
+
+</div>
+<script>
+var fb = {
+  'Translation gap': 'Correct. The dominant failure here is the <strong>translation gap</strong> — insights are produced but never reach decision-makers with a mandate to act. This is one of the most common and costly failures in urban systems.',
+  'Fragmentation': 'Correct. This is a textbook case of <strong>fragmentation</strong> — multiple parallel systems that cannot speak to each other. Without integration, even the best data becomes noise.',
+  'Misaligned incentives': 'Correct. The data existed and was clear. The problem was that the political logic pointed elsewhere. When electoral cycles and evidence point in different directions, <strong>incentives usually win</strong>.',
+  'Over-measurement': 'Not quite. Over-measurement refers to having too many indicators without clear prioritisation. Look again at where the chain is breaking in this scenario.',
+  'Short-termism': 'Not quite. Short-termism is about reacting to immediate pressures rather than long-term outcomes. Consider whether this scenario is more about <em>when</em> decisions are made or <em>how</em> evidence reaches decision-makers.'
+};
+function check(scId, btn, chosen, correct) {
+  var btns = document.querySelectorAll('#' + scId + ' .opt-btn');
+  btns.forEach(function(b) { b.disabled = true; });
+  var el = document.getElementById('fb-' + scId);
+  el.style.display = 'block';
+  if (chosen === correct) {
+    btn.classList.add('correct');
+    el.className = 'feedback correct';
+    el.innerHTML = fb[chosen];
+  } else {
+    btn.classList.add('wrong');
+    el.className = 'feedback wrong';
+    el.innerHTML = 'Not quite. ' + fb[chosen] + '<br><br>The dominant failure mode here is <strong>' + correct + '</strong>. ' + fb[correct];
+  }
+}
+</script>
+
+  <div class="pdf-btn-wrap">
+    <button class="pdf-btn" onclick="window.print()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17v-6M9 14l3 3 3-3"/><rect x="3" y="3" width="18" height="14" rx="2"/><path d="M3 17h18v4H3z"/></svg>
+      Save my answers as PDF
+    </button>
+    <p class="pdf-hint">Opens your browser's print dialog — choose "Save as PDF" as the destination</p>
+  </div>
+</body>
+</html>

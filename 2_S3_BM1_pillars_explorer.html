@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Section 5 · — The Six Pillars Explorer</title>
+<style>
+ :root {
+ --teal-dark:#085041;--teal-mid:#0F6E56;--teal:#1D9E75;--teal-light:#5DCAA5;--teal-pale:#E1F5EE;--teal-faint:#F0FAF6;
+ --p1:#185FA5;--p1-pale:#E6F1FB;--p1-dark:#0C447C;
+ --p2:#534AB7;--p2-pale:#EEEDFE;--p2-dark:#3C3489;
+ --p3:#3B6D11;--p3-pale:#EAF3DE;--p3-dark:#27500A;
+ --p4:#D85A30;--p4-pale:#FAECE7;--p4-dark:#712B13;
+ --p5:#BA7517;--p5-pale:#FAEEDA;--p5-dark:#633806;
+ --p6:#993556;--p6-pale:#FBEAF0;--p6-dark:#72243E;
+ --text:#1a1a1a;--text-mid:#444;--text-muted:#6b6b6b;
+ --border:#e2e2e2;--border-light:#f0f0f0;--bg:#fff;--bg-soft:#f8f9fa;
+ --radius:10px;--radius-sm:6px;
+ }
+ *{box-sizing:border-box;margin:0;padding:0}
+ body{font-family:'Helvetica Neue',Arial,sans-serif;color:var(--text);background:var(--bg);font-size:15px;line-height:1.65}
+ .page{max-width:780px;margin:0 auto;padding:48px 24px 80px}
+ .bm-label{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--teal-mid);background:var(--teal-pale);padding:5px 14px;border-radius:20px;margin-bottom:18px}
+ .bm-title{font-size:28px;font-weight:700;color:var(--text);line-height:1.25;margin-bottom:10px;letter-spacing:-.3px;font-family:'Georgia',serif}
+ .bm-sub{font-size:14px;color:var(--text-muted);line-height:1.65;max-width:600px;margin-bottom:32px}
+ .sec-label{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin:28px 0 14px;display:flex;align-items:center;gap:10px}
+ .sec-label::after{content:'';flex:1;height:1px;background:var(--border-light)}
+ .divider{border:none;border-top:1px solid var(--border-light);margin:32px 0}
+
+ /* Pillar nav */
+ .pillar-nav{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-bottom:28px}
+ .pnav-btn{border:1.5px solid var(--border);border-radius:var(--radius);padding:12px 8px;text-align:center;cursor:pointer;transition:all .15s;background:var(--bg-soft)}
+ .pnav-btn:hover{transform:translateY(-1px)}
+ .pnav-num{font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:3px}
+ .pnav-name{font-size:11px;font-weight:600;line-height:1.3}
+ .pnav-btn.active{transform:translateY(-2px)}
+
+ .p1 .pnav-num,.p1-hd .ph-num{color:var(--p1)} .p1.active,.p1-hd{background:var(--p1-pale);border-color:var(--p1)} .p1 .pnav-name{color:var(--p1-dark)}
+ .p2 .pnav-num,.p2-hd .ph-num{color:var(--p2)} .p2.active,.p2-hd{background:var(--p2-pale);border-color:var(--p2)} .p2 .pnav-name{color:var(--p2-dark)}
+ .p3 .pnav-num,.p3-hd .ph-num{color:var(--p3)} .p3.active,.p3-hd{background:var(--p3-pale);border-color:var(--p3)} .p3 .pnav-name{color:var(--p3-dark)}
+ .p4 .pnav-num,.p4-hd .ph-num{color:var(--p4)} .p4.active,.p4-hd{background:var(--p4-pale);border-color:var(--p4)} .p4 .pnav-name{color:var(--p4-dark)}
+ .p5 .pnav-num,.p5-hd .ph-num{color:var(--p5)} .p5.active,.p5-hd{background:var(--p5-pale);border-color:var(--p5)} .p5 .pnav-name{color:var(--p5-dark)}
+ .p6 .pnav-num,.p6-hd .ph-num{color:var(--p6)} .p6.active,.p6-hd{background:var(--p6-pale);border-color:var(--p6)} .p6 .pnav-name{color:var(--p6-dark)}
+
+ /* Pillar panels */
+ .pillar-panel{display:none}
+ .pillar-panel.visible{display:block}
+ .p-header{border-radius:var(--radius);padding:22px 24px;margin-bottom:20px}
+ .ph-num{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px}
+ .ph-name{font-size:22px;font-weight:700;font-family:'Georgia',serif;margin-bottom:4px}
+ .ph-question{font-size:15px;font-weight:600;font-style:italic;margin-bottom:10px}
+ .ph-desc{font-size:14px;line-height:1.75}
+ .p-body{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px}
+ .p-card{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:18px}
+ .p-card-label{font-size:10px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--text-muted);margin-bottom:10px}
+ .indicator-list{list-style:none;padding:0}
+ .indicator-list li{font-size:13px;color:var(--text-mid);padding:5px 0;border-bottom:1px solid var(--border-light);line-height:1.5}
+ .indicator-list li:last-child{border-bottom:none}
+ .indicator-list li::before{content:'·';color:var(--text-muted);margin-right:8px}
+ .p-aud-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+ .p-aud{border-radius:var(--radius-sm);padding:14px}
+ .p-aud.pm{background:var(--teal-faint);border:1px solid var(--teal-pale)}
+ .p-aud.rs{background:#F5F0FF;border:1px solid #D8D4F8}
+ .p-aud-label{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:5px}
+ .p-aud.pm .p-aud-label{color:var(--teal-mid)}
+ .p-aud.rs .p-aud-label{color:var(--p2)}
+ .p-aud-text{font-size:13px;line-height:1.6;color:var(--text-mid)}
+ .p-diagnostic{background:var(--bg-soft);border-radius:var(--radius-sm);padding:16px 18px;margin-bottom:16px}
+ .p-diag-label{font-size:10px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--text-muted);margin-bottom:6px}
+ .p-diag-q{font-size:15px;font-weight:600;color:var(--text);line-height:1.5;font-family:'Georgia',serif}
+ .p-signal{border-radius:var(--radius-sm);padding:14px 16px}
+ .p-signal-label{font-size:10px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;margin-bottom:6px}
+ .p-signal-text{font-size:13px;line-height:1.6}
+ .p1-hd .ph-desc,.p1-hd .ph-question{color:var(--p1-dark)}
+ .p2-hd .ph-desc,.p2-hd .ph-question{color:var(--p2-dark)}
+ .p3-hd .ph-desc,.p3-hd .ph-question{color:var(--p3-dark)}
+ .p4-hd .ph-desc,.p4-hd .ph-question{color:var(--p4-dark)}
+ .p5-hd .ph-desc,.p5-hd .ph-question{color:var(--p5-dark)}
+ .p6-hd .ph-desc,.p6-hd .ph-question{color:var(--p6-dark)}
+
+ /* Connection note */
+ .conn-note{background:var(--teal-pale);border-radius:var(--radius);padding:20px 24px;margin-top:28px;border-left:4px solid var(--teal)}
+ .conn-label{font-size:10px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--teal-mid);margin-bottom:6px}
+ .conn-text{font-size:14px;color:var(--teal-dark);line-height:1.7}
+
+ @media(max-width:600px){
+ .pillar-nav{grid-template-columns:repeat(3,1fr)}
+ .p-body,.p-aud-grid{grid-template-columns:1fr}
+ }
+
+ /* ===== PDF / PRINT ===== */
+ .pdf-btn-wrap{text-align:center;margin-top:32px;padding-top:24px;border-top:1px solid var(--border-light)}
+ .pdf-btn{display:inline-flex;align-items:center;gap:8px;background:var(--teal-dark);color:#fff;border:none;border-radius:24px;padding:11px 28px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Helvetica Neue',Arial,sans-serif;transition:background .15s;letter-spacing:.01em}
+ .pdf-btn:hover{background:var(--teal-mid)}
+ .pdf-btn svg{width:16px;height:16px;flex-shrink:0}
+ .pdf-hint{font-size:11px;color:var(--text-muted);margin-top:8px}
+ @media print{
+ .pdf-btn-wrap,.progress-row,.aud-toggle,.check-item,.ready-box,.forward-box,
+ .bm-label,button,.next-btn,.retry-btn,.results-detail,.pass-badge,
+ .tc-header .tc-toggle,.sev-btns,.check-match-btn,.submit-blank,
+ .gap-opt.disabled-opt,.psel-btn,.trap-btn,.nav-btn{display:none!important}
+ body{background:#fff!important;font-size:13px;line-height:1.6;color:#1a1a1a}
+ .page,.quiz-wrap{max-width:100%!important;padding:20px!important}
+ textarea,input[type=text],.blank-input{border:none!important;background:transparent!important;padding:4px 0!important;resize:none!important;min-height:0!important;font-size:13px!important;color:#1a1a1a!important}
+ .r-block,.seq-block,.canvas-section,.audit-block,.threat-card,.an-card,
+ .brief-out,.brief-row,.csum-row,.op-row,.summary-card,.seq-step{break-inside:avoid}
+ .tc-body{display:block!important}
+ .bm-title,.q-title{font-size:20px!important}
+ .r-q,.q-text{font-size:15px!important}
+ .results-circle{display:none!important}
+ .results-card{display:block!important;border:none!important;padding:0!important}
+ .results-title{font-size:18px!important}
+ .feedback-box{font-size:12px!important}
+ .opt.correct{background:#e8f5f0!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+ .opt.wrong{background:#fef2f2!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+ h1,h2,h3{break-after:avoid}
+ a[href]:after{content:''}
+ }
+</style>
+</head>
+<body>
+<div class="page">
+ <div class="bm-label">Inside the city intelligence index · Six pillars deep dive explorer</div>
+ <h1 class="bm-title">The six pillars explorer</h1>
+ <p class="bm-sub">A deep dive into each CII pillar — what it measures, what the indicators reveal, and what it means for policymakers and researchers. Select any pillar to explore.</p>
+
+ <div class="pillar-nav" id="pillar-nav">
+ <div class="pnav-btn p1 active" onclick="show(1)"><p class="pnav-num">01</p><p class="pnav-name">Foundational</p></div>
+ <div class="pnav-btn p2" onclick="show(2)"><p class="pnav-num">02</p><p class="pnav-name">Innovator</p></div>
+ <div class="pnav-btn p3" onclick="show(3)"><p class="pnav-num">03</p><p class="pnav-name">Integrator</p></div>
+ <div class="pnav-btn p4" onclick="show(4)"><p class="pnav-num">04</p><p class="pnav-name">Regenerative</p></div>
+ <div class="pnav-btn p5" onclick="show(5)"><p class="pnav-num">05</p><p class="pnav-name">Connected</p></div>
+ <div class="pnav-btn p6" onclick="show(6)"><p class="pnav-num">06</p><p class="pnav-name">Healthy Society</p></div>
+ </div>
+
+ <!-- PANEL 1: FOUNDATIONAL -->
+ <div class="pillar-panel visible" id="panel1">
+ <div class="p-header p1-hd">
+ <p class="ph-num">Pillar 01</p>
+ <p class="ph-name">Foundational intelligence</p>
+ <p class="ph-question">Can people actually participate in city life?</p>
+ <p class="ph-desc">The Foundational pillar is the floor of the CII. It captures whether residents have the basic capabilities to participate fully in society — basic education, digital access, institutional trust, and the opportunities that shape daily life. A city cannot be intelligent if significant portions of its population are excluded from the conditions that make participation possible. High performance here signals that a city has built the core conditions for human development, democratic participation, and long-term societal stability.</p>
+ </div>
+ <div class="p-body">
+ <div class="p-card">
+ <p class="p-card-label">Example indicators (25 total)</p>
+ <ul class="indicator-list">
+ <li>Households with broadband at home</li>
+ <li>People with above basic digital skills (16–74)</li>
+ <li>Early school leavers (% 18–24)</li>
+ <li>Tertiary education attainment (25–64)</li>
+ <li>Lifelong learning participation</li>
+ <li>Online interaction with public authorities</li>
+ <li>Access to information & communications (SPI)</li>
+ <li>Institutional trust composite</li>
+ </ul>
+ </div>
+ <div class="p-card">
+ <p class="p-card-label">What strong vs. weak performance means</p>
+ <ul class="indicator-list">
+ <li><strong>Strong:</strong> High digital participation, low school leaving rates, broad institutional trust — a population equipped to engage</li>
+ <li><strong>Weak:</strong> Digital exclusion concentrated in specific demographics, low tertiary attainment, declining trust in public institutions</li>
+ <li><strong>The hidden risk:</strong> Weak Foundational performance predicts vulnerability in every other pillar — you cannot innovate, integrate, or connect a population that is structurally excluded</li>
+ </ul>
+ </div>
+ </div>
+ <div class="p-aud-grid">
+ <div class="p-aud pm"><p class="p-aud-label">For policymakers</p><p class="p-aud-text">The Foundational pillar is your equity indicator. A high composite score that masks deep inequality across districts or demographics is more dangerous than a uniformly low score — because it hides the fragility. Ask not just "what is our Foundational score?" but "where within our city is the floor lowest?"</p></div>
+ <div class="p-aud rs"><p class="p-aud-label">For researchers</p><p class="p-aud-text">The Foundational pillar is methodologically complex because it combines inputs (education investment, digital infrastructure) with outcomes (attainment, trust). The causal arrows run in both directions. A city's Foundational score reflects both historical investment and current trajectory — distinguishing these analytically matters enormously for comparative research.</p></div>
+ </div>
+ <div class="p-diagnostic"><p class="p-diag-label">Diagnostic question</p><p class="p-diag-q">In your city or research context, which Foundational dimension — education, digital access, or institutional trust — is most at risk of widening inequality over the next decade? What is the early signal?</p></div>
+ <div class="p-signal" style="background:var(--p1-pale);border:1px solid #B5D4F4"><p class="p-signal-label" style="color:var(--p1)">The key insight</p><p class="p-signal-text" style="color:var(--p1-dark)">Foundational performance is a leading indicator, not a lagging one. By the time Foundational decline shows up in outcome data, the structural damage has been compounding for years. Cities that monitor Foundational weak signals early have the longest window for effective intervention.</p></div>
+ </div>
+
+ <!-- PANEL 2: INNOVATOR -->
+ <div class="pillar-panel" id="panel2">
+ <div class="p-header p2-hd">
+ <p class="ph-num">Pillar 02</p>
+ <p class="ph-name">Innovator intelligence</p>
+ <p class="ph-question">Can the city generate and translate new knowledge?</p>
+ <p class="ph-desc">The Innovator pillar measures the strength of a city's knowledge and creativity engine — R&D intensity, research output, talent production, entrepreneurial activity. But crucially, it also measures whether that knowledge converts into economic and social value. A city can have world-class research institutions and still fail to innovate if the translation mechanism is broken. High Innovator performance indicates a city capable of shaping the future rather than merely reacting to it.</p>
+ </div>
+ <div class="p-body">
+ <div class="p-card">
+ <p class="p-card-label">Example indicators (25 total)</p>
+ <ul class="indicator-list">
+ <li>R&D expenditure intensity (GERD)</li>
+ <li>Patent applications per capita</li>
+ <li>Horizon Europe participation per 1M pop</li>
+ <li>Venture capital investment per capita</li>
+ <li>Academic citations per 1,000 persons</li>
+ <li>Knowledge-intensive employment share</li>
+ <li>Start-up density</li>
+ <li>University-industry collaboration intensity</li>
+ </ul>
+ </div>
+ <div class="p-card">
+ <p class="p-card-label">What strong vs. weak performance means</p>
+ <ul class="indicator-list">
+ <li><strong>Strong:</strong> Active R&D ecosystem, high citation rates, venture activity, talent retention — a city generating ideas and converting them</li>
+ <li><strong>Weak:</strong> Research output without commercial or social application, talent emigration, low university-industry linkage</li>
+ <li><strong>The hidden risk:</strong> High R&D investment with low translation = sunk cost. The gap between generation and application is where most innovation ecosystems fail.</li>
+ </ul>
+ </div>
+ </div>
+ <div class="p-aud-grid">
+ <div class="p-aud pm"><p class="p-aud-label">For policymakers</p><p class="p-aud-text">The Innovator pillar exposes whether public investment in research is producing returns in the city's own economy — or whether it is subsidising innovation that benefits other places. The translation gap between knowledge creation and application is a policy failure mode, not just a market failure.</p></div>
+ <div class="p-aud rs"><p class="p-aud-label">For researchers</p><p class="p-aud-text">The Innovator pillar raises the uncomfortable question of research impact. Cities with high academic output but low social and economic application have a structural translation problem. For researchers studying urban innovation, this pillar provides an analytical lens to distinguish the knowledge engine from the innovation system.</p></div>
+ </div>
+ <div class="p-diagnostic"><p class="p-diag-label">Diagnostic question</p><p class="p-diag-q">In your context, where is the translation mechanism between knowledge creation and application most broken? Is it in funding structures, institutional incentives, or the absence of pathways between research institutions and decision-makers?</p></div>
+ <div class="p-signal" style="background:var(--p2-pale);border:1px solid #AFA9EC"><p class="p-signal-label" style="color:var(--p2)">The key insight</p><p class="p-signal-text" style="color:var(--p2-dark)">R&D expenditure and patent output are inputs. Job creation, start-up formation, and cited policy change are outputs. Most Innovator indices measure the former and call it innovation. The CII measures both — and the gap between them is where the most important policy conversations happen.</p></div>
+ </div>
+
+ <!-- PANEL 3: INTEGRATOR -->
+ <div class="pillar-panel" id="panel3">
+ <div class="p-header p3-hd">
+ <p class="ph-num">Pillar 03</p>
+ <p class="ph-name">Integrator intelligence</p>
+ <p class="ph-question">Do the city's systems work together?</p>
+ <p class="ph-desc">The Integrator pillar measures how well a city coordinates across systems — governance quality, service delivery, public administration, safety, mobility, digital governance, institutional responsiveness. It reflects the city's ability to implement, enforce, and synchronise policies across departments and scales. Strong Integrator cities demonstrate administrative intelligence: the capacity to move from good intentions to reliable outcomes through coordination, accountability, and collective problem-solving.</p>
+ </div>
+ <div class="p-body">
+ <div class="p-card">
+ <p class="p-card-label">Example indicators (25 total)</p>
+ <ul class="indicator-list">
+ <li>Median commute time</li>
+ <li>Public transport accessibility (30–45 min radius)</li>
+ <li>Digital public services (DESI)</li>
+ <li>Open Data Maturity Index</li>
+ <li>Government effectiveness composite</li>
+ <li>Rule of law index</li>
+ <li>Perceived corruption index</li>
+ <li>Inter-municipal cooperation rate</li>
+ </ul>
+ </div>
+ <div class="p-card">
+ <p class="p-card-label">What strong vs. weak performance means</p>
+ <ul class="indicator-list">
+ <li><strong>Strong:</strong> Seamless cross-department coordination, reliable public services, high digital governance maturity, low corruption</li>
+ <li><strong>Weak:</strong> Siloed departments, inconsistent service delivery, low institutional trust, policy implementation gaps</li>
+ <li><strong>The hidden risk:</strong> High innovation + low integration = ideas that never scale. The most common reason good urban policies fail is Integrator weakness, not policy design failure.</li>
+ </ul>
+ </div>
+ </div>
+ <div class="p-aud-grid">
+ <div class="p-aud pm"><p class="p-aud-label">For policymakers</p><p class="p-aud-text">The Integrator pillar is your implementation diagnostic. When good policies produce poor outcomes, the failure is almost always in this pillar — in the coordination architecture, the accountability structures, or the information flows between departments. Before designing new policies, ask whether your Integrator capacity can deliver what already exists.</p></div>
+ <div class="p-aud rs"><p class="p-aud-label">For researchers</p><p class="p-aud-text">The Integrator pillar is methodologically rich because it measures process quality, not just outputs. For researchers studying governance, this pillar provides a multi-dimensional framework that distinguishes formal institutional capacity from actual coordination effectiveness — a distinction that most governance indices collapse.</p></div>
+ </div>
+ <div class="p-diagnostic"><p class="p-diag-label">Diagnostic question</p><p class="p-diag-q">In your city or research context, name one policy area where Integrator weakness — poor coordination, inconsistent implementation, or institutional silos — is the primary reason good policy is producing poor outcomes.</p></div>
+ <div class="p-signal" style="background:var(--p3-pale);border:1px solid #97C459"><p class="p-signal-label" style="color:var(--p3)">The key insight</p><p class="p-signal-text" style="color:var(--p3-dark)">The Integrator pillar is the most underinvested dimension in urban policy. Most cities spend heavily on policy design and very little on coordination architecture. Yet the evidence consistently shows that implementation capacity — not policy quality — is the binding constraint on urban outcomes.</p></div>
+ </div>
+
+ <!-- PANEL 4: REGENERATIVE -->
+ <div class="pillar-panel" id="panel4">
+ <div class="p-header p4-hd">
+ <p class="ph-num">Pillar 04</p>
+ <p class="ph-name">Regenerative intelligence</p>
+ <p class="ph-question">Is the city restoring as well as consuming?</p>
+ <p class="ph-desc">The Regenerative pillar evaluates environmental performance and long-term ecological resilience — air quality, emissions, biodiversity, climate risk, circularity, green innovation. It measures not only whether a city is reducing harm, but whether it is actively restoring environmental systems. High Regenerative performance indicates a city that balances human prosperity with ecological health — building infrastructure that replenishes rather than depletes.</p>
+ </div>
+ <div class="p-body">
+ <div class="p-card">
+ <p class="p-card-label">Example indicators (25 total)</p>
+ <ul class="indicator-list">
+ <li>PM2.5 annual mean concentration</li>
+ <li>NO2 annual mean concentration</li>
+ <li>Green space per capita (m²)</li>
+ <li>Renewable energy share</li>
+ <li>Climate risk exposure index</li>
+ <li>Environmental technology patents per 100k pop</li>
+ <li>Recycling and waste diversion rate</li>
+ <li>Years of life lost due to air pollution</li>
+ </ul>
+ </div>
+ <div class="p-card">
+ <p class="p-card-label">What strong vs. weak performance means</p>
+ <ul class="indicator-list">
+ <li><strong>Strong:</strong> Clean air, high green infrastructure, renewable energy transition underway, active ecological restoration</li>
+ <li><strong>Weak:</strong> High pollution exposure, climate vulnerability, low green investment, ecological deficit accumulating</li>
+ <li><strong>The hidden risk:</strong> Regenerative weakness has the longest compounding time of any pillar — damage accumulates invisibly for decades before appearing in outcome data.</li>
+ </ul>
+ </div>
+ </div>
+ <div class="p-aud-grid">
+ <div class="p-aud pm"><p class="p-aud-label">For policymakers</p><p class="p-aud-text">The Regenerative pillar makes visible the cost of short-termism in environmental decisions. Air pollution's impact on life expectancy, productivity, and health system costs is fully calculable — but rarely included in the political cost-benefit of industrial or transport decisions. This pillar makes those long-term costs legible.</p></div>
+ <div class="p-aud rs"><p class="p-aud-label">For researchers</p><p class="p-aud-text">The Regenerative pillar combines stock measures (current environmental quality) with flow measures (investment in restoration). For researchers studying urban sustainability, the CII approach challenges the common conflation of carbon reduction with regeneration — they are related but distinct, and the distinction matters for policy design.</p></div>
+ </div>
+ <div class="p-diagnostic"><p class="p-diag-label">Diagnostic question</p><p class="p-diag-q">In your city or research context, which environmental risk is currently being under-measured — meaning its future cost to health, productivity, or resilience is not yet reflected in planning or investment decisions?</p></div>
+ <div class="p-signal" style="background:var(--p4-pale);border:1px solid #F0997B"><p class="p-signal-label" style="color:var(--p4)">The key insight</p><p class="p-signal-text" style="color:var(--p4-dark)">The difference between mitigation and regeneration is the difference between slowing decline and building capacity. Cities that only mitigate are managing the past. Cities that regenerate are investing in the future. The CII measures both — and penalises the conflation of the two.</p></div>
+ </div>
+
+ <!-- PANEL 5: CONNECTED -->
+ <div class="pillar-panel" id="panel5">
+ <div class="p-header p5-hd">
+ <p class="ph-num">Pillar 05</p>
+ <p class="ph-name">Connected intelligence</p>
+ <p class="ph-question">How openly does the city link to the world?</p>
+ <p class="ph-desc">The Connected pillar captures openness, mobility, and global integration — physically, digitally, socially, and intellectually. It includes connectivity infrastructure, international networks, data openness, mobility patterns, cultural exchange, migration flows, and cross-border collaborations. Cities that perform well here are positioned as hubs within wider systems — able to attract ideas, talent, partnerships, and opportunities from beyond their borders.</p>
+ </div>
+ <div class="p-body">
+ <div class="p-card">
+ <p class="p-card-label">Example indicators (25 total)</p>
+ <ul class="indicator-list">
+ <li>Average fixed broadband speed</li>
+ <li>5G coverage (%)</li>
+ <li>Air connectivity index</li>
+ <li>Airport passenger volume per capita</li>
+ <li>Foreign-born population share</li>
+ <li>International student share</li>
+ <li>Open data portal maturity</li>
+ <li>Cross-border research collaboration rate</li>
+ </ul>
+ </div>
+ <div class="p-card">
+ <p class="p-card-label">What strong vs. weak performance means</p>
+ <ul class="indicator-list">
+ <li><strong>Strong:</strong> High physical and digital connectivity, diverse populations, active international networks, open data infrastructure</li>
+ <li><strong>Weak:</strong> Infrastructure gaps, homogeneous populations, low international linkage, closed data governance</li>
+ <li><strong>The hidden risk:</strong> Connectivity disconnected from integration produces inequality — high-speed internet in neighbourhoods without digital literacy creates a two-tier city.</li>
+ </ul>
+ </div>
+ </div>
+ <div class="p-aud-grid">
+ <div class="p-aud pm"><p class="p-aud-label">For policymakers</p><p class="p-aud-text">The Connected pillar challenges the assumption that infrastructure investment equals connectivity. A city can have world-class broadband infrastructure serving only part of its population, or excellent air links used by only a fraction of its workforce. Ask not just "are we connected?" but "who is connected — and to what?"</p></div>
+ <div class="p-aud rs"><p class="p-aud-label">For researchers</p><p class="p-aud-text">The Connected pillar raises important questions about the relationship between openness and resilience. Highly connected cities are more exposed to global shocks. The CII does not resolve this tension — it makes it measurable. For researchers studying urban resilience, this pillar is one of the most analytically generative in the framework.</p></div>
+ </div>
+ <div class="p-diagnostic"><p class="p-diag-label">Diagnostic question</p><p class="p-diag-q">In your city or research context, where is connectivity producing inclusion — and where is it producing a new form of exclusion? Who is being connected, and who is being left behind?</p></div>
+ <div class="p-signal" style="background:var(--p5-pale);border:1px solid #EF9F27"><p class="p-signal-label" style="color:var(--p5)">The key insight</p><p class="p-signal-text" style="color:var(--p5-dark)">Connection without inclusion is infrastructure for the already advantaged. The Connected pillar is most meaningful when read alongside the Foundational pillar: a city's connectivity score tells you how open it is; its Foundational score tells you who can actually access that openness.</p></div>
+ </div>
+
+ <!-- PANEL 6: HEALTHY SOCIETY -->
+ <div class="pillar-panel" id="panel6">
+ <div class="p-header p6-hd">
+ <p class="ph-num">Pillar 06</p>
+ <p class="ph-name">Healthy society intelligence</p>
+ <p class="ph-question">Are people actually living well?</p>
+ <p class="ph-desc">The Healthy Society pillar holds all others accountable. It measures a city's ability to support long, flourishing lives — health outcomes, system performance, environmental health risks, access to care, mental and emotional wellbeing, and health investment. High performance reflects a city that protects life, reduces preventable suffering, and invests in the conditions that allow communities to thrive. It is, ultimately, the pillar that asks: what is all of this for?</p>
+ </div>
+ <div class="p-body">
+ <div class="p-card">
+ <p class="p-card-label">Example indicators (25 total)</p>
+ <ul class="indicator-list">
+ <li>Life expectancy at birth</li>
+ <li>Standardised cancer death rate</li>
+ <li>Standardised heart disease death rate</li>
+ <li>Health expenditure per capita (PPP)</li>
+ <li>Avoidable mortality rate</li>
+ <li>Mental health service access rate</li>
+ <li>Healthy life years at birth</li>
+ <li>Environmental health risk composite</li>
+ </ul>
+ </div>
+ <div class="p-card">
+ <p class="p-card-label">What strong vs. weak performance means</p>
+ <ul class="indicator-list">
+ <li><strong>Strong:</strong> Long healthy lives, accessible care, low avoidable mortality, strong mental health infrastructure, low environmental health burden</li>
+ <li><strong>Weak:</strong> Preventable deaths, healthcare access gaps, mental health crises without system response, health inequalities across districts</li>
+ <li><strong>The hidden risk:</strong> High GDP can coexist with declining healthy life expectancy — the Healthy Society pillar makes that contradiction visible.</li>
+ </ul>
+ </div>
+ </div>
+ <div class="p-aud-grid">
+ <div class="p-aud pm"><p class="p-aud-label">For policymakers</p><p class="p-aud-text">Healthy Society performance is shaped by decisions made in every other domain — transport, housing, green space, education, economic policy. A policymaker with authority over transport is making health decisions. This pillar is the argument for systemic thinking in every policy domain, not just health.</p></div>
+ <div class="p-aud rs"><p class="p-aud-label">For researchers</p><p class="p-aud-text">The Healthy Society pillar integrates biological outcomes with social determinants — making it one of the most complex pillars to study at city scale. For researchers, it raises the methodological question of attribution: when life expectancy improves, which urban policy decisions contributed most? The CII provides the comparative framework for beginning to answer that question.</p></div>
+ </div>
+ <div class="p-diagnostic"><p class="p-diag-label">Diagnostic question</p><p class="p-diag-q">In your city or research context, which health outcome — physical, mental, or environmental — is most clearly being shaped by decisions made outside the health sector? What would it take to make that connection visible to the people making those decisions?</p></div>
+ <div class="p-signal" style="background:var(--p6-pale);border:1px solid #ED93B1"><p class="p-signal-label" style="color:var(--p6)">The key insight</p><p class="p-signal-text" style="color:var(--p6-dark)">The Healthy Society pillar is the CII's ultimate accountability measure. A city that scores highly on innovation, connectivity, and integration — but whose residents are not living healthier, longer, more flourishing lives — has optimised for the wrong outcomes. Health is not a sector. It is the result.</p></div>
+ </div>
+
+ <div class="conn-note">
+ <p class="conn-label">Connecting to Section 5</p>
+ <p class="conn-text">In Section 5, you will use this pillar framework to diagnose your own city or policy area — identifying which pillar is the binding constraint on the outcomes you care most about, and where the highest-leverage intervention lies. The depth of your engagement with each pillar here will directly determine the quality of your diagnostic work there.</p>
+ </div>
+</div>
+<script>
+function show(n){
+ for(var i=1;i<=6;i++){
+ document.getElementById('panel'+i).classList.remove('visible');
+ document.querySelectorAll('.pnav-btn')[i-1].classList.remove('active');
+ }
+ document.getElementById('panel'+n).classList.add('visible');
+ document.querySelectorAll('.pnav-btn')[n-1].classList.add('active');
+}
+</script>
+
+ <div class="pdf-btn-wrap">
+ <button class="pdf-btn" onclick="window.print()">
+ <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17v-6M9 14l3 3 3-3"/><rect x="3" y="3" width="18" height="14" rx="2"/><path d="M3 17h18v4H3z"/></svg>
+ Save my answers as PDF
+ </button>
+ <p class="pdf-hint">Opens your browser's print dialog — choose "Save as PDF" as the destination</p>
+ </div>
+</body>
+</html>

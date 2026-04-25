@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Section 3 · Synthesis Reflection</title>
+<style>
+ :root {
+ --teal-dark: #085041; --teal-mid: #0F6E56; --teal: #1D9E75;
+ --teal-light: #5DCAA5; --teal-pale: #E1F5EE; --teal-faint: #F0FAF6;
+ --purple: #534AB7; --purple-pale: #EEEDFE;
+ --amber: #BA7517; --amber-pale: #FAEEDA;
+ --blue: #185FA5; --blue-pale: #E6F1FB;
+ --coral: #D85A30; --coral-pale: #FAECE7;
+ --text: #1a1a1a; --text-mid: #444; --text-muted: #6b6b6b;
+ --border: #e2e2e2; --border-light: #f0f0f0;
+ --bg: #ffffff; --bg-soft: #f8f9fa;
+ --radius: 10px; --radius-sm: 6px;
+ }
+ * { box-sizing: border-box; margin: 0; padding: 0; }
+ body { font-family: 'Helvetica Neue', Arial, sans-serif; color: var(--text); background: var(--bg); font-size: 15px; line-height: 1.65; }
+ .page { max-width: 760px; margin: 0 auto; padding: 48px 24px 80px; }
+ .bm-label { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; color: var(--teal-mid); background: var(--teal-pale); padding: 5px 14px; border-radius: 20px; margin-bottom: 18px; }
+ .bm-title { font-size: 28px; font-weight: 700; color: var(--text); line-height: 1.25; margin-bottom: 10px; letter-spacing: -.3px; font-family: 'Georgia', serif; }
+ .bm-sub { font-size: 14px; color: var(--text-muted); line-height: 1.65; max-width: 580px; margin-bottom: 20px; }
+ .intro-note { background: var(--bg-soft); border: 1px solid var(--border-light); border-radius: var(--radius); padding: 16px 20px; font-size: 13px; color: var(--text-muted); line-height: 1.65; margin-bottom: 32px; }
+ .sec-label { font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--text-muted); margin: 32px 0 14px; display: flex; align-items: center; gap: 10px; }
+ .sec-label::after { content: ''; flex: 1; height: 1px; background: var(--border-light); }
+ .divider { border: none; border-top: 1px solid var(--border-light); margin: 36px 0; }
+
+ /* Progress */
+ .progress-row { display: flex; align-items: center; gap: 12px; margin-bottom: 32px; }
+ .progress-label { font-size: 12px; color: var(--text-muted); white-space: nowrap; }
+ .progress-outer { flex: 1; height: 5px; background: var(--border-light); border-radius: 3px; overflow: hidden; }
+ .progress-inner { height: 100%; background: var(--teal); border-radius: 3px; transition: width .4s ease; width: 0%; }
+ .progress-pct { font-size: 12px; font-weight: 700; color: var(--teal); min-width: 36px; text-align: right; }
+
+ /* Reflections */
+ .r-block { margin-bottom: 28px; }
+ .r-num { font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--teal); margin-bottom: 6px; }
+ .r-q { font-size: 16px; font-weight: 600; color: var(--text); line-height: 1.5; margin-bottom: 10px; font-family: 'Georgia', serif; }
+ .r-why { font-size: 13px; color: var(--text-muted); line-height: 1.65; border-left: 2px solid var(--border); padding-left: 14px; margin-bottom: 14px; }
+ .r-textarea { width: 100%; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 12px 14px; font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 14px; color: var(--text); line-height: 1.65; resize: vertical; min-height: 80px; transition: border-color .15s; outline: none; }
+ .r-textarea:focus { border-color: var(--teal-light); }
+ .r-textarea::placeholder { color: #b0b0b0; }
+
+ /* Comparison table */
+ .compare-title { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 12px; }
+ .compare-table { width: 100%; border-collapse: collapse; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; font-size: 13px; margin-bottom: 32px; }
+ .compare-table th { background: var(--bg-soft); padding: 10px 14px; text-align: left; font-weight: 700; font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: var(--text-muted); border-bottom: 1px solid var(--border); }
+ .compare-table td { padding: 12px 14px; border-bottom: 1px solid var(--border-light); vertical-align: top; }
+ .compare-table tr:last-child td { border-bottom: none; }
+ .compare-table td:first-child { font-weight: 600; font-size: 13px; color: var(--text); width: 25%; }
+ .compare-table td:not(:first-child) { font-size: 13px; color: var(--text-mid); }
+ .compare-table select { width: 100%; background: var(--bg-soft); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 5px 8px; font-size: 12px; color: var(--text); font-family: 'Helvetica Neue', Arial, sans-serif; outline: none; cursor: pointer; }
+ .compare-table select:focus { border-color: var(--teal-light); }
+ .tag { display: inline-block; font-size: 11px; font-weight: 700; padding: 2px 9px; border-radius: 10px; }
+ .tag-teal { background: var(--teal-pale); color: var(--teal-mid); }
+ .tag-blue { background: var(--blue-pale); color: var(--blue); }
+ .tag-purple { background: var(--purple-pale); color: var(--purple); }
+ .tag-amber { background: var(--amber-pale); color: var(--amber); }
+
+ /* Checklist */
+ .check-item { display: flex; align-items: flex-start; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--border-light); }
+ .check-item:last-child { border-bottom: none; }
+ .check-item input[type="checkbox"] { width: 17px; height: 17px; cursor: pointer; flex-shrink: 0; margin-top: 1px; accent-color: var(--teal); }
+ .check-item label { font-size: 14px; color: var(--text); line-height: 1.55; cursor: pointer; }
+
+ /* Ready box */
+ .ready-box { display: none; background: var(--teal-pale); border-radius: var(--radius); padding: 28px 32px; text-align: center; margin-top: 32px; border: 1px solid var(--teal-light); }
+ .ready-text { font-size: 15px; color: var(--teal-dark); line-height: 1.7; }
+
+ /* Connecting forward */
+ .forward-box { background: var(--bg-soft); border: 1px solid var(--border); border-radius: var(--radius); padding: 22px 24px; margin-top: 32px; }
+ .forward-label { font-size: 10px; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px; }
+ .forward-text { font-size: 14px; color: var(--text-mid); line-height: 1.75; }
+ .forward-text strong { color: var(--text); }
+
+ /* ===== PDF / PRINT ===== */
+ .pdf-btn-wrap{text-align:center;margin-top:32px;padding-top:24px;border-top:1px solid var(--border-light)}
+ .pdf-btn{display:inline-flex;align-items:center;gap:8px;background:var(--teal-dark);color:#fff;border:none;border-radius:24px;padding:11px 28px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Helvetica Neue',Arial,sans-serif;transition:background .15s;letter-spacing:.01em}
+ .pdf-btn:hover{background:var(--teal-mid)}
+ .pdf-btn svg{width:16px;height:16px;flex-shrink:0}
+ .pdf-hint{font-size:11px;color:var(--text-muted);margin-top:8px}
+ @media print{
+ .pdf-btn-wrap,.progress-row,.aud-toggle,.check-item,.ready-box,.forward-box,
+ .bm-label,button,.next-btn,.retry-btn,.results-detail,.pass-badge,
+ .tc-header .tc-toggle,.sev-btns,.check-match-btn,.submit-blank,
+ .gap-opt.disabled-opt,.psel-btn,.trap-btn,.nav-btn{display:none!important}
+ body{background:#fff!important;font-size:13px;line-height:1.6;color:#1a1a1a}
+ .page,.quiz-wrap{max-width:100%!important;padding:20px!important}
+ textarea,input[type=text],.blank-input{border:none!important;background:transparent!important;padding:4px 0!important;resize:none!important;min-height:0!important;font-size:13px!important;color:#1a1a1a!important}
+ .r-block,.seq-block,.canvas-section,.audit-block,.threat-card,.an-card,
+ .brief-out,.brief-row,.csum-row,.op-row,.summary-card,.seq-step{break-inside:avoid}
+ .tc-body{display:block!important}
+ .bm-title,.q-title{font-size:20px!important}
+ .r-q,.q-text{font-size:15px!important}
+ .results-circle{display:none!important}
+ .results-card{display:block!important;border:none!important;padding:0!important}
+ .results-title{font-size:18px!important}
+ .feedback-box{font-size:12px!important}
+ .opt.correct{background:#e8f5f0!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+ .opt.wrong{background:#fef2f2!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+ h1,h2,h3{break-after:avoid}
+ a[href]:after{content:''}
+ }
+</style>
+</head>
+<body>
+<div class="page">
+
+ <div class="bm-label">What city intelligence actually is · End-of-section reflection</div>
+ <h1 class="bm-title">Synthesising your learning from Section 3</h1>
+ <p class="bm-sub">Five structured prompts to connect what you've learned to your own context. This section asked a harder question than Section 2 — not just why systems fail, but what they need in order to succeed. These reflections ask you to hold both.</p>
+ <div class="intro-note">Allow 20–30 minutes. Work through each prompt in sequence. You can type your responses below, or use this as a guide for a written entry or team discussion. The diagnostic grid at the end is designed to be kept and revisited as the course deepens.</div>
+
+ <div class="progress-row">
+ <span class="progress-label">Completion</span>
+ <div class="progress-outer"><div class="progress-inner" id="pbar"></div></div>
+ <span class="progress-pct" id="pct">0%</span>
+ </div>
+
+ <!-- R1 -->
+ <div class="r-block">
+ <p class="r-num">Reflection 01 — Reframing intelligence</p>
+ <p class="r-q">Section 2 showed you why cities fail. Section 3 has shifted the question: what does a system need in order to succeed? In your own words, describe what city intelligence means — and why that definition matters for the work you do.</p>
+ <p class="r-why">This is not a test of recall. It is an invitation to make the definition yours. The difference between knowing a concept and owning it is the ability to state it in your own language, with your own examples.</p>
+ <textarea class="r-textarea" placeholder="Write your own definition of city intelligence — grounded in your context, not the course's language..." oninput="update()"></textarea>
+ </div>
+
+ <!-- R2 -->
+ <div class="r-block">
+ <p class="r-num">Reflection 02 — Your system's strongest layer</p>
+ <p class="r-q">Looking at the four layers of the concept map — data and information, governance and institutions, decision and action, outcomes and impact — which layer is strongest in your current context? What makes it strong, and what does that strength depend on?</p>
+ <p class="r-why">Intelligence does not require every layer to be equally strong. It requires the connections between layers to be functional. Understanding where your system is strongest is the starting point for understanding which connections are most at risk.</p>
+ <textarea class="r-textarea" placeholder="Name the layer, describe what makes it strong, and consider what conditions are keeping it that way..." oninput="update()"></textarea>
+ </div>
+
+ <!-- R3 -->
+ <div class="r-block">
+ <p class="r-num">Reflection 03 — The weakest connection</p>
+ <p class="r-q">Intelligence breaks down at the transitions between layers — not usually inside them. Which transition in your system is currently the most broken? Where does something that exists in one layer fail to reach the next one?</p>
+ <p class="r-why">This is the most practically useful question in the section. The four break points — data that isn't interpreted, interpretation that doesn't become action, action without outcome measurement, outcomes that don't feed back into data — are not equally common. Identifying yours precisely is the first step to addressing it.</p>
+ <textarea class="r-textarea" placeholder="Name the broken transition specifically. What exists on one side of it that fails to cross to the other?" oninput="update()"></textarea>
+ </div>
+
+ <!-- R4 -->
+ <div class="r-block">
+ <p class="r-num">Reflection 04 — The condition you most need to build</p>
+ <p class="r-q">Of the four conditions — circulation, feedback, alignment, time horizon — which one is most absent from your context right now? Not which is most important in the abstract: which is most limiting in your specific situation?</p>
+ <p class="r-why">The four conditions interact — a weakness in one tends to amplify weaknesses in the others. But they don't all need to be built simultaneously. Identifying the most limiting condition is the basis for strategic sequencing: which one, if strengthened, would most unlock the others?</p>
+ <textarea class="r-textarea" placeholder="Name the condition, describe how its absence manifests in your daily work, and explain why it is the most limiting..." oninput="update()"></textarea>
+ </div>
+
+ <!-- R5 -->
+ <div class="r-block">
+ <p class="r-num">Reflection 05 — One structural move</p>
+ <p class="r-q">Based on your reflections above: name one structural change — not a communication improvement, not a new report, not a meeting — but a structural change that would genuinely strengthen the weakest condition or the most broken connection in your system. What would it change, and who would need to support it?</p>
+ <p class="r-why">The distinction between structural change and surface improvement matters. Producing a better report is not a structural move. Redesigning where reports go and who has a mandate to act on them is structural. This question is asking for the harder, more important answer.</p>
+ <textarea class="r-textarea" style="min-height:100px;" placeholder="Be specific and structural. What changes, how does it work, and what does it make possible that isn't possible now?" oninput="update()"></textarea>
+ </div>
+
+ <hr class="divider">
+
+ <!-- COMPARISON GRID -->
+ <p class="compare-title">Section comparison — mapping your progress from Section 2 to Section 3</p>
+ <div style="overflow-x:auto;">
+ <table class="compare-table">
+ <thead>
+ <tr>
+ <th style="width:22%">Dimension</th>
+ <th style="width:26%">Section 2 gave you</th>
+ <th style="width:26%">Section 3 adds</th>
+ <th style="width:26%">Your strongest insight so far</th>
+ </tr>
+ </thead>
+ <tbody>
+ <tr>
+ <td><span class="tag tag-teal">The problem</span></td>
+ <td>Why cities fail despite good data — the 5 failure modes</td>
+ <td>What intelligence actually requires — the 4 conditions</td>
+ <td><select onchange="update()"><option value="">— select the most useful for you —</option><option>The 5 failure modes framework</option><option>The data-intelligence distinction</option><option>The 4 conditions for intelligence</option><option>The concept map layers</option><option>The break points between layers</option></select></td>
+ </tr>
+ <tr>
+ <td><span class="tag tag-blue">The frame</span></td>
+ <td>The illusion of intelligence</td>
+ <td>Intelligence as an emergent property of connected systems</td>
+ <td><select onchange="update()"><option value="">— select —</option><option>Illusion of intelligence</option><option>Intelligence vs. information</option><option>Emergent property of connection</option><option>Living systems paradigm</option></select></td>
+ </tr>
+ <tr>
+ <td><span class="tag tag-purple">The diagnosis tool</span></td>
+ <td>Failure mode identification</td>
+ <td>Four conditions self-audit + concept map</td>
+ <td><select onchange="update()"><option value="">— select —</option><option>Failure mode identification</option><option>The concept map</option><option>The self-audit scores</option><option>The break points framework</option></select></td>
+ </tr>
+ <tr>
+ <td><span class="tag tag-amber">Coming next</span></td>
+ <td colspan="2">Section 4 introduces the City Intelligence Index — the measurement instrument built to operationalise exactly these concepts across 6 structural pillars.</td>
+ <td><select onchange="update()"><option value="">— your biggest remaining question —</option><option>How is the CII actually built?</option><option>How do I apply this to my own city?</option><option>How do I measure the 4 conditions?</option><option>What does high city intelligence look like in practice?</option><option>How do I make the case for structural change?</option></select></td>
+ </tr>
+ </tbody>
+ </table>
+ </div>
+
+ <hr class="divider">
+
+ <p style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:16px;">Before moving to the quiz — a final self-check</p>
+ <div id="checklist">
+ <div class="check-item"><input type="checkbox" id="c1" onchange="update()"><label for="c1">I can explain the difference between a city that has data and a city that is intelligent — in my own words</label></div>
+ <div class="check-item"><input type="checkbox" id="c2" onchange="update()"><label for="c2">I can identify which of the four layers is strongest and which transition is most broken in my context</label></div>
+ <div class="check-item"><input type="checkbox" id="c3" onchange="update()"><label for="c3">I can name the four conditions for city intelligence without looking at the framework</label></div>
+ <div class="check-item"><input type="checkbox" id="c4" onchange="update()"><label for="c4">I understand that intelligence is an emergent property — it lives in the connections between layers, not inside any single one</label></div>
+ <div class="check-item"><input type="checkbox" id="c5" onchange="update()"><label for="c5">I have named one structural change I could advocate for in my own context</label></div>
+ </div>
+
+ <div class="forward-box">
+ <p class="forward-label">Looking ahead — Section 4</p>
+ <p class="forward-text">You now have two complementary frameworks: the <strong>five failure modes</strong> (what breaks intelligence) and the <strong>four conditions</strong> (what enables it). Section 4 introduces the <strong>City Intelligence Index</strong> — the measurement instrument built to operationalise these concepts across six structural pillars. The CII will be your diagnostic tool for the rest of the course. The deeper your understanding of the conceptual foundations you've built here, the more you will be able to do with it.</p>
+ </div>
+
+ <div class="ready-box" id="readyBox">
+ <p class="ready-text">You are ready for the Section 3 quiz.<br>You will be asked to distinguish city intelligence from related concepts — and to identify which conditions and connections are at work in real-world scenarios.</p>
+ </div>
+
+</div>
+<script>
+function update() {
+ var texts = document.querySelectorAll('.r-textarea');
+ var selects = document.querySelectorAll('.compare-table select');
+ var checks = document.querySelectorAll('#checklist input[type="checkbox"]');
+ var textFilled = 0;
+ texts.forEach(function(t){ if(t.value.trim().length>20) textFilled++; });
+ var selectFilled = 0;
+ selects.forEach(function(s){ if(s.value!=='') selectFilled++; });
+ var checkFilled = 0;
+ checks.forEach(function(c){ if(c.checked) checkFilled++; });
+ var total = texts.length + selects.length + checks.length;
+ var done = textFilled + selectFilled + checkFilled;
+ var pct = Math.round((done/total)*100);
+ document.getElementById('pbar').style.width = pct+'%';
+ document.getElementById('pct').textContent = pct+'%';
+ document.getElementById('readyBox').style.display = (pct>=75)?'block':'none';
+}
+</script>
+
+ <div class="pdf-btn-wrap">
+ <button class="pdf-btn" onclick="window.print()">
+ <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17v-6M9 14l3 3 3-3"/><rect x="3" y="3" width="18" height="14" rx="2"/><path d="M3 17h18v4H3z"/></svg>
+ Save my answers as PDF
+ </button>
+ <p class="pdf-hint">Opens your browser's print dialog — choose "Save as PDF" as the destination</p>
+ </div>
+</body>
+</html>

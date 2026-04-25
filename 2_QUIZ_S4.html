@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Section 6 Quiz — Diagnosing Your City</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=DM+Sans:wght@300;400;500;600&display=swap');
+:root{--teal-dark:#085041;--teal-mid:#0F6E56;--teal:#1D9E75;--teal-light:#5DCAA5;--teal-pale:#E1F5EE;--teal-faint:#F0FAF6;--correct:#0F6E56;--correct-pale:#E1F5EE;--correct-border:#5DCAA5;--wrong:#B91C1C;--wrong-pale:#FEF2F2;--wrong-border:#FECACA;--text:#1a1a1a;--text-mid:#3a3a3a;--text-muted:#777;--border:#E5E5E5;--bg:#FAFAF9;--card:#FFFFFF;--radius:12px;--radius-sm:8px;}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:15px;line-height:1.65}
+.quiz-wrap{max-width:680px;margin:0 auto;padding:40px 20px 80px}
+.quiz-header{text-align:center;margin-bottom:40px}
+.q-section-label{font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--teal-mid);margin-bottom:12px}
+.q-title{font-family:'Playfair Display',serif;font-size:28px;font-weight:700;color:var(--text);line-height:1.2;margin-bottom:10px}
+.q-desc{font-size:14px;color:var(--text-muted);line-height:1.6;max-width:500px;margin:0 auto}
+.progress-wrap{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px 20px;margin-bottom:28px;display:flex;align-items:center;gap:14px}
+.progress-outer{flex:1;height:6px;background:#E8EAE8;border-radius:3px;overflow:hidden}
+.progress-inner{height:100%;background:linear-gradient(90deg,var(--teal),var(--teal-light));border-radius:3px;transition:width .4s ease;width:0%}
+.progress-text{font-size:12px;font-weight:600;color:var(--teal-mid);white-space:nowrap}
+.score-display{font-size:12px;font-weight:600;color:var(--text-muted);white-space:nowrap}
+.q-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:28px;margin-bottom:16px;display:none;animation:slideIn .3s ease}
+.q-card.active{display:block}
+@keyframes slideIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.q-meta{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.q-num{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--teal-mid);background:var(--teal-pale);padding:3px 10px;border-radius:20px}
+.q-type{font-size:10px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--text-muted)}
+.q-text{font-family:'Playfair Display',serif;font-size:17px;font-weight:500;line-height:1.55;color:var(--text);margin-bottom:20px}
+.multi-note{font-size:12px;color:var(--text-muted);margin-bottom:10px;font-style:italic}
+.options{display:flex;flex-direction:column;gap:8px;margin-bottom:20px}
+.opt{display:flex;align-items:flex-start;gap:12px;padding:12px 14px;border:1px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;transition:all .15s;background:var(--card)}
+.opt:hover:not(.disabled){border-color:var(--teal-light);background:var(--teal-faint)}
+.opt.correct{border-color:var(--correct-border);background:var(--correct-pale)}
+.opt.wrong{border-color:var(--wrong-border);background:var(--wrong-pale)}
+.opt.disabled{cursor:default;opacity:.75}
+.opt-marker{width:22px;height:22px;border-radius:50%;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;font-size:11px;font-weight:700;color:var(--text-muted)}
+.opt.correct .opt-marker{border-color:var(--correct);background:var(--correct);color:#fff}
+.opt.wrong .opt-marker{border-color:var(--wrong);background:var(--wrong);color:#fff}
+.opt-text{font-size:14px;color:var(--text-mid);line-height:1.55;padding-top:1px}
+.tf-row{display:flex;gap:10px;margin-bottom:20px}
+.tf-btn{flex:1;padding:12px;border:1px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;font-size:14px;font-weight:600;text-align:center;transition:all .15s;background:var(--card);color:var(--text-muted)}
+.tf-btn:hover:not(.disabled){border-color:var(--teal-light);background:var(--teal-faint);color:var(--teal-dark)}
+.tf-btn.correct{border-color:var(--correct-border);background:var(--correct-pale);color:var(--correct)}
+.tf-btn.wrong{border-color:var(--wrong-border);background:var(--wrong-pale);color:var(--wrong)}
+.tf-btn.disabled{cursor:default}
+.match-grid{display:grid;gap:8px;margin-bottom:20px}
+.match-row{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:center}
+.match-left{padding:10px 12px;background:var(--teal-faint);border:1px solid var(--teal-pale);border-radius:var(--radius-sm);font-size:13px;font-weight:600;color:var(--teal-dark);text-align:right}
+.match-arrow{color:var(--text-muted);font-size:14px;text-align:center}
+.match-select{padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:13px;font-family:'DM Sans',sans-serif;background:var(--card);color:var(--text);outline:none;cursor:pointer;width:100%}
+.match-select.correct{border-color:var(--correct-border);background:var(--correct-pale);color:var(--correct)}
+.match-select.wrong{border-color:var(--wrong-border);background:var(--wrong-pale);color:var(--wrong)}
+.check-match-btn{padding:9px 20px;background:var(--teal);color:#fff;border:none;border-radius:var(--radius-sm);font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background .15s;margin-bottom:16px}
+.check-match-btn:hover{background:var(--teal-mid)}
+.check-match-btn:disabled{background:#ccc;cursor:default}
+.blank-input{width:100%;padding:11px 14px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:14px;font-family:'DM Sans',sans-serif;color:var(--text);background:var(--card);outline:none;margin-bottom:16px;transition:border-color .15s}
+.blank-input.correct{border-color:var(--correct-border);background:var(--correct-pale)}
+.blank-input.wrong{border-color:var(--wrong-border);background:var(--wrong-pale)}
+.submit-blank{padding:9px 20px;background:var(--teal);color:#fff;border:none;border-radius:var(--radius-sm);font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background .15s;margin-bottom:16px}
+.feedback-box{display:none;padding:16px 18px;border-radius:var(--radius-sm);margin-bottom:20px;font-size:13px;line-height:1.7}
+.feedback-box.correct{background:var(--correct-pale);border:1px solid var(--correct-border);color:var(--teal-dark)}
+.feedback-box.wrong{background:var(--wrong-pale);border:1px solid var(--wrong-border);color:#7A1F1F}
+.feedback-box .fb-verdict{font-weight:700;display:block;margin-bottom:4px}
+.q-nav{display:flex;justify-content:flex-end}
+.next-btn{padding:10px 24px;background:var(--teal);color:#fff;border:none;border-radius:var(--radius-sm);font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background .15s;display:none}
+.next-btn:hover{background:var(--teal-mid)}
+.results-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:40px 32px;text-align:center;display:none}
+.results-circle{width:100px;height:100px;border-radius:50%;background:linear-gradient(135deg,var(--teal),var(--teal-light));display:flex;align-items:center;justify-content:center;margin:0 auto 20px;box-shadow:0 8px 24px rgba(29,158,117,.25)}
+.results-pct{font-family:'Playfair Display',serif;font-size:30px;font-weight:700;color:#fff}
+.results-title{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--text);margin-bottom:8px}
+.results-sub{font-size:14px;color:var(--text-muted);line-height:1.6;margin-bottom:24px}
+.results-detail{display:flex;gap:16px;justify-content:center;margin-bottom:24px}
+.rd-box{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 20px;text-align:center}
+.rd-num{font-family:'Playfair Display',serif;font-size:24px;font-weight:700;color:var(--teal)}
+.rd-label{font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.07em;margin-top:2px}
+.retry-btn{padding:11px 28px;background:var(--teal);color:#fff;border:none;border-radius:var(--radius-sm);font-size:14px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif}
+.pass-badge{display:inline-block;padding:4px 14px;border-radius:20px;font-size:12px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;margin-bottom:16px}
+.pass-badge.pass{background:var(--correct-pale);color:var(--correct);border:1px solid var(--correct-border)}
+.pass-badge.fail{background:var(--wrong-pale);color:var(--wrong);border:1px solid var(--wrong-border)}
+
+ /* ===== PDF / PRINT ===== */
+ .pdf-btn-wrap{text-align:center;margin-top:32px;padding-top:24px;border-top:1px solid var(--border-light)}
+ .pdf-btn{display:inline-flex;align-items:center;gap:8px;background:var(--teal-dark);color:#fff;border:none;border-radius:24px;padding:11px 28px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Helvetica Neue',Arial,sans-serif;transition:background .15s;letter-spacing:.01em}
+ .pdf-btn:hover{background:var(--teal-mid)}
+ .pdf-btn svg{width:16px;height:16px;flex-shrink:0}
+ .pdf-hint{font-size:11px;color:var(--text-muted);margin-top:8px}
+ @media print{
+ .pdf-btn-wrap,.progress-row,.aud-toggle,.check-item,.ready-box,.forward-box,
+ .bm-label,button,.next-btn,.retry-btn,.results-detail,.pass-badge,
+ .tc-header .tc-toggle,.sev-btns,.check-match-btn,.submit-blank,
+ .gap-opt.disabled-opt,.psel-btn,.trap-btn,.nav-btn{display:none!important}
+ body{background:#fff!important;font-size:13px;line-height:1.6;color:#1a1a1a}
+ .page,.quiz-wrap{max-width:100%!important;padding:20px!important}
+ textarea,input[type=text],.blank-input{border:none!important;background:transparent!important;padding:4px 0!important;resize:none!important;min-height:0!important;font-size:13px!important;color:#1a1a1a!important}
+ .r-block,.seq-block,.canvas-section,.audit-block,.threat-card,.an-card,
+ .brief-out,.brief-row,.csum-row,.op-row,.summary-card,.seq-step{break-inside:avoid}
+ .tc-body{display:block!important}
+ .bm-title,.q-title{font-size:20px!important}
+ .r-q,.q-text{font-size:15px!important}
+ .results-circle{display:none!important}
+ .results-card{display:block!important;border:none!important;padding:0!important}
+ .results-title{font-size:18px!important}
+ .feedback-box{font-size:12px!important}
+ .opt.correct{background:#e8f5f0!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+ .opt.wrong{background:#fef2f2!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+ h1,h2,h3{break-after:avoid}
+ a[href]:after{content:''}
+ }
+</style>
+</head>
+<body>
+<div class="quiz-wrap">
+ <div class="quiz-header">
+ <p class="q-section-label">Diagnosing your city · City Intelligence Mastercourse</p>
+ <h1 class="q-title">Diagnosing your city</h1>
+ <p class="q-desc">Section 5 asked you to stop reading the CII and start using it. This quiz tests whether you can apply the diagnostic logic — reading a real profile, identifying health as infrastructure, distinguishing weak signals from crises. 10 questions.</p>
+ </div>
+ <div class="progress-wrap">
+ <div class="progress-outer"><div class="progress-inner" id="progress-bar"></div></div>
+ <span class="progress-text" id="progress-text">0 / 10</span>
+ <span class="score-display" id="score-display">Score: 0</span>
+ </div>
+
+ <div class="q-card active" id="q1">
+ <div class="q-meta"><span class="q-num">Question 1</span><span class="q-type">True / False</span></div>
+ <p class="q-text">"Health is a sector. Improving urban health outcomes requires primarily investing in health system capacity — more doctors, more hospitals, better access to care."</p>
+ <div class="tf-row">
+ <button class="tf-btn" onclick="checkTF('q1',this,'True','False')">True</button>
+ <button class="tf-btn" onclick="checkTF('q1',this,'False','False')">False</button>
+ </div>
+ <div class="feedback-box" id="fb-q1"></div>
+ <div class="q-nav"><button class="next-btn" id="next-q1" onclick="nextQ(1,2)">Next question →</button></div>
+ </div>
+
+ <div class="q-card" id="q2">
+ <div class="q-meta"><span class="q-num">Question 2</span><span class="q-type">Multiple choice</span></div>
+ <p class="q-text">A city notices a small but consistent annual rise in avoidable mortality among working-age adults. The trend has been visible for four years but has not yet generated policy response. What does Section 5's diagnostic framework call this?</p>
+ <div class="options" id="opts-q2">
+ <div class="opt" data-v="A"><span class="opt-marker">A</span><span class="opt-text">A structural gap — a missing connection between two pillars that should be aligned</span></div>
+ <div class="opt" data-v="B"><span class="opt-marker">B</span><span class="opt-text">A weak signal — an early pattern visible in the data before it becomes a headline crisis</span></div>
+ <div class="opt" data-v="C"><span class="opt-marker">C</span><span class="opt-text">A composite score divergence — an unexplained gap between pillar performance levels</span></div>
+ <div class="opt" data-v="D"><span class="opt-marker">D</span><span class="opt-text">A feedback loop failure — evidence that the system is not learning from its outcomes</span></div>
+ </div>
+ <div class="feedback-box" id="fb-q2"></div>
+ <div class="q-nav"><button class="next-btn" id="next-q2" onclick="nextQ(2,3)">Next question →</button></div>
+ </div>
+
+ <div class="q-card" id="q3">
+ <div class="q-meta"><span class="q-num">Question 3</span><span class="q-type">Match and sort</span></div>
+ <p class="q-text">Match each diagnostic step to its correct description.</p>
+ <div class="match-grid" id="match-q3">
+ <div class="match-row"><div class="match-left">Read the outlier pillar</div><div class="match-arrow">→</div><select class="match-select" id="m3-1"><option value="">— select —</option><option>The pillar diverging most from the city's average — where the structural story lives</option><option>Two pillars that should perform similarly but don't — the missing link</option><option>Which decisions, in which domains, are producing the pattern you see</option></select></div>
+ <div class="match-row"><div class="match-left">Find the broken connection</div><div class="match-arrow">→</div><select class="match-select" id="m3-2"><option value="">— select —</option><option>The pillar diverging most from the city's average — where the structural story lives</option><option>Two pillars that should perform similarly but don't — the missing link</option><option>Which decisions, in which domains, are producing the pattern you see</option></select></div>
+ <div class="match-row"><div class="match-left">Ask the attribution question</div><div class="match-arrow">→</div><select class="match-select" id="m3-3"><option value="">— select —</option><option>The pillar diverging most from the city's average — where the structural story lives</option><option>Two pillars that should perform similarly but don't — the missing link</option><option>Which decisions, in which domains, are producing the pattern you see</option></select></div>
+ </div>
+ <button class="check-match-btn" id="check-q3" onclick="checkMatch3('q3',['The pillar diverging most from the city\'s average — where the structural story lives','Two pillars that should perform similarly but don\'t — the missing link','Which decisions, in which domains, are producing the pattern you see'])">Check answers</button>
+ <div class="feedback-box" id="fb-q3"></div>
+ <div class="q-nav"><button class="next-btn" id="next-q3" onclick="nextQ(3,4)">Next question →</button></div>
+ </div>
+
+ <div class="q-card" id="q4">
+ <div class="q-meta"><span class="q-num">Question 4</span><span class="q-type">Multiple choice</span></div>
+ <p class="q-text">A city has this profile: Foundational 0.71, Innovator 0.68, Integrator 0.73, Regenerative 0.65, Connected 0.74, Healthy Society 0.38. An official says: "We should increase the health budget." What is the most accurate response?</p>
+ <div class="options" id="opts-q4">
+ <div class="opt" data-v="A"><span class="opt-marker">A</span><span class="opt-text">Agree — the 0.38 score confirms the health system is underfunded</span></div>
+ <div class="opt" data-v="B"><span class="opt-marker">B</span><span class="opt-text">The official is right to prioritise health, but should focus on prevention rather than cure</span></div>
+ <div class="opt" data-v="C"><span class="opt-marker">C</span><span class="opt-text">The Healthy Society gap in a city with strong performance everywhere else signals a structural disconnect — the attribution question is which domains are failing to convert their performance into health outcomes, not how large the health budget is</span></div>
+ <div class="opt" data-v="D"><span class="opt-marker">D</span><span class="opt-text">The composite score is strong enough that the Healthy Society gap may not require urgent attention</span></div>
+ </div>
+ <div class="feedback-box" id="fb-q4"></div>
+ <div class="q-nav"><button class="next-btn" id="next-q4" onclick="nextQ(4,5)">Next question →</button></div>
+ </div>
+
+ <div class="q-card" id="q5">
+ <div class="q-meta"><span class="q-num">Question 5</span><span class="q-type">Fill in the blank</span></div>
+ <p class="q-text">Complete the sentence: "A weak signal is an early warning. A structural gap is a ______."</p>
+ <input type="text" class="blank-input" id="blank-q5" placeholder="Type your answer..." />
+ <button class="submit-blank" onclick="checkBlank('q5',['missing connection','broken connection','absent connection'])">Submit</button>
+ <div class="feedback-box" id="fb-q5"></div>
+ <div class="q-nav"><button class="next-btn" id="next-q5" onclick="nextQ(5,6)">Next question →</button></div>
+ </div>
+
+ <div class="q-card" id="q6">
+ <div class="q-meta"><span class="q-num">Question 6</span><span class="q-type">Multiple choice</span></div>
+ <p class="q-text">A city scores 0.79 on Regenerative and 0.41 on Healthy Society. Which attribution question most precisely applies the Section 5 diagnostic logic?</p>
+ <div class="options" id="opts-q6">
+ <div class="opt" data-v="A"><span class="opt-marker">A</span><span class="opt-text">Why is the city investing in environmental restoration while neglecting health services?</span></div>
+ <div class="opt" data-v="B"><span class="opt-marker">B</span><span class="opt-text">Which specific environmental improvements — in which districts — are not reaching the populations with the worst health outcomes, and what structural barrier is preventing the connection?</span></div>
+ <div class="opt" data-v="C"><span class="opt-marker">C</span><span class="opt-text">How can the city's environmental strengths be communicated more effectively to improve perceived quality of life?</span></div>
+ <div class="opt" data-v="D"><span class="opt-marker">D</span><span class="opt-text">What is the overall Regenerative-to-Healthy Society correlation across the ten-city comparison group?</span></div>
+ </div>
+ <div class="feedback-box" id="fb-q6"></div>
+ <div class="q-nav"><button class="next-btn" id="next-q6" onclick="nextQ(6,7)">Next question →</button></div>
+ </div>
+
+ <div class="q-card" id="q7">
+ <div class="q-meta"><span class="q-num">Question 7</span><span class="q-type">Multiple response</span></div>
+ <p class="q-text">Which of the following are weak signals — early patterns that appear before a crisis? Select all that apply.</p>
+ <p class="multi-note">Select all that apply, then click Check.</p>
+ <div class="options" id="opts-q7">
+ <div class="opt multi-opt" onclick="toggleMulti(this)"><span class="opt-marker">□</span><span class="opt-text">A consistent but small annual rise in youth unemployment over three years</span></div>
+ <div class="opt multi-opt" onclick="toggleMulti(this)"><span class="opt-marker">□</span><span class="opt-text">A sudden spike in emergency hospital admissions following a heat wave</span></div>
+ <div class="opt multi-opt" onclick="toggleMulti(this)"><span class="opt-marker">□</span><span class="opt-text">A gradual decline in public transport ridership in peripheral districts over five years</span></div>
+ <div class="opt multi-opt" onclick="toggleMulti(this)"><span class="opt-marker">□</span><span class="opt-text">A slow, multi-year erosion of institutional trust scores — not a scandal, just a drift</span></div>
+ <div class="opt multi-opt" onclick="toggleMulti(this)"><span class="opt-marker">□</span><span class="opt-text">A major industrial accident that triggers an air quality crisis</span></div>
+ <div class="opt multi-opt" onclick="toggleMulti(this)"><span class="opt-marker">□</span><span class="opt-text">An uptick in avoidable mortality among working-age adults that has not yet generated policy debate</span></div>
+ </div>
+ <button class="check-match-btn" id="check-q7" onclick="checkMulti('q7',['A consistent but small annual rise in youth unemployment over three years','A gradual decline in public transport ridership in peripheral districts over five years','A slow, multi-year erosion of institutional trust scores — not a scandal, just a drift','An uptick in avoidable mortality among working-age adults that has not yet generated policy debate'])">Check answers</button>
+ <div class="feedback-box" id="fb-q7"></div>
+ <div class="q-nav"><button class="next-btn" id="next-q7" onclick="nextQ(7,8)">Next question →</button></div>
+ </div>
+
+ <div class="q-card" id="q8">
+ <div class="q-meta"><span class="q-num">Question 8</span><span class="q-type">Multiple choice</span></div>
+ <p class="q-text">After completing a CII diagnosis, a senior official says: "The first step is to commission a comprehensive review of our coordination mechanisms." A city intelligence practitioner says: "That is not a first move — that is a delay." Who is right?</p>
+ <div class="options" id="opts-q8">
+ <div class="opt" data-v="A"><span class="opt-marker">A</span><span class="opt-text">The official is right — a comprehensive review is necessary before any structural change can be designed</span></div>
+ <div class="opt" data-v="B"><span class="opt-marker">B</span><span class="opt-text">The practitioner is right — commissioning a study substitutes analysis for action and resets the diagnostic process</span></div>
+ <div class="opt" data-v="C"><span class="opt-marker">C</span><span class="opt-text">Both are partially right — a targeted review is appropriate if bounded and time-limited</span></div>
+ <div class="opt" data-v="D"><span class="opt-marker">D</span><span class="opt-text">The practitioner is right, but only if the diagnostic template has been completed in full</span></div>
+ </div>
+ <div class="feedback-box" id="fb-q8"></div>
+ <div class="q-nav"><button class="next-btn" id="next-q8" onclick="nextQ(8,9)">Next question →</button></div>
+ </div>
+
+ <div class="q-card" id="q9">
+ <div class="q-meta"><span class="q-num">Question 9</span><span class="q-type">Multiple choice</span></div>
+ <p class="q-text">A researcher finds that cities with higher Integrator scores tend to have better Healthy Society outcomes. A policymaker responds: "This proves we need to invest in coordination infrastructure." What does the Section 5 diagnostic logic add?</p>
+ <div class="options" id="opts-q9">
+ <div class="opt" data-v="A"><span class="opt-marker">A</span><span class="opt-text">Nothing — the researcher's finding provides the attribution and the policymaker's response is correct</span></div>
+ <div class="opt" data-v="B"><span class="opt-marker">B</span><span class="opt-text">The policymaker should commission further research before drawing any policy conclusions</span></div>
+ <div class="opt" data-v="C"><span class="opt-marker">C</span><span class="opt-text">The correlation identifies the structural relationship but does not constitute an attribution. The diagnostic question is: in this specific city, which coordination failure is most directly producing which health gap — and what is the first structural move?</span></div>
+ <div class="opt" data-v="D"><span class="opt-marker">D</span><span class="opt-text">The researcher's finding cannot be applied to individual cities because it is based on cross-city comparison</span></div>
+ </div>
+ <div class="feedback-box" id="fb-q9"></div>
+ <div class="q-nav"><button class="next-btn" id="next-q9" onclick="nextQ(9,10)">Next question →</button></div>
+ </div>
+
+ <div class="q-card" id="q10">
+ <div class="q-meta"><span class="q-num">Question 10</span><span class="q-type">Multiple choice</span></div>
+ <p class="q-text">Which of the following best describes the attribution question in the Section 5 diagnostic framework?</p>
+ <div class="options" id="opts-q10">
+ <div class="opt" data-v="A"><span class="opt-marker">A</span><span class="opt-text">A question that identifies who is responsible for the underperforming pillar</span></div>
+ <div class="opt" data-v="B"><span class="opt-marker">B</span><span class="opt-text">A question that explains the CII's scoring methodology for each pillar</span></div>
+ <div class="opt" data-v="C"><span class="opt-marker">C</span><span class="opt-text">A question that identifies which decisions, in which domains, are most likely producing the structural pattern — and points toward a specific intervention</span></div>
+ <div class="opt" data-v="D"><span class="opt-marker">D</span><span class="opt-text">A question that compares the city's performance against the comparison group average</span></div>
+ </div>
+ <div class="feedback-box" id="fb-q10"></div>
+ <div class="q-nav"><button class="next-btn" id="next-q10" onclick="showResults()">See my results →</button></div>
+ </div>
+
+ <div class="results-card" id="results">
+ <div class="results-circle"><span class="results-pct" id="res-pct">—</span></div>
+ <span class="pass-badge" id="pass-badge">—</span>
+ <h2 class="results-title" id="res-title">—</h2>
+ <p class="results-sub" id="res-sub">—</p>
+ <div class="results-detail">
+ <div class="rd-box"><div class="rd-num" id="res-correct">—</div><div class="rd-label">Correct</div></div>
+ <div class="rd-box"><div class="rd-num">10</div><div class="rd-label">Questions</div></div>
+ <div class="rd-box"><div class="rd-num" id="res-score">—</div><div class="rd-label">Points</div></div>
+ </div>
+ <button class="retry-btn" onclick="retryQuiz()">Retake quiz</button>
+ <div style="margin-top:12px">
+ <button class="pdf-btn" onclick="window.print()" style="display:inline-flex;align-items:center;gap:8px;background:#085041;color:#fff;border:none;border-radius:24px;padding:10px 24px;font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif">
+ <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17v-6M9 14l3 3 3-3"/><rect x="3" y="3" width="18" height="14" rx="2"/><path d="M3 17h18v4H3z"/></svg>
+ Save results as PDF
+ </button>
+ <p style="font-size:11px;color:#777;margin-top:6px">Opens print dialog — choose "Save as PDF"</p>
+ </div>
+ </div>
+</div>
+
+<script>
+var TOTAL=10;
+var state={answered:0,correct:0,points:0};
+var mcCorrect={'q2':'B','q4':'C','q6':'B','q8':'B','q9':'C','q10':'C'};
+var feedbacks={
+ 'q1':'The correct answer is False. Health is not a sector — it is the accumulated outcome of every urban domain. Transport policy is health policy. Housing policy is health policy. Education policy is health policy. Environmental policy is health policy. The Healthy Society pillar in the CII is the accountability layer precisely because it reflects the cumulative impact of all other pillars.',
+ 'q2':'The correct answer is a weak signal — an early pattern visible in the data before it becomes a headline crisis. A structural gap is a different concept: it refers to a missing connection between pillars, not a time-based pattern. A weak signal appears six to ten years before the crisis. The four-year trend in avoidable mortality is exactly what the diagnostic framework is designed to catch.',
+ 'q3':'The three diagnostic steps follow a precise sequence. Reading the outlier pillar is the entry point — the pillar diverging most from the average is where the structural story lives. Finding the broken connection moves from observation to structural analysis — it identifies where a relationship that should exist is absent. The attribution question transforms a CII reading into a diagnosis by connecting the structural pattern to a decision domain.',
+ 'q4':'The correct answer is that the Healthy Society gap signals a structural disconnect — and the attribution question is which domains are failing to convert their performance into health outcomes. When five pillars are performing well and Healthy Society is critically low, the problem is structural, not sectoral. Increasing the health budget treats the symptom while the structural cause compounds.',
+ 'q5':'The correct answer is a missing connection. A weak signal is about time — visible early, before the crisis. A structural gap is about architecture — two parts of the urban system that should be connected are not. Structural gaps do not resolve with better data or more funding. They resolve with structural change: redesigning how two systems connect.',
+ 'q6':'The correct answer asks which specific environmental improvements are not reaching the populations with the worst health outcomes — and what structural barrier is preventing the connection. This is attribution thinking at its most precise. The divergence between strong Regenerative and weak Healthy Society raises a structural question about distribution, not about sector investment levels.',
+ 'q7':'The four correct answers all share the defining characteristics of a weak signal: visible in data over time, not yet generating political urgency, signalling a structural pattern that will compound if unaddressed. The heat wave spike and industrial accident are headline crises — not weak signals. The diagnostic value of weak signal reading is the window it opens for intervention before compounding costs make the problem structurally harder.',
+ 'q8':'The correct answer is that the practitioner is right — commissioning a study substitutes analysis for action and resets the diagnostic process. The diagnostic framework is designed to produce an attribution question and a first structural move — not another study. Using a CII diagnosis to justify further analytical work before acting is one of the most common ways good diagnostic work gets wasted.',
+ 'q9':'The correct answer is that the correlation identifies the structural relationship but does not constitute an attribution. A cross-city correlation confirms that Integrator performance is structurally related to Healthy Society outcomes. But it does not tell this specific city which specific coordination failure is producing which specific health gap. The diagnostic logic requires a further step: the attribution question for this city, in this context.',
+ 'q10':'The correct answer is a question that identifies which decisions, in which domains, are most likely producing the structural pattern — and points toward a specific intervention. It is not about responsibility (option A), methodology (option B), or benchmarking (option D). The attribution question is the bridge between the diagnostic reading and the intervention design.'
+};
+
+function showFeedback(qId,isCorrect,p){
+ var el=document.getElementById('fb-'+qId);
+ el.style.display='block';
+ el.className='feedback-box '+(isCorrect?'correct':'wrong');
+ el.innerHTML='<span class="fb-verdict">'+(isCorrect?'✓ Correct':'✗ Not quite')+'</span>'+feedbacks[qId];
+ document.getElementById('next-'+qId).style.display='block';
+ state.answered++;
+ if(isCorrect){state.correct++;state.points+=(p||1);}
+ var pct=Math.round((state.answered/TOTAL)*100);
+ document.getElementById('progress-bar').style.width=pct+'%';
+ document.getElementById('progress-text').textContent=state.answered+' / '+TOTAL;
+ document.getElementById('score-display').textContent='Score: '+state.correct;
+}
+
+function checkTF(qId,btn,chosen,c){
+ document.getElementById(qId).querySelectorAll('.tf-btn').forEach(function(b){b.classList.add('disabled')});
+ btn.classList.add(chosen===c?'correct':'wrong');
+ showFeedback(qId,chosen===c,1);
+}
+
+function checkMC(qId,opt,chosen){
+ var c=mcCorrect[qId];
+ document.getElementById('opts-'+qId).querySelectorAll('.opt').forEach(function(o,i){
+ o.classList.add('disabled');o.onclick=null;
+ if(String.fromCharCode(65+i)===c) o.classList.add('correct');
+ });
+ if(chosen!==c) opt.classList.add('wrong');
+ var p=(qId==='q4'||qId==='q6'||qId==='q9')?2:1;
+ showFeedback(qId,chosen===c,p);
+}
+
+function toggleMulti(opt){
+ if(opt.classList.contains('disabled')) return;
+ opt.classList.toggle('selected');
+ opt.querySelector('.opt-marker').textContent=opt.classList.contains('selected')?'✓':'□';
+}
+
+function checkMulti(qId,correctList){
+ var opts=document.getElementById('opts-'+qId).querySelectorAll('.multi-opt');
+ var selected=[];
+ opts.forEach(function(o){if(o.classList.contains('selected'))selected.push(o.querySelector('.opt-text').textContent.trim())});
+ opts.forEach(function(o){
+ o.classList.add('disabled');o.onclick=null;
+ var txt=o.querySelector('.opt-text').textContent.trim();
+ if(correctList.includes(txt)) o.classList.add('correct');
+ else if(o.classList.contains('selected')) o.classList.add('wrong');
+ });
+ document.getElementById('check-'+qId).disabled=true;
+ var ok=correctList.every(function(c){return selected.includes(c)})&&selected.length===correctList.length;
+ showFeedback(qId,ok,2);
+}
+
+function checkMatch3(qId,correctAnswers){
+ var allCorrect=true;
+ for(var i=1;i<=3;i++){
+ var s=document.getElementById('m3-'+i);
+ s.disabled=true;
+ if(s.value===correctAnswers[i-1]) s.classList.add('correct');
+ else{s.classList.add('wrong');allCorrect=false;}
+ }
+ document.getElementById('check-'+qId).disabled=true;
+ showFeedback(qId,allCorrect,2);
+}
+
+function checkBlank(qId,acceptedAnswers){
+ var input=document.getElementById('blank-'+qId);
+ var val=input.value.trim().toLowerCase();
+ var ok=acceptedAnswers.some(function(a){return val===a.toLowerCase()||val.includes('connection')||val.includes('missing')});
+ input.classList.add(ok?'correct':'wrong');
+ input.disabled=true;
+ document.querySelector('#'+qId+' .submit-blank').disabled=true;
+ showFeedback(qId,ok,1);
+}
+
+function nextQ(c,n){
+ document.getElementById('q'+c).classList.remove('active');
+ document.getElementById('q'+n).classList.add('active');
+ window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function showResults(){
+ document.getElementById('q10').classList.remove('active');
+ document.getElementById('results').style.display='block';
+ var pct=Math.round((state.correct/TOTAL)*100);
+ var pass=pct>=70;
+ document.getElementById('res-pct').textContent=pct+'%';
+ document.getElementById('pass-badge').textContent=pass?'PASSED':'KEEP GOING';
+ document.getElementById('pass-badge').className='pass-badge '+(pass?'pass':'fail');
+ document.getElementById('res-title').textContent=pass?'Well done.':'Keep working at it.';
+ document.getElementById('res-sub').textContent=pass?'You can apply the diagnostic logic to a real profile. Your attribution question is ready. Bring it to Section 6 — where the diagnosis becomes a design.':'Review the diagnostic template and the 20-minute exercise. The three-step process — outlier, broken connection, attribution question — is the core skill. Work through it again with a real city in mind.';
+ document.getElementById('res-correct').textContent=state.correct;
+ document.getElementById('res-score').textContent=state.points;
+ window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function retryQuiz(){
+ state={answered:0,correct:0,points:0};
+ document.getElementById('progress-bar').style.width='0%';
+ document.getElementById('progress-text').textContent='0 / '+TOTAL;
+ document.getElementById('score-display').textContent='Score: 0';
+ document.getElementById('results').style.display='none';
+ document.querySelectorAll('.q-card').forEach(function(c){c.classList.remove('active')});
+ document.getElementById('q1').classList.add('active');
+ document.querySelectorAll('.feedback-box').forEach(function(f){f.style.display='none'});
+ document.querySelectorAll('.next-btn').forEach(function(b){b.style.display='none'});
+ document.querySelectorAll('.opt').forEach(function(o){o.className='opt'});
+ document.querySelectorAll('.tf-btn').forEach(function(b){b.className='tf-btn'});
+ document.querySelectorAll('.blank-input').forEach(function(i){i.value='';i.className='blank-input';i.disabled=false});
+ document.querySelectorAll('.submit-blank').forEach(function(b){b.disabled=false});
+ document.querySelectorAll('.match-select').forEach(function(s){s.value='';s.className='match-select';s.disabled=false});
+ document.querySelectorAll('.check-match-btn').forEach(function(b){b.disabled=false});
+ document.querySelectorAll('.multi-opt').forEach(function(o){
+ o.classList.remove('selected','correct','wrong','disabled');
+ o.querySelector('.opt-marker').textContent='□';
+ o.onclick=function(){toggleMulti(this)};
+ });
+ bindAll();
+ window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function bindAll(){
+ for(var qId in mcCorrect){
+ (function(id){
+ document.getElementById('opts-'+id).querySelectorAll('.opt').forEach(function(o,i){
+ o.onclick=function(){checkMC(id,this,String.fromCharCode(65+i))};
+ });
+ })(qId);
+ }
+}
+bindAll();
+</script>
+</body>
+</html>

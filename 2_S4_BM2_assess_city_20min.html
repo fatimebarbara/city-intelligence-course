@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Section 6 · — Assess Your City in 20 Minutes</title>
+<style>
+ :root{
+ --teal-dark:#085041;--teal-mid:#0F6E56;--teal:#1D9E75;--teal-light:#5DCAA5;--teal-pale:#E1F5EE;--teal-faint:#F0FAF6;
+ --purple:#534AB7;--purple-pale:#EEEDFE;--purple-mid:#3C3489;
+ --amber:#BA7517;--amber-pale:#FAEEDA;
+ --blue:#185FA5;--blue-pale:#E6F1FB;
+ --coral:#D85A30;--coral-pale:#FAECE7;
+ --green:#3B6D11;--green-pale:#EAF3DE;
+ --pink:#993556;--pink-pale:#FBEAF0;
+ --text:#1a1a1a;--text-mid:#444;--text-muted:#6b6b6b;
+ --border:#e2e2e2;--border-light:#f0f0f0;--bg:#fff;--bg-soft:#f8f9fa;
+ --radius:10px;--radius-sm:6px;
+ }
+ *{box-sizing:border-box;margin:0;padding:0}
+ body{font-family:'Helvetica Neue',Arial,sans-serif;color:var(--text);background:var(--bg);font-size:15px;line-height:1.65}
+ .page{max-width:760px;margin:0 auto;padding:48px 24px 80px}
+ .bm-label{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--teal-mid);background:var(--teal-pale);padding:5px 14px;border-radius:20px;margin-bottom:18px}
+ .bm-title{font-size:28px;font-weight:700;color:var(--text);line-height:1.25;margin-bottom:10px;letter-spacing:-.3px;font-family:'Georgia',serif}
+ .bm-sub{font-size:14px;color:var(--text-muted);line-height:1.65;max-width:580px;margin-bottom:24px}
+ .divider{border:none;border-top:1px solid var(--border-light);margin:28px 0}
+ textarea{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 12px;font-family:'Helvetica Neue',Arial,sans-serif;font-size:14px;color:var(--text);line-height:1.6;resize:vertical;outline:none;transition:border-color .15s;min-height:72px}
+ textarea:focus{border-color:var(--teal-light)}
+ textarea::placeholder{color:#b0b0b0}
+
+ /* Timer */
+ .timer-bar{background:var(--teal);border-radius:var(--radius);padding:20px 24px;margin-bottom:28px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+ .timer-label{font-size:13px;font-weight:600;color:rgba(255,255,255,.85)}
+ .timer-display{font-size:28px;font-weight:700;color:#fff;letter-spacing:.05em;font-variant-numeric:tabular-nums;min-width:80px;text-align:right}
+ .timer-btn{background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.3);border-radius:20px;padding:7px 18px;font-size:13px;font-weight:600;color:#fff;cursor:pointer;transition:all .15s;font-family:'Helvetica Neue',Arial,sans-serif}
+ .timer-btn:hover{background:rgba(255,255,255,.3)}
+ .timer-progress{flex:1;height:6px;background:rgba(255,255,255,.25);border-radius:3px;overflow:hidden}
+ .timer-fill{height:100%;background:rgba(255,255,255,.8);border-radius:3px;transition:width 1s linear;width:100%}
+
+ /* Phase cards */
+ .phase{border:1px solid var(--border);border-radius:var(--radius);padding:22px;margin-bottom:16px;transition:border-color .2s}
+ .phase.active{border-color:var(--teal-light);background:var(--teal-faint)}
+ .phase.complete{border-color:var(--border-light);background:var(--bg-soft)}
+ .phase-header{display:flex;align-items:flex-start;gap:12px;margin-bottom:10px}
+ .phase-num{display:flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;font-size:12px;font-weight:700;flex-shrink:0;margin-top:1px;background:var(--bg-soft);border:1px solid var(--border);color:var(--text-muted)}
+ .phase.active .phase-num{background:var(--teal);border-color:var(--teal);color:#fff}
+ .phase.complete .phase-num{background:var(--green-pale);border-color:#97C459;color:var(--green)}
+ .phase-title-wrap{flex:1}
+ .phase-time{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--teal-mid);margin-bottom:3px}
+ .phase.complete .phase-time{color:var(--green)}
+ .phase-title{font-size:15px;font-weight:700;color:var(--text)}
+ .phase-desc{font-size:13px;color:var(--text-muted);line-height:1.6;margin-bottom:12px}
+ .phase-task{background:var(--bg);border:1px solid var(--border-light);border-radius:var(--radius-sm);padding:14px;margin-bottom:8px}
+ .task-label{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);margin-bottom:6px}
+ .phase.active .task-label{color:var(--teal-mid)}
+
+ /* Brief output */
+ .brief-section{margin-bottom:20px}
+ .brief-label{font-size:10px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--teal-mid);margin-bottom:8px;padding-bottom:5px;border-bottom:1px solid var(--teal-pale)}
+ .brief-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:8px}
+ .brief-field{background:var(--bg-soft);border-radius:var(--radius-sm);padding:12px}
+ .bf-name{font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--text-muted);margin-bottom:4px}
+ .bf-val{font-size:13px;color:var(--text);line-height:1.55;min-height:20px;font-family:'Georgia',serif;font-style:italic}
+ .bf-empty{color:var(--text-muted);font-style:normal;font-family:'Helvetica Neue',Arial,sans-serif;font-size:12px}
+
+ .start-box{background:var(--teal-pale);border-radius:var(--radius);padding:24px 28px;text-align:center;margin-bottom:28px;border:1px solid var(--teal-light)}
+ .start-title{font-size:18px;font-weight:700;color:var(--teal-dark);margin-bottom:8px;font-family:'Georgia',serif}
+ .start-sub{font-size:13px;color:var(--teal-mid);line-height:1.65;margin-bottom:16px}
+ .start-btn{background:var(--teal);color:#fff;border:none;border-radius:24px;padding:12px 32px;font-size:14px;font-weight:600;cursor:pointer;transition:background .15s;font-family:'Helvetica Neue',Arial,sans-serif}
+ .start-btn:hover{background:var(--teal-mid)}
+
+ /* ===== PDF / PRINT ===== */
+ .pdf-btn-wrap{text-align:center;margin-top:32px;padding-top:24px;border-top:1px solid var(--border-light)}
+ .pdf-btn{display:inline-flex;align-items:center;gap:8px;background:var(--teal-dark);color:#fff;border:none;border-radius:24px;padding:11px 28px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Helvetica Neue',Arial,sans-serif;transition:background .15s;letter-spacing:.01em}
+ .pdf-btn:hover{background:var(--teal-mid)}
+ .pdf-btn svg{width:16px;height:16px;flex-shrink:0}
+ .pdf-hint{font-size:11px;color:var(--text-muted);margin-top:8px}
+ @media print{
+ .pdf-btn-wrap,.progress-row,.aud-toggle,.check-item,.ready-box,.forward-box,
+ .bm-label,button,.next-btn,.retry-btn,.results-detail,.pass-badge,
+ .tc-header .tc-toggle,.sev-btns,.check-match-btn,.submit-blank,
+ .gap-opt.disabled-opt,.psel-btn,.trap-btn,.nav-btn{display:none!important}
+ body{background:#fff!important;font-size:13px;line-height:1.6;color:#1a1a1a}
+ .page,.quiz-wrap{max-width:100%!important;padding:20px!important}
+ textarea,input[type=text],.blank-input{border:none!important;background:transparent!important;padding:4px 0!important;resize:none!important;min-height:0!important;font-size:13px!important;color:#1a1a1a!important}
+ .r-block,.seq-block,.canvas-section,.audit-block,.threat-card,.an-card,
+ .brief-out,.brief-row,.csum-row,.op-row,.summary-card,.seq-step{break-inside:avoid}
+ .tc-body{display:block!important}
+ .bm-title,.q-title{font-size:20px!important}
+ .r-q,.q-text{font-size:15px!important}
+ .results-circle{display:none!important}
+ .results-card{display:block!important;border:none!important;padding:0!important}
+ .results-title{font-size:18px!important}
+ .feedback-box{font-size:12px!important}
+ .opt.correct{background:#e8f5f0!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+ .opt.wrong{background:#fef2f2!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+ h1,h2,h3{break-after:avoid}
+ a[href]:after{content:''}
+ }
+</style>
+</head>
+<body>
+<div class="page">
+ <div class="bm-label">Diagnosing your city · Assess your city in 20 minutes</div>
+ <h1 class="bm-title">Assess your city in 20 minutes</h1>
+ <p class="bm-sub">A timed guided exercise. Four phases. One focused diagnostic brief you can use immediately — in a meeting, a research proposal, or a policy conversation. Start the timer and work through each phase without stopping.</p>
+
+ <div class="start-box" id="start-box">
+ <p class="start-title">Before you begin</p>
+ <p class="start-sub">Have your city in mind. Have a specific decision or question you want this diagnosis to serve. The timer is a tool for focus — not for pressure. If you need more time on a phase, keep going. The 20 minutes is a guide, not a deadline.</p>
+ <button class="start-btn" onclick="startTimer()">Start the 20-minute exercise</button>
+ </div>
+
+ <div class="timer-bar" id="timer-bar" style="display:none">
+ <div>
+ <p class="timer-label">Time remaining</p>
+ <div class="timer-progress"><div class="timer-fill" id="timer-fill"></div></div>
+ </div>
+ <span class="timer-display" id="timer-display">20:00</span>
+ <button class="timer-btn" onclick="pauseTimer()" id="pause-btn">Pause</button>
+ </div>
+
+ <!-- PHASE 1 -->
+ <div class="phase active" id="ph1">
+ <div class="phase-header">
+ <div class="phase-num">1</div>
+ <div class="phase-title-wrap">
+ <p class="phase-time">Minutes 1–3 · 3 minutes</p>
+ <p class="phase-title">Name your city and your question</p>
+ </div>
+ </div>
+ <p class="phase-desc">Write fast. Don't edit. The goal is to fix your context before you start reading data — not to produce perfect sentences.</p>
+ <div class="phase-task">
+ <p class="task-label">Your city and the one outcome you care most about</p>
+ <textarea id="p1a" rows="2" placeholder="City: [name]. Outcome I care most about: [what changes in people's lives if this works]" oninput="updateBrief()"></textarea>
+ </div>
+ <div class="phase-task">
+ <p class="task-label">The specific decision or question this diagnosis serves</p>
+ <textarea id="p1b" rows="2" placeholder="This diagnosis is meant to inform: [decision / research question]" oninput="updateBrief()" style="min-height:56px"></textarea>
+ </div>
+ </div>
+
+ <!-- PHASE 2 -->
+ <div class="phase" id="ph2">
+ <div class="phase-header">
+ <div class="phase-num">2</div>
+ <div class="phase-title-wrap">
+ <p class="phase-time">Minutes 4–9 · 6 minutes</p>
+ <p class="phase-title">Read the pillar profile — start with the outlier</p>
+ </div>
+ </div>
+ <p class="phase-desc">Do not start with the composite score. Find the pillar that diverges most from the average. Name it. Then describe what the profile tells you as a pattern — not as a list of scores.</p>
+ <div class="phase-task">
+ <p class="task-label">The outlier pillar and what it reveals</p>
+ <textarea id="p2a" rows="2" placeholder="The outlier pillar is [name]. It matters because [structural meaning — not just the score]." oninput="updateBrief()"></textarea>
+ </div>
+ <div class="phase-task">
+ <p class="task-label">The overall profile pattern in one sentence</p>
+ <textarea id="p2b" rows="2" placeholder="The profile shows a city that is [strong in / weak in / structured around]..." oninput="updateBrief()" style="min-height:52px"></textarea>
+ </div>
+ </div>
+
+ <!-- PHASE 3 -->
+ <div class="phase" id="ph3">
+ <div class="phase-header">
+ <div class="phase-num">3</div>
+ <div class="phase-title-wrap">
+ <p class="phase-time">Minutes 10–15 · 6 minutes</p>
+ <p class="phase-title">Detect the structural gap and broken connection</p>
+ </div>
+ </div>
+ <p class="phase-desc">Look for the two pillars whose performance diverges most unexpectedly. Not just the lowest score — the missing connection between two dimensions that should be aligned.</p>
+ <div class="phase-task">
+ <p class="task-label">The structural gap — two pillars and the broken connection between them</p>
+ <textarea id="p3a" rows="2" placeholder="The gap between [pillar] and [pillar] — in this city, [what should connect them but doesn't]." oninput="updateBrief()"></textarea>
+ </div>
+ <div class="phase-task">
+ <p class="task-label">One weak signal that is visible now but not yet in the headline data</p>
+ <textarea id="p3b" rows="2" placeholder="A weak signal currently visible in [domain / indicator]: [what it means structurally if unaddressed]." oninput="updateBrief()" style="min-height:52px"></textarea>
+ </div>
+ </div>
+
+ <!-- PHASE 4 -->
+ <div class="phase" id="ph4">
+ <div class="phase-header">
+ <div class="phase-num">4</div>
+ <div class="phase-title-wrap">
+ <p class="phase-time">Minutes 16–20 · 5 minutes</p>
+ <p class="phase-title">Formulate the attribution question and first move</p>
+ </div>
+ </div>
+ <p class="phase-desc">This is the output phase. Write the one question this diagnosis opens — and the one structural move it points to. These two outputs are what you take out of this exercise.</p>
+ <div class="phase-task">
+ <p class="task-label">The attribution question — which decisions are producing this pattern?</p>
+ <textarea id="p4a" rows="3" placeholder="The [outlier/gap] in [city] is most likely produced by decisions in [domain] — specifically [mechanism]. If [structural change], then [predicted impact]." oninput="updateBrief()" style="min-height:80px"></textarea>
+ </div>
+ <div class="phase-task">
+ <p class="task-label">The first structural move this diagnosis points to</p>
+ <textarea id="p4b" rows="2" placeholder="The first structural move is [specific change] — not [common surface response], because [reason it goes deeper]." oninput="updateBrief()" style="min-height:56px"></textarea>
+ </div>
+ </div>
+
+ <div class="divider"></div>
+
+ <!-- BRIEF OUTPUT -->
+ <p style="font-size:18px;font-weight:700;font-family:'Georgia',serif;margin-bottom:6px">Your diagnostic brief</p>
+ <p style="font-size:13px;color:var(--text-muted);margin-bottom:20px;line-height:1.6">This brief is built from your responses above. It updates as you write. Copy it, save it, or use it directly in a meeting or proposal.</p>
+
+ <div class="brief-section">
+ <p class="brief-label">Context</p>
+ <div class="brief-row">
+ <div class="brief-field"><p class="bf-name">City & outcome</p><p class="bf-val" id="br-p1a"><span class="bf-empty">Complete Phase 1</span></p></div>
+ <div class="brief-field"><p class="bf-name">Decision or question</p><p class="bf-val" id="br-p1b"><span class="bf-empty">—</span></p></div>
+ </div>
+ </div>
+ <div class="brief-section">
+ <p class="brief-label">Profile reading</p>
+ <div class="brief-row">
+ <div class="brief-field"><p class="bf-name">Outlier pillar</p><p class="bf-val" id="br-p2a"><span class="bf-empty">—</span></p></div>
+ <div class="brief-field"><p class="bf-name">Profile pattern</p><p class="bf-val" id="br-p2b"><span class="bf-empty">—</span></p></div>
+ </div>
+ </div>
+ <div class="brief-section">
+ <p class="brief-label">Structural diagnosis</p>
+ <div class="brief-row">
+ <div class="brief-field"><p class="bf-name">Structural gap</p><p class="bf-val" id="br-p3a"><span class="bf-empty">—</span></p></div>
+ <div class="brief-field"><p class="bf-name">Weak signal</p><p class="bf-val" id="br-p3b"><span class="bf-empty">—</span></p></div>
+ </div>
+ </div>
+ <div class="brief-section">
+ <p class="brief-label">Attribution and action</p>
+ <div class="brief-field" style="margin-bottom:10px"><p class="bf-name">Attribution question</p><p class="bf-val" id="br-p4a"><span class="bf-empty">—</span></p></div>
+ <div class="brief-field" style="background:var(--teal-faint);border:1px solid var(--teal-pale)"><p class="bf-name" style="color:var(--teal-mid)">First structural move</p><p class="bf-val" id="br-p4b"><span class="bf-empty">—</span></p></div>
+ </div>
+
+</div>
+<script>
+var totalSecs=1200, remaining=1200, running=false, interval=null;
+
+function startTimer(){
+ document.getElementById('start-box').style.display='none';
+ document.getElementById('timer-bar').style.display='flex';
+ running=true;
+ interval=setInterval(tick,1000);
+ markPhase(1);
+}
+
+function tick(){
+ if(!running) return;
+ remaining--;
+ var m=Math.floor(remaining/60), s=remaining%60;
+ document.getElementById('timer-display').textContent=(m<10?'0':'')+m+':'+(s<10?'0':'')+s;
+ document.getElementById('timer-fill').style.width=(remaining/totalSecs*100)+'%';
+ var elapsed=totalSecs-remaining;
+ if(elapsed>=180) markPhase(2);
+ if(elapsed>=540) markPhase(3);
+ if(elapsed>=900) markPhase(4);
+ if(remaining<=0){clearInterval(interval);document.getElementById('timer-display').textContent='Done';}
+}
+
+function pauseTimer(){
+ running=!running;
+ document.getElementById('pause-btn').textContent=running?'Pause':'Resume';
+}
+
+var activePhase=1;
+function markPhase(n){
+ if(n<=activePhase) return;
+ for(var i=1;i<n;i++){
+ document.getElementById('ph'+i).classList.remove('active');
+ document.getElementById('ph'+i).classList.add('complete');
+ document.getElementById('ph'+i).querySelector('.phase-num').textContent='✓';
+ }
+ document.getElementById('ph'+n).classList.add('active');
+ activePhase=n;
+}
+
+function updateBrief(){
+ var ids=['p1a','p1b','p2a','p2b','p3a','p3b','p4a','p4b'];
+ ids.forEach(function(id){
+ var val=document.getElementById(id).value.trim();
+ var el=document.getElementById('br-'+id);
+ el.innerHTML=val?val:'<span class="bf-empty">—</span>';
+ });
+}
+</script>
+
+ <div class="pdf-btn-wrap">
+ <button class="pdf-btn" onclick="window.print()">
+ <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17v-6M9 14l3 3 3-3"/><rect x="3" y="3" width="18" height="14" rx="2"/><path d="M3 17h18v4H3z"/></svg>
+ Save my answers as PDF
+ </button>
+ <p class="pdf-hint">Opens your browser's print dialog — choose "Save as PDF" as the destination</p>
+ </div>
+</body>
+</html>

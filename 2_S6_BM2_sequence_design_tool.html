@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Section 8 · Sequence Design Tool</title>
+<style>
+ :root{
+ --teal-dark:#085041;--teal-mid:#0F6E56;--teal:#1D9E75;--teal-light:#5DCAA5;--teal-pale:#E1F5EE;--teal-faint:#F0FAF6;
+ --purple:#534AB7;--purple-pale:#EEEDFE;--purple-mid:#3C3489;
+ --amber:#BA7517;--amber-pale:#FAEEDA;--blue:#185FA5;--blue-pale:#E6F1FB;
+ --coral:#D85A30;--coral-pale:#FAECE7;--green:#3B6D11;--green-pale:#EAF3DE;
+ --pink:#993556;--pink-pale:#FBEAF0;
+ --text:#1a1a1a;--text-mid:#444;--text-muted:#6b6b6b;
+ --border:#e2e2e2;--border-light:#f0f0f0;--bg:#fff;--bg-soft:#f8f9fa;
+ --radius:10px;--radius-sm:6px;
+ }
+ *{box-sizing:border-box;margin:0;padding:0}
+ body{font-family:'Helvetica Neue',Arial,sans-serif;color:var(--text);background:var(--bg);font-size:15px;line-height:1.65}
+ .page{max-width:760px;margin:0 auto;padding:48px 24px 80px}
+ .bm-label{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--teal-mid);background:var(--teal-pale);padding:5px 14px;border-radius:20px;margin-bottom:18px}
+ .bm-title{font-size:28px;font-weight:700;color:var(--text);line-height:1.25;margin-bottom:10px;letter-spacing:-.3px;font-family:'Georgia',serif}
+ .bm-sub{font-size:14px;color:var(--text-muted);line-height:1.65;max-width:580px;margin-bottom:20px}
+ .intro-note{background:var(--bg-soft);border:1px solid var(--border-light);border-radius:var(--radius);padding:16px 20px;font-size:13px;color:var(--text-muted);line-height:1.65;margin-bottom:28px}
+ .divider{border:none;border-top:1px solid var(--border-light);margin:28px 0}
+ .sec-head{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin:24px 0 12px;display:flex;align-items:center;gap:10px}
+ .sec-head::after{content:'';flex:1;height:1px;background:var(--border-light)}
+ textarea,input[type=text]{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 12px;font-family:'Helvetica Neue',Arial,sans-serif;font-size:14px;color:var(--text);line-height:1.6;resize:vertical;min-height:64px;outline:none;transition:border-color .15s}
+ textarea:focus,input[type=text]:focus{border-color:var(--teal-light)}
+ textarea::placeholder,input::placeholder{color:#b0b0b0}
+ .field-group{margin-bottom:16px}
+ .field-label{font-size:12px;font-weight:600;color:var(--text-mid);margin-bottom:5px;display:block}
+ .field-sub{font-size:12px;color:var(--text-muted);margin-bottom:6px;line-height:1.55}
+
+ /* Aud toggle */
+ .aud-toggle{display:flex;gap:8px;margin-bottom:20px}
+ .aud-btn{border:1px solid var(--border);border-radius:20px;padding:7px 18px;font-size:13px;font-weight:500;cursor:pointer;background:var(--bg-soft);color:var(--text-muted);transition:all .15s;font-family:'Helvetica Neue',Arial,sans-serif}
+ .aud-btn.pm-active{background:var(--teal-pale);color:var(--teal-dark);border-color:var(--teal-light);font-weight:600}
+ .aud-btn.rs-active{background:var(--purple-pale);color:var(--purple-mid);border-color:#AFA9EC;font-weight:600}
+
+ /* Progress */
+ .progress-row{display:flex;align-items:center;gap:12px;margin-bottom:24px}
+ .progress-label{font-size:12px;color:var(--text-muted);white-space:nowrap}
+ .progress-outer{flex:1;height:5px;background:var(--border-light);border-radius:3px;overflow:hidden}
+ .progress-inner{height:100%;background:var(--teal);border-radius:3px;transition:width .4s ease}
+ .progress-pct{font-size:12px;font-weight:700;color:var(--teal);min-width:36px;text-align:right}
+
+ /* Sequence steps */
+ .seq-block{border:1px solid var(--border);border-radius:var(--radius);padding:22px;margin-bottom:14px;position:relative}
+ .seq-block.s1{border-top:3px solid var(--teal)}
+ .seq-block.s2{border-top:3px solid var(--purple)}
+ .seq-block.s3{border-top:3px solid var(--amber)}
+ .sb-header{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+ .sb-badge{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:3px 10px;border-radius:12px}
+ .s1 .sb-badge{background:var(--teal-pale);color:var(--teal-dark)}
+ .s2 .sb-badge{background:var(--purple-pale);color:var(--purple-mid)}
+ .s3 .sb-badge{background:var(--amber-pale);color:var(--amber)}
+ .sb-title{font-size:14px;font-weight:700;color:var(--text)}
+
+ /* Pillar select */
+ .pillar-select{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+ .psel-btn{border:1px solid var(--border);border-radius:16px;padding:5px 13px;font-size:12px;font-weight:600;cursor:pointer;background:var(--bg-soft);color:var(--text-muted);transition:all .15s;font-family:'Helvetica Neue',Arial,sans-serif}
+ .psel-btn:hover{background:var(--bg)}
+ .psel-btn.sel-p1{background:var(--blue-pale);border-color:var(--blue);color:var(--blue)}
+ .psel-btn.sel-p2{background:var(--purple-pale);border-color:var(--purple);color:var(--purple)}
+ .psel-btn.sel-p3{background:var(--green-pale);border-color:var(--green);color:var(--green)}
+ .psel-btn.sel-p4{background:var(--coral-pale);border-color:var(--coral);color:var(--coral)}
+ .psel-btn.sel-p5{background:var(--amber-pale);border-color:var(--amber);color:var(--amber)}
+ .psel-btn.sel-p6{background:var(--pink-pale);border-color:var(--pink);color:var(--pink)}
+
+ /* Compound test */
+ .compound-test{background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-top:24px}
+ .ct-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:12px}
+ .ct-check{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--border-light)}
+ .ct-check:last-child{border-bottom:none}
+ .ct-check input{width:16px;height:16px;cursor:pointer;flex-shrink:0;margin-top:2px;accent-color:var(--teal)}
+ .ct-check label{font-size:13px;color:var(--text);line-height:1.55;cursor:pointer}
+ .ct-result{margin-top:14px;padding:12px 14px;border-radius:var(--radius-sm);font-size:13px;line-height:1.65;display:none}
+ .ct-result.pass{background:var(--teal-faint);border:1px solid var(--teal-pale);color:var(--teal-dark)}
+ .ct-result.partial{background:var(--amber-pale);border:1px solid #E8C06A;color:#7A4C00}
+
+ /* Brief */
+ .brief-out{background:var(--teal-faint);border:1px solid var(--teal-pale);border-radius:var(--radius);padding:22px;margin-top:20px}
+ .brief-title{font-size:14px;font-weight:700;font-family:'Georgia',serif;color:var(--teal-dark);margin-bottom:14px}
+ .brief-row{margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid var(--teal-pale)}
+ .brief-row:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+ .brief-label{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--teal-mid);margin-bottom:3px}
+ .brief-val{font-size:13px;color:var(--teal-dark);line-height:1.6;font-family:'Georgia',serif;font-style:italic;min-height:18px}
+ .brief-empty{color:var(--text-muted);font-style:normal;font-family:'Helvetica Neue',Arial,sans-serif;font-size:12px}
+
+ /* Audience-specific labels */
+ .pm-lbl,.pm-sub{} 
+ .rs-lbl,.rs-sub{display:none}
+
+ /* ===== PDF / PRINT ===== */
+ .pdf-btn-wrap{text-align:center;margin-top:32px;padding-top:24px;border-top:1px solid var(--border-light)}
+ .pdf-btn{display:inline-flex;align-items:center;gap:8px;background:var(--teal-dark);color:#fff;border:none;border-radius:24px;padding:11px 28px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Helvetica Neue',Arial,sans-serif;transition:background .15s;letter-spacing:.01em}
+ .pdf-btn:hover{background:var(--teal-mid)}
+ .pdf-btn svg{width:16px;height:16px;flex-shrink:0}
+ .pdf-hint{font-size:11px;color:var(--text-muted);margin-top:8px}
+ @media print{
+ .pdf-btn-wrap,.progress-row,.aud-toggle,.check-item,.ready-box,.forward-box,
+ .bm-label,button,.next-btn,.retry-btn,.results-detail,.pass-badge,
+ .tc-header .tc-toggle,.sev-btns,.check-match-btn,.submit-blank,
+ .gap-opt.disabled-opt,.psel-btn,.trap-btn,.nav-btn{display:none!important}
+ body{background:#fff!important;font-size:13px;line-height:1.6;color:#1a1a1a}
+ .page,.quiz-wrap{max-width:100%!important;padding:20px!important}
+ textarea,input[type=text],.blank-input{border:none!important;background:transparent!important;padding:4px 0!important;resize:none!important;min-height:0!important;font-size:13px!important;color:#1a1a1a!important}
+ .r-block,.seq-block,.canvas-section,.audit-block,.threat-card,.an-card,
+ .brief-out,.brief-row,.csum-row,.op-row,.summary-card,.seq-step{break-inside:avoid}
+ .tc-body{display:block!important}
+ .bm-title,.q-title{font-size:20px!important}
+ .r-q,.q-text{font-size:15px!important}
+ .results-circle{display:none!important}
+ .results-card{display:block!important;border:none!important;padding:0!important}
+ .results-title{font-size:18px!important}
+ .feedback-box{font-size:12px!important}
+ .opt.correct{background:#e8f5f0!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+ .opt.wrong{background:#fef2f2!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+ h1,h2,h3{break-after:avoid}
+ a[href]:after{content:''}
+ }
+</style>
+</head>
+<body>
+<div class="page">
+ <div class="bm-label">From one intervention to a strategy · Sequence design tool</div>
+ <h1 class="bm-title">Designing a strategy that compounds</h1>
+ <p class="bm-sub">Build your three-step compounding intervention sequence — the sequence where each step raises the probability of success for the next. Output: a one-page strategy brief you can use immediately.</p>
+ <div class="intro-note">This tool works best when used directly after the pillar dependency mapper. Bring your structural starting point and your three-step sequence here to test whether it genuinely compounds — or whether it is parallel interventions in disguise.</div>
+
+ <div class="aud-toggle">
+ <button class="aud-btn pm-active" id="btn-pm" onclick="setAud('pm')">I am a policymaker</button>
+ <button class="aud-btn" id="btn-rs" onclick="setAud('rs')">I am a researcher</button>
+ </div>
+
+ <div class="progress-row">
+ <span class="progress-label">Sequence completion</span>
+ <div class="progress-outer"><div class="progress-inner" id="pbar" style="width:0%"></div></div>
+ <span class="progress-pct" id="pct">0%</span>
+ </div>
+
+ <!-- Context -->
+ <p class="sec-head">Your city and structural starting point</p>
+ <div class="field-group">
+ <label class="field-label">City or system</label>
+ <input type="text" id="f-city" placeholder="Name of city or policy area..." oninput="updateBrief()">
+ </div>
+ <div class="field-group">
+ <label class="field-label pm-lbl">The structural constraint your sequence addresses</label>
+ <label class="field-label rs-lbl">The structural hypothesis your sequence tests</label>
+ <p class="field-sub pm-sub">From your dependency mapper: the pillar gap that is most limiting the others.</p>
+ <p class="field-sub rs-sub">The pillar relationship you are hypothesising as the key dependency in this city.</p>
+ <textarea id="f-constraint" placeholder="The binding constraint in [city] is [pillar gap], because [structural reason]. This limits [which other pillars] from developing..." oninput="updateBrief()" style="min-height:56px"></textarea>
+ </div>
+
+ <!-- Step 1 -->
+ <p class="sec-head">Intervention sequence</p>
+ <div class="seq-block s1">
+ <div class="sb-header"><span class="sb-badge">Step 1 · First move</span><span class="sb-title">The blocking constraint</span></div>
+ <p style="font-size:12px;color:var(--text-muted);margin-bottom:10px;line-height:1.55">Select the target pillar, then describe the structural intervention — not the symptom response.</p>
+ <p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--text-muted);margin-bottom:7px">Target pillar</p>
+ <div class="pillar-select" id="ps1">
+ <button class="psel-btn" onclick="selPillar(1,'Foundational','p1',this)">Foundational</button>
+ <button class="psel-btn" onclick="selPillar(1,'Innovator','p2',this)">Innovator</button>
+ <button class="psel-btn" onclick="selPillar(1,'Integrator','p3',this)">Integrator</button>
+ <button class="psel-btn" onclick="selPillar(1,'Regenerative','p4',this)">Regenerative</button>
+ <button class="psel-btn" onclick="selPillar(1,'Connected','p5',this)">Connected</button>
+ <button class="psel-btn" onclick="selPillar(1,'Healthy Society','p6',this)">Healthy Society</button>
+ </div>
+ <div class="field-group">
+ <label class="field-label">The structural intervention</label>
+ <textarea id="f-s1-int" placeholder="Not a programme or campaign — a structural change. What connection are you building, what pathway are you redesigning, what accountability are you creating?" oninput="updateBrief()"></textarea>
+ </div>
+ <div class="field-group">
+ <label class="field-label">What this unlocks for Step 2</label>
+ <p class="field-sub">The specific condition or capacity that Step 1 creates — that Step 2 depends on existing before it can work.</p>
+ <textarea id="f-s1-unlock" placeholder="Step 1 unlocks [condition] — which means [pillar or domain] can now [what becomes possible that wasn't before]..." oninput="updateBrief()" style="min-height:52px"></textarea>
+ </div>
+ </div>
+
+ <!-- Step 2 -->
+ <div class="seq-block s2">
+ <div class="sb-header"><span class="sb-badge">Step 2 · Second move</span><span class="sb-title">Building on what Step 1 created</span></div>
+ <p style="font-size:12px;color:var(--text-muted);margin-bottom:10px;line-height:1.55">This step should only be possible — or meaningfully more likely to succeed — because Step 1 happened first.</p>
+ <p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--text-muted);margin-bottom:7px">Target pillar</p>
+ <div class="pillar-select" id="ps2">
+ <button class="psel-btn" onclick="selPillar(2,'Foundational','p1',this)">Foundational</button>
+ <button class="psel-btn" onclick="selPillar(2,'Innovator','p2',this)">Innovator</button>
+ <button class="psel-btn" onclick="selPillar(2,'Integrator','p3',this)">Integrator</button>
+ <button class="psel-btn" onclick="selPillar(2,'Regenerative','p4',this)">Regenerative</button>
+ <button class="psel-btn" onclick="selPillar(2,'Connected','p5',this)">Connected</button>
+ <button class="psel-btn" onclick="selPillar(2,'Healthy Society','p6',this)">Healthy Society</button>
+ </div>
+ <div class="field-group">
+ <label class="field-label">The structural intervention</label>
+ <textarea id="f-s2-int" placeholder="What structural change does Step 2 make — and why is it only possible now that Step 1 has happened?" oninput="updateBrief()"></textarea>
+ </div>
+ <div class="field-group">
+ <label class="field-label">What this unlocks for Step 3</label>
+ <textarea id="f-s2-unlock" placeholder="Step 2 unlocks [condition] — which means [pillar or domain] can now [what becomes possible]..." oninput="updateBrief()" style="min-height:52px"></textarea>
+ </div>
+ </div>
+
+ <!-- Step 3 -->
+ <div class="seq-block s3">
+ <div class="sb-header"><span class="sb-badge">Step 3 · Third move</span><span class="sb-title">The compounding effect</span></div>
+ <p style="font-size:12px;color:var(--text-muted);margin-bottom:10px;line-height:1.55">Step 3 produces something that none of the three steps would have produced if done in isolation or in a different order.</p>
+ <p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--text-muted);margin-bottom:7px">Target pillar</p>
+ <div class="pillar-select" id="ps3">
+ <button class="psel-btn" onclick="selPillar(3,'Foundational','p1',this)">Foundational</button>
+ <button class="psel-btn" onclick="selPillar(3,'Innovator','p2',this)">Innovator</button>
+ <button class="psel-btn" onclick="selPillar(3,'Integrator','p3',this)">Integrator</button>
+ <button class="psel-btn" onclick="selPillar(3,'Regenerative','p4',this)">Regenerative</button>
+ <button class="psel-btn" onclick="selPillar(3,'Connected','p5',this)">Connected</button>
+ <button class="psel-btn" onclick="selPillar(3,'Healthy Society','p6',this)">Healthy Society</button>
+ </div>
+ <div class="field-group">
+ <label class="field-label">The structural intervention</label>
+ <textarea id="f-s3-int" placeholder="The third structural change — and why this sequence produces it when parallel interventions would not..." oninput="updateBrief()"></textarea>
+ </div>
+ <div class="field-group">
+ <label class="field-label">The compounding outcome — what the sequence produces that no single intervention could</label>
+ <textarea id="f-s3-compound" placeholder="The compounding outcome of this sequence is [specific change in the city or system] — which would not have been achievable if Steps 1, 2, and 3 had been pursued independently or in a different order, because [reasoning]..." oninput="updateBrief()" style="min-height:80px"></textarea>
+ </div>
+ </div>
+
+ <!-- Compound test -->
+ <div class="compound-test">
+ <p class="ct-title">The compounding test — does your sequence genuinely build on itself?</p>
+ <div class="ct-check"><input type="checkbox" id="ct1" onchange="checkCompound()"><label for="ct1">Step 2 depends on a condition that Step 1 creates — it would not work, or would be significantly less effective, without Step 1 having happened first</label></div>
+ <div class="ct-check"><input type="checkbox" id="ct2" onchange="checkCompound()"><label for="ct2">Step 3 depends on a condition that Step 2 creates — the same dependency applies</label></div>
+ <div class="ct-check"><input type="checkbox" id="ct3" onchange="checkCompound()"><label for="ct3">Each step targets a different pillar — the sequence moves across the dependency hierarchy rather than staying within a single domain</label></div>
+ <div class="ct-check"><input type="checkbox" id="ct4" onchange="checkCompound()"><label for="ct4">There is a named accountable owner for maintaining the thread between steps — someone who is responsible for the sequence as a whole, not just for one step</label></div>
+ <div class="ct-result pass" id="ct-pass">Your sequence passes the compounding test. Each step creates the conditions for the next, and accountability for the chain is in place. Bring this sequence into your strategy brief.</div>
+ <div class="ct-result partial" id="ct-partial">Your sequence is not yet fully compounding. The unchecked criteria reveal where the chain is breaking. Revisit the steps and redesign until the dependency is visible in each transition.</div>
+ </div>
+
+ <!-- Brief -->
+ <div class="brief-out">
+ <p class="brief-title">Your strategy brief</p>
+ <div class="brief-row"><p class="brief-label">City / system</p><p class="brief-val" id="br-city"><span class="brief-empty">—</span></p></div>
+ <div class="brief-row"><p class="brief-label">Structural constraint addressed</p><p class="brief-val" id="br-constraint"><span class="brief-empty">—</span></p></div>
+ <div class="brief-row"><p class="brief-label">Step 1 — First move</p><p class="brief-val" id="br-s1"><span class="brief-empty">—</span></p></div>
+ <div class="brief-row"><p class="brief-label">Step 2 — Building on Step 1</p><p class="brief-val" id="br-s2"><span class="brief-empty">—</span></p></div>
+ <div class="brief-row"><p class="brief-label">Step 3 — The compounding effect</p><p class="brief-val" id="br-s3"><span class="brief-empty">—</span></p></div>
+ <div class="brief-row" style="border-bottom:none;padding-bottom:0;margin-bottom:0"><p class="brief-label" style="color:var(--teal-mid)">Compounding outcome</p><p class="brief-val" id="br-compound"><span class="brief-empty">—</span></p></div>
+ </div>
+</div>
+<script>
+var aud='pm';
+var stepPillars={1:null,2:null,3:null};
+
+function setAud(a){
+ aud=a;
+ document.getElementById('btn-pm').className='aud-btn'+(a==='pm'?' pm-active':'');
+ document.getElementById('btn-rs').className='aud-btn'+(a==='rs'?' rs-active':'');
+ document.querySelectorAll('.pm-lbl,.pm-sub').forEach(function(e){e.style.display=a==='pm'?'block':'none'});
+ document.querySelectorAll('.rs-lbl,.rs-sub').forEach(function(e){e.style.display=a==='rs'?'block':'none'});
+}
+
+function selPillar(step,name,cls,btn){
+ document.getElementById('ps'+step).querySelectorAll('.psel-btn').forEach(function(b){b.className='psel-btn'});
+ btn.className='psel-btn sel-'+cls;
+ stepPillars[step]=name;
+ updateBrief();
+}
+
+function updateBrief(){
+ function val(id){return document.getElementById(id)?document.getElementById(id).value.trim():'';}
+ function set(id,v){var el=document.getElementById(id);if(el)el.innerHTML=v?v:'<span class="brief-empty">—</span>';}
+
+ set('br-city',val('f-city'));
+ set('br-constraint',val('f-constraint'));
+
+ var s1=stepPillars[1]?(stepPillars[1]+': '):'';
+ var s2=stepPillars[2]?(stepPillars[2]+': '):'';
+ var s3=stepPillars[3]?(stepPillars[3]+': '):'';
+ set('br-s1',s1+val('f-s1-int')+(val('f-s1-unlock')?' → Unlocks: '+val('f-s1-unlock'):''));
+ set('br-s2',s2+val('f-s2-int')+(val('f-s2-unlock')?' → Unlocks: '+val('f-s2-unlock'):''));
+ set('br-s3',s3+val('f-s3-int'));
+ set('br-compound',val('f-s3-compound'));
+
+ var filled=0,total=8;
+ ['f-city','f-constraint','f-s1-int','f-s1-unlock','f-s2-int','f-s2-unlock','f-s3-int','f-s3-compound'].forEach(function(id){if(val(id).length>15)filled++;});
+ var pct=Math.round((filled/total)*100);
+ document.getElementById('pbar').style.width=pct+'%';
+ document.getElementById('pct').textContent=pct+'%';
+}
+
+function checkCompound(){
+ var checks=['ct1','ct2','ct3','ct4'];
+ var score=checks.filter(function(id){return document.getElementById(id).checked}).length;
+ document.getElementById('ct-pass').style.display=score===4?'block':'none';
+ document.getElementById('ct-partial').style.display=(score>0&&score<4)?'block':'none';
+}
+</script>
+
+ <div class="pdf-btn-wrap">
+ <button class="pdf-btn" onclick="window.print()">
+ <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17v-6M9 14l3 3 3-3"/><rect x="3" y="3" width="18" height="14" rx="2"/><path d="M3 17h18v4H3z"/></svg>
+ Save my answers as PDF
+ </button>
+ <p class="pdf-hint">Opens your browser's print dialog — choose "Save as PDF" as the destination</p>
+ </div>
+</body>
+</html>
