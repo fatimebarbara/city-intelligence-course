@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Section 4 · Synthesis Reflection</title>
+<style>
+ :root{
+ --teal-dark:#085041;--teal-mid:#0F6E56;--teal:#1D9E75;--teal-light:#5DCAA5;--teal-pale:#E1F5EE;--teal-faint:#F0FAF6;
+ --purple:#534AB7;--purple-pale:#EEEDFE;--purple-mid:#3C3489;
+ --text:#1a1a1a;--text-mid:#444;--text-muted:#6b6b6b;
+ --border:#e2e2e2;--border-light:#f0f0f0;--bg:#fff;--bg-soft:#f8f9fa;
+ --p1:#185FA5;--p1-pale:#E6F1FB;--p2:#534AB7;--p2-pale:#EEEDFE;
+ --p3:#3B6D11;--p3-pale:#EAF3DE;--p4:#D85A30;--p4-pale:#FAECE7;
+ --p5:#BA7517;--p5-pale:#FAEEDA;--p6:#993556;--p6-pale:#FBEAF0;
+ --radius:10px;--radius-sm:6px;
+ }
+ *{box-sizing:border-box;margin:0;padding:0}
+ body{font-family:'Helvetica Neue',Arial,sans-serif;color:var(--text);background:var(--bg);font-size:15px;line-height:1.65}
+ .page{max-width:760px;margin:0 auto;padding:48px 24px 80px}
+ .bm-label{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--teal-mid);background:var(--teal-pale);padding:5px 14px;border-radius:20px;margin-bottom:18px}
+ .bm-title{font-size:28px;font-weight:700;color:var(--text);line-height:1.25;margin-bottom:10px;letter-spacing:-.3px;font-family:'Georgia',serif}
+ .bm-sub{font-size:14px;color:var(--text-muted);line-height:1.65;max-width:580px;margin-bottom:20px}
+ .intro-note{background:var(--bg-soft);border:1px solid var(--border-light);border-radius:var(--radius);padding:16px 20px;font-size:13px;color:var(--text-muted);line-height:1.65;margin-bottom:32px}
+ .divider{border:none;border-top:1px solid var(--border-light);margin:32px 0}
+ .progress-row{display:flex;align-items:center;gap:12px;margin-bottom:32px}
+ .progress-label{font-size:12px;color:var(--text-muted);white-space:nowrap}
+ .progress-outer{flex:1;height:5px;background:var(--border-light);border-radius:3px;overflow:hidden}
+ .progress-inner{height:100%;background:var(--teal);border-radius:3px;transition:width .4s ease;width:0%}
+ .progress-pct{font-size:12px;font-weight:700;color:var(--teal);min-width:36px;text-align:right}
+ .r-block{margin-bottom:28px}
+ .r-num{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:6px}
+ .r-q{font-size:16px;font-weight:600;color:var(--text);line-height:1.5;margin-bottom:10px;font-family:'Georgia',serif}
+ .r-why{font-size:13px;color:var(--text-muted);line-height:1.65;border-left:2px solid var(--border);padding-left:14px;margin-bottom:14px}
+ .r-textarea{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px;font-family:'Helvetica Neue',Arial,sans-serif;font-size:14px;color:var(--text);line-height:1.65;resize:vertical;min-height:80px;transition:border-color .15s;outline:none}
+ .r-textarea:focus{border-color:var(--teal-light)}
+ .r-textarea::placeholder{color:#b0b0b0}
+
+ /* Pillar ranking */
+ .pillar-rank{background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:28px}
+ .pr-title{font-size:14px;font-weight:600;color:var(--text);margin-bottom:14px;line-height:1.55}
+ .pr-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+ .pr-slot{border-radius:var(--radius-sm);padding:12px}
+ .pr-slot-label{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px}
+ .pr-slot.first{background:var(--teal-faint);border:1px solid var(--teal-pale)}
+ .pr-slot.first .pr-slot-label{color:var(--teal-mid)}
+ .pr-slot.critical{background:var(--p4-pale);border:1px solid #F0997B}
+ .pr-slot.critical .pr-slot-label{color:var(--p4)}
+ .pr-slot.watch{background:var(--p5-pale);border:1px solid #EF9F27}
+ .pr-slot.watch .pr-slot-label{color:var(--p5)}
+ .pr-select{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:7px 10px;font-size:13px;color:var(--text);font-family:'Helvetica Neue',Arial,sans-serif;outline:none;cursor:pointer}
+ .pr-select:focus{border-color:var(--teal-light)}
+ .pr-slot.first .pr-select{border-color:var(--teal-light)}
+ .pr-slot.critical .pr-select{border-color:#F0997B}
+ .pr-slot.watch .pr-select{border-color:#EF9F27}
+
+ /* Journey table */
+ .journey-table{width:100%;border-collapse:collapse;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;font-size:13px;margin-bottom:32px}
+ .journey-table th{background:var(--bg-soft);padding:10px 14px;text-align:left;font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);border-bottom:1px solid var(--border)}
+ .journey-table td{padding:12px 14px;border-bottom:1px solid var(--border-light);vertical-align:top}
+ .journey-table tr:last-child td{border-bottom:none}
+ .journey-table td:first-child{font-weight:600;color:var(--text);font-size:13px;width:30%}
+ .section-tag{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;margin-bottom:4px}
+ .s1-tag{background:#FEF3C7;color:#92400E}
+ .s2-tag{background:var(--p2-pale);color:var(--purple-mid)}
+ .s3-tag{background:var(--teal-pale);color:var(--teal-dark)}
+ .s4-tag{background:var(--p3-pale);color:var(--p3)}
+
+ /* Checklist */
+ .check-item{display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid var(--border-light)}
+ .check-item:last-child{border-bottom:none}
+ .check-item input[type="checkbox"]{width:17px;height:17px;cursor:pointer;flex-shrink:0;margin-top:1px;accent-color:var(--teal)}
+ .check-item label{font-size:14px;color:var(--text);line-height:1.55;cursor:pointer}
+ .ready-box{display:none;background:var(--teal-pale);border-radius:var(--radius);padding:28px 32px;text-align:center;margin-top:32px;border:1px solid var(--teal-light)}
+ .ready-text{font-size:15px;color:var(--teal-dark);line-height:1.7}
+ .forward-box{background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius);padding:22px 24px;margin-top:28px}
+ .forward-label{font-size:10px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px}
+ .forward-text{font-size:14px;color:var(--text-mid);line-height:1.75}
+ .forward-text strong{color:var(--text)}
+
+ /* ===== PDF / PRINT ===== */
+ .pdf-btn-wrap{text-align:center;margin-top:32px;padding-top:24px;border-top:1px solid var(--border-light)}
+ .pdf-btn{display:inline-flex;align-items:center;gap:8px;background:var(--teal-dark);color:#fff;border:none;border-radius:24px;padding:11px 28px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Helvetica Neue',Arial,sans-serif;transition:background .15s;letter-spacing:.01em}
+ .pdf-btn:hover{background:var(--teal-mid)}
+ .pdf-btn svg{width:16px;height:16px;flex-shrink:0}
+ .pdf-hint{font-size:11px;color:var(--text-muted);margin-top:8px}
+ @media print{
+ .pdf-btn-wrap,.progress-row,.aud-toggle,.check-item,.ready-box,.forward-box,
+ .bm-label,button,.next-btn,.retry-btn,.results-detail,.pass-badge,
+ .tc-header .tc-toggle,.sev-btns,.check-match-btn,.submit-blank,
+ .gap-opt.disabled-opt,.psel-btn,.trap-btn,.nav-btn{display:none!important}
+ body{background:#fff!important;font-size:13px;line-height:1.6;color:#1a1a1a}
+ .page,.quiz-wrap{max-width:100%!important;padding:20px!important}
+ textarea,input[type=text],.blank-input{border:none!important;background:transparent!important;padding:4px 0!important;resize:none!important;min-height:0!important;font-size:13px!important;color:#1a1a1a!important}
+ .r-block,.seq-block,.canvas-section,.audit-block,.threat-card,.an-card,
+ .brief-out,.brief-row,.csum-row,.op-row,.summary-card,.seq-step{break-inside:avoid}
+ .tc-body{display:block!important}
+ .bm-title,.q-title{font-size:20px!important}
+ .r-q,.q-text{font-size:15px!important}
+ .results-circle{display:none!important}
+ .results-card{display:block!important;border:none!important;padding:0!important}
+ .results-title{font-size:18px!important}
+ .feedback-box{font-size:12px!important}
+ .opt.correct{background:#e8f5f0!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+ .opt.wrong{background:#fef2f2!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+ h1,h2,h3{break-after:avoid}
+ a[href]:after{content:''}
+ }
+</style>
+</head>
+<body>
+<div class="page">
+ <div class="bm-label">Inside the city intelligence index · End-of-section reflection</div>
+ <h1 class="bm-title">Synthesising your learning from Section 4</h1>
+ <p class="bm-sub">Five prompts that move from methodology to application. Section 4 introduced the instrument. These reflections ask you to begin making it yours — before you use it in earnest in Section 5.</p>
+ <div class="intro-note">Allow 20–30 minutes. These prompts become more useful the more honestly you engage with them. The goal is not to demonstrate knowledge of the CII — it is to identify, before Section 5, where the framework will be most revealing and most challenging in your specific context.</div>
+
+ <div class="progress-row">
+ <span class="progress-label">Completion</span>
+ <div class="progress-outer"><div class="progress-inner" id="pbar"></div></div>
+ <span class="progress-pct" id="pct">0%</span>
+ </div>
+
+ <div class="r-block">
+ <p class="r-num">Reflection 01 — The pillar that matters most to you</p>
+ <p class="r-q">Of the six CII pillars, which one is most directly connected to the decisions you make or the research you conduct? Not which is most important in the abstract — which one is most immediately relevant to your current work?</p>
+ <p class="r-why">This question is designed to personalise the framework before you use it diagnostically. The CII is most valuable not as a general framework but as a specific lens. Identifying your entry pillar — the one most relevant to your work — allows you to use the rest of the framework to ask better questions about the pillar you care most about.</p>
+ <textarea class="r-textarea" placeholder="Name the pillar, explain why it matters most in your current work, and describe what a meaningful change in your city's performance on this pillar would look like in practice..." oninput="update()"></textarea>
+ </div>
+
+ <div class="r-block">
+ <p class="r-num">Reflection 02 — The pillar you have been neglecting</p>
+ <p class="r-q">Looking at the six pillars as a framework for your own decision-making or research: which pillar have you implicitly treated as less important — or have not considered at all? What does your neglect of this pillar reveal about the blind spots in your current framing?</p>
+ <p class="r-why">Every policymaker and researcher has implicit pillar priorities shaped by their institutional mandate, disciplinary training, or political context. The CII is most useful not when it confirms what you already measure, but when it reveals what you have been systematically ignoring. This reflection asks you to name that blind spot honestly.</p>
+ <textarea class="r-textarea" placeholder="Name the neglected pillar and be specific about why you have underweighted it. What outcomes might you be missing as a result?" oninput="update()"></textarea>
+ </div>
+
+ <div class="r-block">
+ <p class="r-num">Reflection 03 — The composite score problem</p>
+ <p class="r-q">This section introduced a critical methodological principle: composite indices reveal structural patterns that single indicators hide — but the composite score itself can conceal as much as it reveals. Describe a situation in your own context where an aggregate measure — a composite score, an average, a headline statistic — has been used in a way that hid a more important structural story. What was hidden, and what were the consequences?</p>
+ <p class="r-why">This is not an abstract methodological question. Composite indices are used constantly in urban policy and research — and they are constantly misread. The ability to identify when an aggregate is being used to obscure rather than reveal is a core analytical skill this course is building.</p>
+ <textarea class="r-textarea" style="min-height:100px;" placeholder="Name the measure, describe what it hid, and explain the consequences of that concealment for the decision or research it was meant to inform..." oninput="update()"></textarea>
+ </div>
+
+ <div class="r-block">
+ <p class="r-num">Reflection 04 — What the CII cannot tell you</p>
+ <p class="r-q">The videos for this section were explicit: the CII tells you where to look — not what you will find when you look there. For the pillar most relevant to your work, describe one question that a strong or weak CII score would raise — but cannot answer on its own. What additional evidence, methodology, or knowledge would you need to answer it?</p>
+ <p class="r-why">Understanding the limits of an instrument is as important as understanding its capabilities. A researcher or policymaker who over-reads CII scores will make worse decisions than one who understands precisely what the instrument can and cannot do. This reflection builds that analytical discipline.</p>
+ <textarea class="r-textarea" placeholder="Name the question the CII score raises but cannot answer — and describe what you would need in order to answer it..." oninput="update()"></textarea>
+ </div>
+
+ <div class="r-block">
+ <p class="r-num">Reflection 05 — Your city's most important pillar story</p>
+ <p class="r-q">Before you work with real CII data in Section 5: based on what you know about your city or research context, which pillar do you expect to be the most revealing — and why? What is the story you expect to find, and what would surprise you?</p>
+ <p class="r-why">This is a prediction exercise. Making explicit predictions before working with data is one of the most effective ways to ensure that the data changes your thinking rather than confirming it. Write your hypothesis now, before you see the numbers — so that you can test it honestly in Section 5.</p>
+ <textarea class="r-textarea" placeholder="State your prediction explicitly: which pillar, what pattern, and why. What would it mean if you were wrong?" oninput="update()"></textarea>
+ </div>
+
+ <div class="divider"></div>
+
+ <!-- PILLAR RANKING -->
+ <div class="pillar-rank">
+ <p class="pr-title">Before Section 5 — rank the pillars for your context. This is your hypothesis. You will test it against real data.</p>
+ <div class="pr-grid">
+ <div class="pr-slot first"><p class="pr-slot-label">Most strategically important pillar for your context</p><select class="pr-select" onchange="update()"><option value="">— select —</option><option>Foundational</option><option>Innovator</option><option>Integrator</option><option>Regenerative</option><option>Connected</option><option>Healthy Society</option></select></div>
+ <div class="pr-slot critical"><p class="pr-slot-label">Pillar most likely to reveal a critical weakness</p><select class="pr-select" onchange="update()"><option value="">— select —</option><option>Foundational</option><option>Innovator</option><option>Integrator</option><option>Regenerative</option><option>Connected</option><option>Healthy Society</option></select></div>
+ <div class="pr-slot watch"><p class="pr-slot-label">Pillar you have been most underweighting</p><select class="pr-select" onchange="update()"><option value="">— select —</option><option>Foundational</option><option>Innovator</option><option>Integrator</option><option>Regenerative</option><option>Connected</option><option>Healthy Society</option></select></div>
+ </div>
+ </div>
+
+ <!-- JOURNEY TABLE -->
+ <div style="overflow-x:auto;margin-bottom:28px">
+ <table class="journey-table">
+ <thead><tr><th style="width:30%">Dimension</th><th style="width:35%">What you built in Sections 2–3</th><th style="width:35%">What Section 4 adds</th></tr></thead>
+ <tbody>
+ <tr><td>The diagnostic lens</td><td><span class="s1-tag">Why cities fail</span><br>5 failure modes — why systems fail despite data</td><td><span class="s3-tag">Inside the CII</span><br>6 pillars — what structural capacities to measure</td></tr>
+ <tr><td>The conceptual frame</td><td><span class="s2-tag">City intelligence</span><br>Intelligence as emergent property of connected layers</td><td><span class="s3-tag">Inside the CII</span><br>Intelligence operationalised across 150 indicators</td></tr>
+ <tr><td>The practical instrument</td><td><span class="s2-tag">City intelligence</span><br>The 4 conditions self-audit — qualitative</td><td><span class="s3-tag">Inside the CII</span><br>The CII — quantitative, comparative, structural</td></tr>
+ <tr><td>Coming in Section 5</td><td colspan="2"><span class="s4-tag">Diagnosing</span><br>Applying the CII to your own city or policy area — identifying the binding constraint and where to act</td></tr>
+ </tbody>
+ </table>
+ </div>
+
+ <p style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:16px;">Before moving to the quiz — a final self-check</p>
+ <div id="checklist">
+ <div class="check-item"><input type="checkbox" id="c1" onchange="update()"><label for="c1">I can name all six CII pillars and describe what each one measures in a single sentence</label></div>
+ <div class="check-item"><input type="checkbox" id="c2" onchange="update()"><label for="c2">I understand why the CII is a diagnostic instrument and not a ranking system</label></div>
+ <div class="check-item"><input type="checkbox" id="c3" onchange="update()"><label for="c3">I can identify at least one thing a CII score reveals — and one thing it cannot tell me</label></div>
+ <div class="check-item"><input type="checkbox" id="c4" onchange="update()"><label for="c4">I have identified the pillar most relevant to my work and the one I have been most neglecting</label></div>
+ <div class="check-item"><input type="checkbox" id="c5" onchange="update()"><label for="c5">I have made an explicit hypothesis about which pillar will be most revealing in my context — ready to test in Section 5</label></div>
+ </div>
+
+ <div class="forward-box">
+ <p class="forward-label">What Section 5 asks of you</p>
+ <p class="forward-text">Section 5 — Diagnosing your city — is where the CII becomes your instrument, not the course's. You will work with real data from the CII comparison group and apply the diagnostic logic to your own context. The quality of that work depends directly on what you bring to it: the conceptual clarity from Section 3, the methodological discipline from Section 4, and the honest self-assessment you have done here. Come to Section 5 with your hypothesis written down and your pillar priorities clear.</p>
+ </div>
+
+ <div class="ready-box" id="readyBox">
+ <p class="ready-text">You are ready for the Section 4 quiz on methodological reasoning.<br>You will be asked to apply the CII's logic — not recall its details. Think about what the instrument is designed to reveal, and where its limits lie.</p>
+ </div>
+</div>
+<script>
+function update(){
+ var texts=document.querySelectorAll('.r-textarea');
+ var selects=document.querySelectorAll('.pr-select');
+ var checks=document.querySelectorAll('#checklist input[type="checkbox"]');
+ var tf=0; texts.forEach(function(t){if(t.value.trim().length>20)tf++;});
+ var sf=0; selects.forEach(function(s){if(s.value!=='')sf++;});
+ var cf=0; checks.forEach(function(c){if(c.checked)cf++;});
+ var total=texts.length+selects.length+checks.length;
+ var done=tf+sf+cf;
+ var pct=Math.round((done/total)*100);
+ document.getElementById('pbar').style.width=pct+'%';
+ document.getElementById('pct').textContent=pct+'%';
+ document.getElementById('readyBox').style.display=(pct>=75)?'block':'none';
+}
+</script>
+
+ <div class="pdf-btn-wrap">
+ <button class="pdf-btn" onclick="window.print()">
+ <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17v-6M9 14l3 3 3-3"/><rect x="3" y="3" width="18" height="14" rx="2"/><path d="M3 17h18v4H3z"/></svg>
+ Save my answers as PDF
+ </button>
+ <p class="pdf-hint">Opens your browser's print dialog — choose "Save as PDF" as the destination</p>
+ </div>
+</body>
+</html>
