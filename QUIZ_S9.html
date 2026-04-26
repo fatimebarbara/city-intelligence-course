@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Section 10 Quiz — Ethics, Power and Data</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=DM+Sans:wght@300;400;500;600&display=swap');
+:root{--teal-dark:#085041;--teal-mid:#0F6E56;--teal:#1D9E75;--teal-light:#5DCAA5;--teal-pale:#E1F5EE;--teal-faint:#F0FAF6;--correct:#0F6E56;--correct-pale:#E1F5EE;--correct-border:#5DCAA5;--wrong:#B91C1C;--wrong-pale:#FEF2F2;--wrong-border:#FECACA;--text:#1a1a1a;--text-mid:#3a3a3a;--text-muted:#777;--border:#E5E5E5;--bg:#FAFAF9;--card:#FFFFFF;--radius:12px;--radius-sm:8px;}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:15px;line-height:1.65}
+.quiz-wrap{max-width:680px;margin:0 auto;padding:40px 20px 80px}
+.quiz-header{text-align:center;margin-bottom:40px}
+.q-section-label{font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--teal-mid);margin-bottom:12px}
+.q-title{font-family:'Playfair Display',serif;font-size:28px;font-weight:700;color:var(--text);line-height:1.2;margin-bottom:10px}
+.q-desc{font-size:14px;color:var(--text-muted);line-height:1.6;max-width:500px;margin:0 auto}
+.progress-wrap{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px 20px;margin-bottom:28px;display:flex;align-items:center;gap:14px}
+.progress-outer{flex:1;height:6px;background:#E8EAE8;border-radius:3px;overflow:hidden}
+.progress-inner{height:100%;background:linear-gradient(90deg,var(--teal),var(--teal-light));border-radius:3px;transition:width .4s ease;width:0%}
+.progress-text{font-size:12px;font-weight:600;color:var(--teal-mid);white-space:nowrap}
+.score-display{font-size:12px;font-weight:600;color:var(--text-muted);white-space:nowrap}
+.q-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:28px;margin-bottom:16px;display:none;animation:slideIn .3s ease}
+.q-card.active{display:block}
+@keyframes slideIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.q-meta{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.q-num{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--teal-mid);background:var(--teal-pale);padding:3px 10px;border-radius:20px}
+.q-type{font-size:10px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--text-muted)}
+.q-text{font-family:'Playfair Display',serif;font-size:17px;font-weight:500;line-height:1.55;color:var(--text);margin-bottom:20px}
+.options{display:flex;flex-direction:column;gap:8px;margin-bottom:20px}
+.opt{display:flex;align-items:flex-start;gap:12px;padding:12px 14px;border:1px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;transition:all .15s;background:var(--card)}
+.opt:hover:not(.disabled){border-color:var(--teal-light);background:var(--teal-faint)}
+.opt.correct{border-color:var(--correct-border);background:var(--correct-pale)}
+.opt.wrong{border-color:var(--wrong-border);background:var(--wrong-pale)}
+.opt.disabled{cursor:default;opacity:.75}
+.opt-marker{width:22px;height:22px;border-radius:50%;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;font-size:11px;font-weight:700;color:var(--text-muted)}
+.opt.correct .opt-marker{border-color:var(--correct);background:var(--correct);color:#fff}
+.opt.wrong .opt-marker{border-color:var(--wrong);background:var(--wrong);color:#fff}
+.opt-text{font-size:14px;color:var(--text-mid);line-height:1.55;padding-top:1px}
+.tf-row{display:flex;gap:10px;margin-bottom:20px}
+.tf-btn{flex:1;padding:12px;border:1px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;font-size:14px;font-weight:600;text-align:center;transition:all .15s;background:var(--card);color:var(--text-muted)}
+.tf-btn:hover:not(.disabled){border-color:var(--teal-light);background:var(--teal-faint);color:var(--teal-dark)}
+.tf-btn.correct{border-color:var(--correct-border);background:var(--correct-pale);color:var(--correct)}
+.tf-btn.wrong{border-color:var(--wrong-border);background:var(--wrong-pale);color:var(--wrong)}
+.tf-btn.disabled{cursor:default}
+.feedback-box{display:none;padding:16px 18px;border-radius:var(--radius-sm);margin-bottom:20px;font-size:13px;line-height:1.7}
+.feedback-box.correct{background:var(--correct-pale);border:1px solid var(--correct-border);color:var(--teal-dark)}
+.feedback-box.wrong{background:var(--wrong-pale);border:1px solid var(--wrong-border);color:#7A1F1F}
+.feedback-box .fb-verdict{font-weight:700;display:block;margin-bottom:4px}
+.q-nav{display:flex;justify-content:flex-end}
+.next-btn{padding:10px 24px;background:var(--teal);color:#fff;border:none;border-radius:var(--radius-sm);font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background .15s;display:none}
+.next-btn:hover{background:var(--teal-mid)}
+.results-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:40px 32px;text-align:center;display:none}
+.results-circle{width:100px;height:100px;border-radius:50%;background:linear-gradient(135deg,var(--teal),var(--teal-light));display:flex;align-items:center;justify-content:center;margin:0 auto 20px;box-shadow:0 8px 24px rgba(29,158,117,.25)}
+.results-pct{font-family:'Playfair Display',serif;font-size:30px;font-weight:700;color:#fff}
+.results-title{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--text);margin-bottom:8px}
+.results-sub{font-size:14px;color:var(--text-muted);line-height:1.6;margin-bottom:24px}
+.results-detail{display:flex;gap:16px;justify-content:center;margin-bottom:24px}
+.rd-box{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 20px;text-align:center}
+.rd-num{font-family:'Playfair Display',serif;font-size:24px;font-weight:700;color:var(--teal)}
+.rd-label{font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.07em;margin-top:2px}
+.retry-btn{padding:11px 28px;background:var(--teal);color:#fff;border:none;border-radius:var(--radius-sm);font-size:14px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif}
+.pass-badge{display:inline-block;padding:4px 14px;border-radius:20px;font-size:12px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;margin-bottom:16px}
+.pass-badge.pass{background:var(--correct-pale);color:var(--correct);border:1px solid var(--correct-border)}
+.pass-badge.fail{background:var(--wrong-pale);color:var(--wrong);border:1px solid var(--wrong-border)}
+.pdf-btn{display:inline-flex;align-items:center;gap:7px;background:#085041;color:#fff;border:none;border-radius:24px;padding:10px 24px;font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;margin-top:12px}
+</style>
+</head>
+<body>
+<div class="quiz-wrap">
+  <div class="quiz-header">
+    <p class="q-section-label">Ethics, power and data · City Intelligence Mastercourse</p>
+    <h1 class="q-title">Whose intelligence counts?</h1>
+    <p class="q-desc">The technical arc built the framework. This quiz tests whether you can apply it with the analytical honesty it requires — naming what it measures, what it conceals, and what responsible use demands. 10 questions.</p>
+  </div>
+  <div class="progress-wrap">
+    <div class="progress-outer"><div class="progress-inner" id="progress-bar"></div></div>
+    <span class="progress-text" id="progress-text">0 / 10</span>
+    <span class="score-display" id="score-display">Score: 0</span>
+  </div>
+
+  <div class="q-card active" id="q1">
+    <div class="q-meta"><span class="q-num">Question 1</span><span class="q-type">True / False</span></div>
+    <p class="q-text">"A city that becomes more efficiently unequal has become more intelligent. Efficiency and equity both contribute to city intelligence — the CII measures both equally."</p>
+    <div class="tf-row">
+      <button class="tf-btn" onclick="checkTF('q1',this,'True','False')">True</button>
+      <button class="tf-btn" onclick="checkTF('q1',this,'False','False')">False</button>
+    </div>
+    <div class="feedback-box" id="fb-q1"></div>
+    <div class="q-nav"><button class="next-btn" id="next-q1" onclick="nextQ(1,2)">Next question →</button></div>
+  </div>
+
+  <div class="q-card" id="q2">
+    <div class="q-meta"><span class="q-num">Question 2</span><span class="q-type">Multiple choice</span></div>
+    <p class="q-text">The Foundational–Healthy Society correlation of r=0.911 across the CII's the cities in the CII comparison group is a real and robust finding. What is the most important analytical limitation of this finding?</p>
+    <div class="options" id="opts-q2">
+      <div class="opt" data-v="A"><span class="opt-marker">A</span><span class="opt-text">The sample of the cities in the CII comparison group is too small to be statistically significant</span></div>
+      <div class="opt" data-v="B"><span class="opt-marker">B</span><span class="opt-text">The correlation is city-level — it describes a relationship between city averages and reveals nothing about which populations within cities carry the gap between those averages</span></div>
+      <div class="opt" data-v="C"><span class="opt-marker">C</span><span class="opt-text">The Healthy Society pillar measures only a subset of the full dimension, making the correlation incomplete</span></div>
+      <div class="opt" data-v="D"><span class="opt-marker">D</span><span class="opt-text">The correlation is too strong — r=0.911 suggests the two pillars are measuring the same thing and should be combined</span></div>
+    </div>
+    <div class="feedback-box" id="fb-q2"></div>
+    <div class="q-nav"><button class="next-btn" id="next-q2" onclick="nextQ(2,3)">Next question →</button></div>
+  </div>
+
+  <div class="q-card" id="q3">
+    <div class="q-meta"><span class="q-num">Question 3</span><span class="q-type">Multiple choice</span></div>
+    <p class="q-text">The CII includes European cities — Amsterdam, Barcelona, Berlin, Brussels, Budapest, Copenhagen, Helsinki, Lisbon, Madrid, and Paris. Section 10 argues that this geographic scope is not a flaw but "a structural fact with structural consequences." What is the most important consequence for applying the CII in contexts beyond these the cities in the CII comparison group?</p>
+    <div class="options" id="opts-q3">
+      <div class="opt" data-v="A"><span class="opt-marker">A</span><span class="opt-text">The CII cannot be used outside these the cities in the CII comparison group because the indicators are Europe-specific</span></div>
+      <div class="opt" data-v="B"><span class="opt-marker">B</span><span class="opt-text">The calibration of what counts as strong, moderate, or weak performance is anchored to this comparison group — applying the framework elsewhere requires recalibrating what scores mean in a different governance environment</span></div>
+      <div class="opt" data-v="C"><span class="opt-marker">C</span><span class="opt-text">The CII is only valid for cities with comparable data collection infrastructure</span></div>
+      <div class="opt" data-v="D"><span class="opt-marker">D</span><span class="opt-text">The framework's diagnostic logic is invalid outside the European context</span></div>
+    </div>
+    <div class="feedback-box" id="fb-q3"></div>
+    <div class="q-nav"><button class="next-btn" id="next-q3" onclick="nextQ(3,4)">Next question →</button></div>
+  </div>
+
+  <div class="q-card" id="q4">
+    <div class="q-meta"><span class="q-num">Question 4</span><span class="q-type">Multiple choice</span></div>
+    <p class="q-text">A city's CII Healthy Society score improves from 0.44 to 0.58 over three years following a major investment in primary healthcare infrastructure. A city intelligence practitioner says: "This is a genuine improvement — but we still don't know if it is an intelligent one." Why?</p>
+    <div class="options" id="opts-q4">
+      <div class="opt" data-v="A"><span class="opt-marker">A</span><span class="opt-text">Because the investment may not have been the most cost-effective intervention available</span></div>
+      <div class="opt" data-v="B"><span class="opt-marker">B</span><span class="opt-text">Because a genuine improvement in the city-level average does not tell us whether the improvement reached the populations with the worst health outcomes — or whether it was concentrated in already-served areas</span></div>
+      <div class="opt" data-v="C"><span class="opt-marker">C</span><span class="opt-text">Because healthcare infrastructure is a symptom response, not a structural intervention</span></div>
+      <div class="opt" data-v="D"><span class="opt-marker">D</span><span class="opt-text">Because the Healthy Society pillar only has 3 indicators and the score improvement may not reflect real change</span></div>
+    </div>
+    <div class="feedback-box" id="fb-q4"></div>
+    <div class="q-nav"><button class="next-btn" id="next-q4" onclick="nextQ(4,5)">Next question →</button></div>
+  </div>
+
+  <div class="q-card" id="q5">
+    <div class="q-meta"><span class="q-num">Question 5</span><span class="q-type">True / False</span></div>
+    <p class="q-text">"The structural limits of the CII — its geographic scope, its city-level unit of analysis, its particular theory of what cities should optimise for — are methodological errors that should be corrected in the next version of the index."</p>
+    <div class="tf-row">
+      <button class="tf-btn" onclick="checkTF('q5',this,'True','False')">True</button>
+      <button class="tf-btn" onclick="checkTF('q5',this,'False','False')">False</button>
+    </div>
+    <div class="feedback-box" id="fb-q5"></div>
+    <div class="q-nav"><button class="next-btn" id="next-q5" onclick="nextQ(5,6)">Next question →</button></div>
+  </div>
+
+  <div class="q-card" id="q6">
+    <div class="q-meta"><span class="q-num">Question 6</span><span class="q-type">Multiple choice</span></div>
+    <p class="q-text">Section 10 distinguishes between city intelligence and city efficiency. What is the precise difference?</p>
+    <div class="options" id="opts-q6">
+      <div class="opt" data-v="A"><span class="opt-marker">A</span><span class="opt-text">City intelligence uses data; city efficiency uses operational management techniques</span></div>
+      <div class="opt" data-v="B"><span class="opt-marker">B</span><span class="opt-text">City intelligence asks "what is the city doing — for whom?" while city efficiency asks only "what is the city doing?" — optimising the aggregate without asking about the distributional impact</span></div>
+      <div class="opt" data-v="C"><span class="opt-marker">C</span><span class="opt-text">City intelligence addresses all six CII pillars; city efficiency addresses only the Foundational and Integrator pillars</span></div>
+      <div class="opt" data-v="D"><span class="opt-marker">D</span><span class="opt-text">City efficiency is faster to implement; city intelligence requires longer time horizons</span></div>
+    </div>
+    <div class="feedback-box" id="fb-q6"></div>
+    <div class="q-nav"><button class="next-btn" id="next-q6" onclick="nextQ(6,7)">Next question →</button></div>
+  </div>
+
+  <div class="q-card" id="q7">
+    <div class="q-meta"><span class="q-num">Question 7</span><span class="q-type">Multiple choice</span></div>
+    <p class="q-text">A policymaker presents a CII-based analysis to the city council. She shows the Foundational–Healthy Society correlation and recommends investing in digital access to raise the Foundational score. A council member asks: "Will this reach the residents in the southern districts who have the worst health outcomes?" She has no answer. Which equity question did her analysis fail to apply?</p>
+    <div class="options" id="opts-q7">
+      <div class="opt" data-v="A"><span class="opt-marker">A</span><span class="opt-text">Whether the CII's comparison group is appropriate for her city's context</span></div>
+      <div class="opt" data-v="B"><span class="opt-marker">B</span><span class="opt-text">Whether the populations excluded from the city's Foundational investments are the same populations experiencing the worst Healthy Society outcomes — and whether the intervention is designed to reach them</span></div>
+      <div class="opt" data-v="C"><span class="opt-marker">C</span><span class="opt-text">Whether the intervention improves the Foundational score enough to change the Healthy Society score</span></div>
+      <div class="opt" data-v="D"><span class="opt-marker">D</span><span class="opt-text">Whether digital access is the right Foundational indicator to target for this city</span></div>
+    </div>
+    <div class="feedback-box" id="fb-q7"></div>
+    <div class="q-nav"><button class="next-btn" id="next-q7" onclick="nextQ(7,8)">Next question →</button></div>
+  </div>
+
+  <div class="q-card" id="q8">
+    <div class="q-meta"><span class="q-num">Question 8</span><span class="q-type">Multiple choice</span></div>
+    <p class="q-text">Budapest shows the largest negative gap in the CII dataset: Foundational score of 0.326, Healthy Society score of 0.100. The gap is −0.226. What does this gap specifically suggest that the aggregate scores alone do not?</p>
+    <div class="options" id="opts-q8">
+      <div class="opt" data-v="A"><span class="opt-marker">A</span><span class="opt-text">Budapest's data quality is lower than other cities, making its scores unreliable</span></div>
+      <div class="opt" data-v="B"><span class="opt-marker">B</span><span class="opt-text">Budapest's health outcomes are substantially worse than its foundational performance would predict — suggesting that structural factors beyond the Foundational pillar are driving poor health outcomes, or that Foundational investments are not reaching the populations with the worst health outcomes</span></div>
+      <div class="opt" data-v="C"><span class="opt-marker">C</span><span class="opt-text">Budapest should focus on Foundational investment before addressing any other pillar</span></div>
+      <div class="opt" data-v="D"><span class="opt-marker">D</span><span class="opt-text">Budapest's Healthy Society score is being suppressed by the sparse indicator coverage in that pillar</span></div>
+    </div>
+    <div class="feedback-box" id="fb-q8"></div>
+    <div class="q-nav"><button class="next-btn" id="next-q8" onclick="nextQ(8,9)">Next question →</button></div>
+  </div>
+
+  <div class="q-card" id="q9">
+    <div class="q-meta"><span class="q-num">Question 9</span><span class="q-type">Multiple choice</span></div>
+    <p class="q-text">Section 10 argues that "using this framework responsibly means holding two things simultaneously." What are the two things?</p>
+    <div class="options" id="opts-q9">
+      <div class="opt" data-v="A"><span class="opt-marker">A</span><span class="opt-text">The CII is useful for policymakers and for researchers — both audiences must be served simultaneously</span></div>
+      <div class="opt" data-v="B"><span class="opt-marker">B</span><span class="opt-text">The CII is a genuinely useful diagnostic instrument — and it has structural limits that are not methodological accidents but design choices that shape what it can and cannot see</span></div>
+      <div class="opt" data-v="C"><span class="opt-marker">C</span><span class="opt-text">The CII measures current performance and future potential — both must be presented together</span></div>
+      <div class="opt" data-v="D"><span class="opt-marker">D</span><span class="opt-text">The CII produces quantitative scores and qualitative insights — both are needed for responsible use</span></div>
+    </div>
+    <div class="feedback-box" id="fb-q9"></div>
+    <div class="q-nav"><button class="next-btn" id="next-q9" onclick="nextQ(9,10)">Next question →</button></div>
+  </div>
+
+  <div class="q-card" id="q10">
+    <div class="q-meta"><span class="q-num">Question 10</span><span class="q-type">Multiple choice</span></div>
+    <p class="q-text">Section 10 says that presenting the CII's limits alongside its findings is "not a disclaimer — it is a substantive analytical contribution." What is the difference between a disclaimer and a substantive analytical contribution in this context?</p>
+    <div class="options" id="opts-q10">
+      <div class="opt" data-v="A"><span class="opt-marker">A</span><span class="opt-text">A disclaimer is shorter; a substantive contribution requires a separate section in the report</span></div>
+      <div class="opt" data-v="B"><span class="opt-marker">B</span><span class="opt-text">A disclaimer protects the presenter from criticism; a substantive contribution names what additional data would be needed, what the aggregate conceals, and how the limits should shape the intervention design or research question</span></div>
+      <div class="opt" data-v="C"><span class="opt-marker">C</span><span class="opt-text">A disclaimer appears at the end of a document; a substantive contribution appears in the executive summary</span></div>
+      <div class="opt" data-v="D"><span class="opt-marker">D</span><span class="opt-text">A disclaimer is written by the researcher; a substantive contribution is written by the policymaker</span></div>
+    </div>
+    <div class="feedback-box" id="fb-q10"></div>
+    <div class="q-nav"><button class="next-btn" id="next-q10" onclick="showResults()">See my results →</button></div>
+  </div>
+
+  <div class="results-card" id="results">
+    <div class="results-circle"><span class="results-pct" id="res-pct">—</span></div>
+    <span class="pass-badge" id="pass-badge">—</span>
+    <h2 class="results-title" id="res-title">—</h2>
+    <p class="results-sub" id="res-sub">—</p>
+    <div class="results-detail">
+      <div class="rd-box"><div class="rd-num" id="res-correct">—</div><div class="rd-label">Correct</div></div>
+      <div class="rd-box"><div class="rd-num">10</div><div class="rd-label">Questions</div></div>
+      <div class="rd-box"><div class="rd-num" id="res-score">—</div><div class="rd-label">Points</div></div>
+    </div>
+    <button class="retry-btn" onclick="retryQuiz()">Retake quiz</button>
+    <div style="margin-top:12px"><button class="pdf-btn" onclick="window.print()"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17v-6M9 14l3 3 3-3"/><rect x="3" y="3" width="18" height="14" rx="2"/><path d="M3 17h18v4H3z"/></svg>Save results as PDF</button></div>
+  </div>
+</div>
+<script>
+var TOTAL=10;
+var state={answered:0,correct:0,points:0};
+var mcCorrect={'q2':'B','q3':'B','q4':'B','q6':'B','q7':'B','q8':'B','q9':'B','q10':'B'};
+var feedbacks={
+  'q1':'The correct answer is False. City intelligence and city efficiency are distinct — and the course has been building toward this distinction since the Healthy Society pillar was introduced as the accountability layer. A city can become more efficient while becoming more unequal: optimising its aggregate performance while the distributional gap between its best-served and worst-served populations widens. The CII, as currently designed, measures city-level averages — which means a city can improve its scores while becoming more efficiently unequal. That is city efficiency. City intelligence asks the harder question: for whom?',
+  'q2':'The correct answer is that the correlation is city-level — it describes a relationship between city averages, not between populations within cities. With n=10, statistical inference is also limited, but that is not the most important limitation here. The critical issue is what the aggregate conceals: whether the correlation is driven by whole-population improvement or by gains concentrated in already-advantaged populations; whether the same communities that lack Foundational access also bear the worst health outcomes; and whether closing the Foundational gap for all populations would produce the health improvement the city-level correlation suggests.',
+  'q3':'The correct answer is that the calibration of performance levels is anchored to the comparison group. The CII\'s diagnostic logic — identifying structural gaps, reading pillar relationships, identifying blocking constraints — is transferable. What is not directly transferable is the interpretation of scores. A Foundational score of 0.45 in the European comparison group carries a specific meaning relative to the range of performance in those the cities in the CII comparison group. In a different governance context, with different baseline conditions, that score means something different. Applying the framework responsibly outside the comparison group requires recalibrating the benchmarks.',
+  'q4':'The correct answer is that a genuine improvement in the city-level average does not tell us whether the improvement reached the populations with the worst health outcomes. The Healthy Society score improved from 0.44 to 0.58 — a real, measurable change. But if that improvement was concentrated in districts that were already performing adequately, the populations carrying the worst outcomes may have seen little or no change. An "intelligent" intervention in Section 10\'s terms is one that asks: did this reach the people who most needed it — and did it narrow the distributional gap, not just raise the average?',
+  'q5':'The correct answer is False. The structural limits are not methodological errors — they are design choices that reflect the context in which the index was built. The ten-city European scope reflects where comparable urban data is available. The city-level unit of analysis reflects the scale at which the framework is designed to operate. The particular theory of what cities should optimise for reflects a coherent, well-grounded set of judgments about urban development. These choices can be extended, supplemented, or debated — but they are not mistakes to be corrected. Treating them as errors misunderstands the nature of any index: every index embeds design choices.',
+  'q6':'The correct answer is that city intelligence asks "what is the city doing — for whom?" while city efficiency asks only "what is the city doing?" This is a precise and important distinction. A city efficiency lens evaluates aggregate performance: is the city producing more output per unit of resource? A city intelligence lens adds the distributional question: whose life is improving as a result of that output, and whose is not? An intervention can be highly efficient — producing measurable improvements in aggregate CII scores — while being unintelligent, because the improvement does not reach the populations who most need it.',
+  'q7':'The correct answer is the second equity question: whether the populations excluded from Foundational investments are the same populations experiencing the worst health outcomes. The policymaker correctly identified the city-level Foundational–Healthy Society correlation and the appropriate intervention direction. But she could not answer the council member\'s question because she had not applied the distributional lens to her recommendation. The council member\'s question is precisely the equity audit question: does this intervention reach the populations carrying the gap — in this case, the residents of the southern districts?',
+  'q8':'The correct answer is that Budapest\'s health outcomes are substantially worse than its Foundational performance would predict. Most cities in the comparison group have Healthy Society scores close to their Foundational scores. Budapest\'s −0.226 gap is the largest in the dataset — suggesting either that structural factors beyond Foundational performance are producing poor health outcomes, or that whatever Foundational investments Budapest has made are not reaching the populations with the worst health outcomes. This is the most analytically interesting divergence in the dataset, and it is precisely what the equity questions are designed to investigate further.',
+  'q9':'The correct answer names both dimensions: the CII is a genuinely useful diagnostic instrument, and it has structural limits that are design choices, not accidents. This is a specific formulation — not "every tool has strengths and weaknesses." The point is that the limits are structural and designed-in: they reflect choices about scope, unit of analysis, and theory of urban development. Responsible use requires holding both simultaneously: using the framework for what it genuinely does well, while naming its limits as an active part of the analysis rather than a footnote.',
+  'q10':'The correct answer distinguishes a substantive analytical contribution by what it does: it names what additional data would be needed, what the aggregate conceals, and how the limits should shape the intervention or research design. A disclaimer protects the presenter — it signals awareness of criticism without changing anything about the analysis. A substantive contribution changes the analysis itself: it identifies the specific distributional question the aggregate cannot answer, names the data that would answer it, and shows how the limits reshape what the intervention should look like. The test is whether anything in the presentation, report, or research design changes as a result of naming the limit.'
+};
+
+function showFeedback(qId,isCorrect,p){
+  var el=document.getElementById('fb-'+qId);
+  el.style.display='block';
+  el.className='feedback-box '+(isCorrect?'correct':'wrong');
+  el.innerHTML='<span class="fb-verdict">'+(isCorrect?'✓ Correct':'✗ Not quite')+'</span>'+feedbacks[qId];
+  document.getElementById('next-'+qId).style.display='block';
+  state.answered++;
+  if(isCorrect){state.correct++;state.points+=(p||1);}
+  var pct=Math.round((state.answered/TOTAL)*100);
+  document.getElementById('progress-bar').style.width=pct+'%';
+  document.getElementById('progress-text').textContent=state.answered+' / '+TOTAL;
+  document.getElementById('score-display').textContent='Score: '+state.correct;
+}
+function checkTF(qId,btn,chosen,c){
+  document.getElementById(qId).querySelectorAll('.tf-btn').forEach(function(b){b.classList.add('disabled')});
+  btn.classList.add(chosen===c?'correct':'wrong');
+  showFeedback(qId,chosen===c,1);
+}
+function checkMC(qId,opt,chosen){
+  var c=mcCorrect[qId];
+  document.getElementById('opts-'+qId).querySelectorAll('.opt').forEach(function(o,i){
+    o.classList.add('disabled');o.onclick=null;
+    if(String.fromCharCode(65+i)===c) o.classList.add('correct');
+  });
+  if(chosen!==c) opt.classList.add('wrong');
+  var p=(qId==='q4'||qId==='q8'||qId==='q10')?2:1;
+  showFeedback(qId,chosen===c,p);
+}
+function nextQ(c,n){
+  document.getElementById('q'+c).classList.remove('active');
+  document.getElementById('q'+n).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function showResults(){
+  document.getElementById('q10').classList.remove('active');
+  document.getElementById('results').style.display='block';
+  var pct=Math.round((state.correct/TOTAL)*100);
+  var pass=pct>=70;
+  document.getElementById('res-pct').textContent=pct+'%';
+  document.getElementById('pass-badge').textContent=pass?'PASSED':'KEEP GOING';
+  document.getElementById('pass-badge').className='pass-badge '+(pass?'pass':'fail');
+  document.getElementById('res-title').textContent=pass?'Well done.':'Keep working at it.';
+  document.getElementById('res-sub').textContent=pass?'You can apply the equity lens analytically — naming what the CII measures, what it conceals, and what responsible use requires. Section 11 asks a different kind of question: what does this work require of you personally?':'Review the CII limits explorer and the equity audit. The core skills are: distinguishing city intelligence from city efficiency, naming both what the r=0.911 finding shows and what it conceals, and applying the three equity questions to a specific scenario rather than agreeing with them in the abstract.';
+  document.getElementById('res-correct').textContent=state.correct;
+  document.getElementById('res-score').textContent=state.points;
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function retryQuiz(){
+  state={answered:0,correct:0,points:0};
+  document.getElementById('progress-bar').style.width='0%';
+  document.getElementById('progress-text').textContent='0 / '+TOTAL;
+  document.getElementById('score-display').textContent='Score: 0';
+  document.getElementById('results').style.display='none';
+  document.querySelectorAll('.q-card').forEach(function(c){c.classList.remove('active')});
+  document.getElementById('q1').classList.add('active');
+  document.querySelectorAll('.feedback-box').forEach(function(f){f.style.display='none'});
+  document.querySelectorAll('.next-btn').forEach(function(b){b.style.display='none'});
+  document.querySelectorAll('.opt').forEach(function(o){o.className='opt'});
+  document.querySelectorAll('.tf-btn').forEach(function(b){b.className='tf-btn'});
+  bindAll();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function bindAll(){
+  for(var qId in mcCorrect){
+    (function(id){
+      document.getElementById('opts-'+id).querySelectorAll('.opt').forEach(function(o,i){
+        o.onclick=function(){checkMC(id,this,String.fromCharCode(65+i))};
+      });
+    })(qId);
+  }
+}
+bindAll();
+</script>
+</body>
+</html>

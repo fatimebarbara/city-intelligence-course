@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Section 10 · Ethics, power and data — CII limits explorer</title>
+<style>
+  :root{
+    --teal-dark:#085041;--teal-mid:#0F6E56;--teal:#1D9E75;--teal-light:#5DCAA5;--teal-pale:#E1F5EE;--teal-faint:#F0FAF6;
+    --purple:#534AB7;--purple-pale:#EEEDFE;--purple-mid:#3C3489;
+    --amber:#BA7517;--amber-pale:#FAEEDA;--blue:#185FA5;--blue-pale:#E6F1FB;
+    --coral:#D85A30;--coral-pale:#FAECE7;--green:#3B6D11;--green-pale:#EAF3DE;
+    --text:#1a1a1a;--text-mid:#444;--text-muted:#6b6b6b;
+    --border:#e2e2e2;--border-light:#f0f0f0;--bg:#fff;--bg-soft:#f8f9fa;
+    --radius:10px;--radius-sm:6px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Helvetica Neue',Arial,sans-serif;color:var(--text);background:var(--bg);font-size:15px;line-height:1.65}
+  .page{max-width:760px;margin:0 auto;padding:48px 24px 80px}
+  .bm-label{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--teal-mid);background:var(--teal-pale);padding:5px 14px;border-radius:20px;margin-bottom:18px}
+  .bm-title{font-size:28px;font-weight:700;color:var(--text);line-height:1.25;margin-bottom:10px;letter-spacing:-.3px;font-family:'Georgia',serif}
+  .bm-sub{font-size:14px;color:var(--text-muted);line-height:1.65;max-width:580px;margin-bottom:20px}
+  .intro-note{background:var(--bg-soft);border:1px solid var(--border-light);border-radius:var(--radius);padding:16px 20px;font-size:13px;color:var(--text-muted);line-height:1.65;margin-bottom:28px}
+  .tab-nav{display:flex;gap:0;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:24px}
+  .tab-btn{flex:1;padding:11px 6px;text-align:center;cursor:pointer;background:var(--bg-soft);border:none;border-right:1px solid var(--border);font-family:'Helvetica Neue',Arial,sans-serif;font-size:12px;font-weight:600;color:var(--text-muted);transition:all .15s;line-height:1.3}
+  .tab-btn:last-child{border-right:none}
+  .tab-btn.active{background:var(--teal);color:#fff}
+  .tab-btn:hover:not(.active){background:var(--bg);color:var(--text)}
+  .tab-panel{display:none}
+  .tab-panel.active{display:block}
+  .pillar-card{border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:14px}
+  .pc-header{display:flex;align-items:flex-start;gap:12px;margin-bottom:12px}
+  .pc-dot{width:14px;height:14px;border-radius:50%;flex-shrink:0;margin-top:3px}
+  .p1 .pc-dot{background:#185FA5}.p2 .pc-dot{background:#534AB7}.p3 .pc-dot{background:#3B6D11}
+  .p4 .pc-dot{background:#D85A30}.p5 .pc-dot{background:#BA7517}.p6 .pc-dot{background:#993556}
+  .pc-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:2px}
+  .pc-question{font-size:12px;color:var(--text-muted);font-style:italic}
+  .pc-body{font-size:13px;color:var(--text-mid);line-height:1.65;margin-bottom:10px}
+  .pc-measures-label{font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--text-muted);margin-bottom:6px;margin-top:8px;display:block}
+  .pc-measure-row{display:flex;align-items:center;gap:8px;margin-bottom:4px;font-size:12px;color:var(--text-mid)}
+  .pc-check{color:var(--teal);font-weight:700;flex-shrink:0}
+  .pc-limit{margin-top:10px;padding:10px 12px;border-radius:var(--radius-sm);background:var(--bg-soft);border-left:3px solid var(--border);font-size:12px;color:var(--text-muted);line-height:1.6}
+  .pc-limit strong{color:var(--text-mid)}
+  .finding-box{background:var(--teal-dark);border-radius:var(--radius);padding:28px;margin-bottom:20px;color:#fff}
+  .fb-label{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.7);margin-bottom:8px}
+  .fb-number{font-size:48px;font-weight:700;font-family:'Georgia',serif;color:#fff;line-height:1;margin-bottom:8px}
+  .fb-desc{font-size:14px;color:rgba(255,255,255,.9);line-height:1.65;margin-bottom:14px}
+  .fb-caveat{font-size:12px;color:rgba(255,255,255,.7);line-height:1.6;border-top:1px solid rgba(255,255,255,.2);padding-top:12px}
+  .findings-grid{display:grid;gap:12px;margin-bottom:20px}
+  .finding-card{border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px}
+  .fc-label{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--teal-mid);margin-bottom:5px}
+  .fc-title{font-size:14px;font-weight:700;font-family:'Georgia',serif;color:var(--text);margin-bottom:6px;line-height:1.4}
+  .fc-body{font-size:13px;color:var(--text-mid);line-height:1.65}
+  .city-table{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:16px}
+  .city-table th{background:var(--bg-soft);padding:8px 12px;text-align:left;font-weight:700;font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:var(--text-muted);border-bottom:1px solid var(--border)}
+  .city-table td{padding:8px 12px;border-bottom:1px solid var(--border-light)}
+  .city-table tr:last-child td{border-bottom:none}
+  .score-bar{display:flex;align-items:center;gap:8px}
+  .sbar{height:8px;border-radius:4px;background:var(--teal);flex-shrink:0}
+  .score-num{font-size:12px;font-weight:700;color:var(--text-mid);white-space:nowrap}
+  .gap-pos{color:var(--teal-mid);font-size:12px;font-weight:600}
+  .gap-neg{color:var(--coral);font-size:12px;font-weight:600}
+  .eq-card{border:1px solid var(--border);border-radius:var(--radius);padding:18px;margin-bottom:12px}
+  .eq-num{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--teal-mid);margin-bottom:5px}
+  .eq-q{font-size:15px;font-weight:600;font-family:'Georgia',serif;color:var(--text);line-height:1.5;margin-bottom:8px}
+  .eq-body{font-size:13px;color:var(--text-muted);line-height:1.65}
+  .eq-apply{margin-top:10px;font-size:12px;color:var(--text-mid);line-height:1.6;background:var(--teal-faint);padding:9px 12px;border-radius:var(--radius-sm);border-left:3px solid var(--teal-pale)}
+  .limit-card{border:1px solid var(--border);border-radius:var(--radius);padding:18px;margin-bottom:12px}
+  .lc-badge{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:3px 10px;border-radius:12px;background:var(--purple-pale);color:var(--purple-mid);margin-bottom:8px}
+  .lc-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:6px}
+  .lc-body{font-size:13px;color:var(--text-mid);line-height:1.65}
+  .lc-impl{margin-top:10px;padding:10px 12px;border-radius:var(--radius-sm);background:var(--purple-pale);font-size:12px;color:var(--purple-mid);line-height:1.6}
+  .pdf-btn-wrap{text-align:center;margin-top:32px;padding-top:24px;border-top:1px solid var(--border-light)}
+  .pdf-btn{display:inline-flex;align-items:center;gap:8px;background:var(--teal-dark);color:#fff;border:none;border-radius:24px;padding:11px 28px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Helvetica Neue',Arial,sans-serif;transition:background .15s}
+  .pdf-btn:hover{background:var(--teal-mid)}
+  .pdf-hint{font-size:11px;color:var(--text-muted);margin-top:8px}
+  @media print{.tab-nav,.pdf-btn-wrap,button{display:none!important}.tab-panel{display:block!important}body{font-size:13px}.page{max-width:100%!important;padding:20px!important}.pillar-card,.finding-card,.eq-card,.limit-card,.finding-box{break-inside:avoid}a[href]:after{content:''}}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="bm-label">Ethics, power and data · CII limits explorer</div>
+  <h1 class="bm-title">What the CII sees — and what it doesn't</h1>
+  <p class="bm-sub">The CII is a complete, validated measurement instrument across all six pillars. Understanding what each pillar measures — and what any city-level index cannot see by design — is part of using it responsibly.</p>
+  <div class="intro-note">This is not a critique of the CII. It is the analytical honesty sophisticated practitioners and researchers apply to every framework they use. Knowing the structural limits of a tool is a prerequisite for using it well.</div>
+
+  <div class="tab-nav">
+    <button class="tab-btn active" onclick="showTab('pillars',this)">What each pillar measures</button>
+    <button class="tab-btn" onclick="showTab('findings',this)">Cross-pillar findings</button>
+    <button class="tab-btn" onclick="showTab('equity',this)">Equity questions</button>
+    <button class="tab-btn" onclick="showTab('limits',this)">Structural limits</button>
+  </div>
+
+  <div class="tab-panel active" id="tab-pillars">
+    <p style="font-size:13px;color:var(--text-muted);margin-bottom:16px;line-height:1.6">Each pillar captures a specific structural capacity. Understanding what each one measures — and what it does not attempt to measure — is the foundation of reading a CII profile analytically rather than mechanically.</p>
+
+    <div class="pillar-card p1">
+      <div class="pc-header"><div class="pc-dot"></div><div><p class="pc-title">Foundational — the structural floor</p><p class="pc-question">Can people actually participate in the city's intelligence?</p></div></div>
+      <p class="pc-body">Foundational measures the conditions that make participation possible: digital access, educational attainment, institutional trust, and social cohesion. These are prerequisites for every other pillar. A city cannot build genuine innovation, coordination, or healthy outcomes on a population that cannot access the systems designed to serve them.</p>
+      <span class="pc-measures-label">What it measures</span>
+      <div class="pc-measure-row"><span class="pc-check">✓</span>Access to digital infrastructure and services</div>
+      <div class="pc-measure-row"><span class="pc-check">✓</span>Educational attainment and learning outcomes</div>
+      <div class="pc-measure-row"><span class="pc-check">✓</span>Institutional trust between citizens and public institutions</div>
+      <div class="pc-measure-row"><span class="pc-check">✓</span>Social cohesion — communities as collective actors</div>
+      <div class="pc-limit"><strong>What it does not attempt to measure:</strong> The distribution of Foundational access within the city. A strong aggregate score reveals nothing about which districts or populations fall below the average.</div>
+    </div>
+
+    <div class="pillar-card p2">
+      <div class="pc-header"><div class="pc-dot"></div><div><p class="pc-title">Innovator — the knowledge engine</p><p class="pc-question">Can the city generate, translate, and deploy new knowledge?</p></div></div>
+      <p class="pc-body">Innovator measures the city's capacity to produce and translate knowledge into economic and social value — covering R&D investment, patent output, knowledge-intensive employment, and the ecosystem conditions that allow innovation to compound across actors and sectors.</p>
+      <span class="pc-measures-label">What it measures</span>
+      <div class="pc-measure-row"><span class="pc-check">✓</span>R&D investment as a share of economic activity</div>
+      <div class="pc-measure-row"><span class="pc-check">✓</span>Knowledge-intensive employment and sector depth</div>
+      <div class="pc-measure-row"><span class="pc-check">✓</span>Start-up formation and innovation ecosystem density</div>
+      <div class="pc-measure-row"><span class="pc-check">✓</span>University quality and research output</div>
+      <div class="pc-limit"><strong>What it does not attempt to measure:</strong> Who benefits from innovation activity. A strong Innovator score can coexist with a highly unequal distribution of its economic benefits.</div>
+    </div>
+
+    <div class="pillar-card p3">
+      <div class="pc-header"><div class="pc-dot"></div><div><p class="pc-title">Integrator — the coordination architecture</p><p class="pc-question">Do the city's systems actually work together?</p></div></div>
+      <p class="pc-body">Integrator measures governance capacity that connects the city's parts: cross-departmental coordination, government effectiveness, open data maturity, policy consistency, and the structural mechanisms for addressing complex challenges across institutional boundaries. This is the pillar that enables compounding — without coordination architecture, pillar-level improvements remain isolated.</p>
+      <span class="pc-measures-label">What it measures</span>
+      <div class="pc-measure-row"><span class="pc-check">✓</span>Cross-departmental planning and accountability mechanisms</div>
+      <div class="pc-measure-row"><span class="pc-check">✓</span>Government effectiveness and policy consistency</div>
+      <div class="pc-measure-row"><span class="pc-check">✓</span>Open data maturity and citizen accessibility</div>
+      <div class="pc-measure-row"><span class="pc-check">✓</span>Emergency response and crisis coordination capacity</div>
+      <div class="pc-limit"><strong>What it does not attempt to measure:</strong> The quality of what is being coordinated. Strong coordination architecture can be used efficiently toward the wrong goals. Integrator measures the mechanism — not the ends it serves.</div>
+    </div>
+
+    <div class="pillar-card p4">
+      <div class="pc-header"><div class="pc-dot"></div><div><p class="pc-title">Regenerative — ecological capacity</p><p class="pc-question">Is the city restoring as well as consuming?</p></div></div>
+      <p class="pc-body">Regenerative measures whether the city is managing its ecological relationship sustainably — reducing emissions, expanding green infrastructure, transitioning energy systems, and distributing environmental burdens fairly. A city can score well on other pillars while systematically externalising environmental costs onto its most vulnerable populations.</p>
+      <span class="pc-measures-label">What it measures</span>
+      <div class="pc-measure-row"><span class="pc-check">✓</span>Carbon emissions trajectory and climate commitment</div>
+      <div class="pc-measure-row"><span class="pc-check">✓</span>Green space access and urban biodiversity</div>
+      <div class="pc-measure-row"><span class="pc-check">✓</span>Energy transition progress and renewable uptake</div>
+      <div class="pc-measure-row"><span class="pc-check">✓</span>Waste recycling and circular economy capacity</div>
+      <div class="pc-limit"><strong>What it does not attempt to measure:</strong> The distribution of environmental burden. Air quality, flood risk, heat exposure, and proximity to pollution are rarely evenly distributed — and a city-level score can obscure acute environmental injustice in specific districts.</div>
+    </div>
+
+    <div class="pillar-card p5">
+      <div class="pc-header"><div class="pc-dot"></div><div><p class="pc-title">Connected — openness and networks</p><p class="pc-question">How openly does the city link to the world and to its residents?</p></div></div>
+      <p class="pc-body">Connected measures the city's openness: its physical, digital, and institutional connections to the wider world and to its own populations — including transport accessibility, broadband infrastructure, international networks, and the degree to which the city's systems are navigable by all residents.</p>
+      <span class="pc-measures-label">What it measures</span>
+      <div class="pc-measure-row"><span class="pc-check">✓</span>Broadband speed and digital accessibility</div>
+      <div class="pc-measure-row"><span class="pc-check">✓</span>International air and rail connectivity</div>
+      <div class="pc-measure-row"><span class="pc-check">✓</span>Public transport accessibility and coverage</div>
+      <div class="pc-measure-row"><span class="pc-check">✓</span>Open government data and digital participation rates</div>
+      <div class="pc-limit"><strong>What it does not attempt to measure:</strong> Whether connectivity benefits are accessible to all residents. High aggregate connectivity can coexist with significant populations effectively disconnected — through cost, language, disability, or geography.</div>
+    </div>
+
+    <div class="pillar-card p6">
+      <div class="pc-header"><div class="pc-dot"></div><div><p class="pc-title">Healthy Society — the accountability layer</p><p class="pc-question">Are people actually living well?</p></div></div>
+      <p class="pc-body">Healthy Society is the accountability layer of the CII. It asks whether the city's structural performance — everything the other five pillars measure — is translating into actual wellbeing for residents. It is the ultimate output measure: not what the city is capable of, but what it is producing for the people living in it.</p>
+      <span class="pc-measures-label">What it measures</span>
+      <div class="pc-measure-row"><span class="pc-check">✓</span>Life expectancy and avoidable mortality</div>
+      <div class="pc-measure-row"><span class="pc-check">✓</span>Mental health access and outcomes</div>
+      <div class="pc-measure-row"><span class="pc-check">✓</span>Air quality and environmental health burden</div>
+      <div class="pc-measure-row"><span class="pc-check">✓</span>Food security and nutrition access</div>
+      <div class="pc-limit"><strong>What it does not attempt to measure:</strong> The distribution of health outcomes within the city. A city can achieve an adequate aggregate score while masking a decades-long gap in life expectancy between its wealthiest and most deprived communities.</div>
+    </div>
+  </div>
+
+  <div class="tab-panel" id="tab-findings">
+    <p style="font-size:13px;color:var(--text-muted);margin-bottom:16px;line-height:1.6">These are the cross-pillar patterns that emerge from reading the CII comparatively. Each one is a genuine finding — and each one opens a question that city-level measurement alone cannot fully answer.</p>
+
+    <div class="finding-box">
+      <p class="fb-label">Key cross-pillar finding — CII comparison cities</p>
+      <div class="fb-number">r ≈ 0.91</div>
+      <p class="fb-desc">Foundational performance and Healthy Society outcomes are strongly correlated across the CII comparison cities. Cities with stronger foundational conditions — stronger digital access, educational attainment, institutional trust, and social cohesion — also show substantially better health outcomes.</p>
+      <p class="fb-caveat">This cross-sectional correlation describes a powerful structural pattern — not a causal mechanism. It does not reveal whether the relationship holds within cities as well as between them. That is the equity question this finding opens.</p>
+    </div>
+
+    <div class="findings-grid">
+      <div class="finding-card">
+        <p class="fc-label">Finding 01 — The floor determines the ceiling</p>
+        <p class="fc-title">Cities with weak Foundational performance consistently underperform on Healthy Society relative to their other pillar investments</p>
+        <p class="fc-body">No city in the CII dataset with a weak Foundational score achieves a strong Healthy Society outcome. The pattern suggests that the structural floor — participation conditions, access, trust — constrains the effectiveness of every other pillar in delivering wellbeing. Investment in innovation, coordination, or connectivity does not substitute for foundational strength.</p>
+      </div>
+      <div class="finding-card">
+        <p class="fc-label">Finding 02 — Integrator as amplifier</p>
+        <p class="fc-title">Cities with strong coordination architecture show more coherent multi-pillar profiles — smaller gaps between strongest and weakest pillars</p>
+        <p class="fc-body">Cities with stronger Integrator scores show smaller variation across their non-Integrator pillars. Coordination capacity does not simply add a pillar score — it appears to amplify the coherence of the whole profile, helping other pillar investments compound rather than remain isolated. This is the strongest evidence in the CII for the sequencing argument made in Section 7.</p>
+      </div>
+      <div class="finding-card">
+        <p class="fc-label">Finding 03 — The translation gap</p>
+        <p class="fc-title">Some cities convert Foundational strength into Healthy Society outcomes more effectively than others — the gap is not explained by scores alone</p>
+        <p class="fc-body">Cities with similar Foundational scores show meaningfully different Healthy Society outcomes. This translation gap is where the most analytically interesting variation lives. It suggests the mechanisms connecting structural capacity to lived outcomes require active governance choices — not just strong baseline scores.</p>
+      </div>
+      <div class="finding-card">
+        <p class="fc-label">Finding 04 — Regenerative as independent signal</p>
+        <p class="fc-title">Regenerative performance is less tightly linked to other pillar scores — suggesting it responds to distinct governance choices</p>
+        <p class="fc-body">Unlike the strong Foundational–Healthy Society relationship, Regenerative performance shows weaker correlation with other pillar outcomes. Some cities with average structural intelligence show strong Regenerative performance — suggesting that ecological governance follows its own logic, shaped by political will and civic culture as much as overall institutional capacity.</p>
+      </div>
+    </div>
+
+    <p style="font-size:14px;font-weight:600;font-family:'Georgia',serif;margin-bottom:12px;color:var(--text)">Foundational vs Healthy Society — selected CII cities</p>
+    <table class="city-table">
+      <thead><tr><th>City</th><th>Foundational</th><th>Healthy Society</th><th>Gap (HS − F)</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Helsinki</strong></td><td><div class="score-bar"><div class="sbar" style="width:84px"></div><span class="score-num">0.837</span></div></td><td><div class="score-bar"><div class="sbar" style="width:93px"></div><span class="score-num">0.927</span></div></td><td><span class="gap-pos">+0.090</span></td></tr>
+        <tr><td><strong>Copenhagen</strong></td><td><div class="score-bar"><div class="sbar" style="width:81px"></div><span class="score-num">0.809</span></div></td><td><div class="score-bar"><div class="sbar" style="width:96px"></div><span class="score-num">0.955</span></div></td><td><span class="gap-pos">+0.146</span></td></tr>
+        <tr><td><strong>Amsterdam</strong></td><td><div class="score-bar"><div class="sbar" style="width:73px"></div><span class="score-num">0.733</span></div></td><td><div class="score-bar"><div class="sbar" style="width:70px"></div><span class="score-num">0.698</span></div></td><td><span class="gap-neg">−0.035</span></td></tr>
+        <tr><td><strong>Berlin</strong></td><td><div class="score-bar"><div class="sbar" style="width:41px"></div><span class="score-num">0.406</span></div></td><td><div class="score-bar"><div class="sbar" style="width:48px"></div><span class="score-num">0.479</span></div></td><td><span class="gap-pos">+0.073</span></td></tr>
+        <tr><td><strong>Brussels</strong></td><td><div class="score-bar"><div class="sbar" style="width:43px"></div><span class="score-num">0.425</span></div></td><td><div class="score-bar"><div class="sbar" style="width:44px"></div><span class="score-num">0.441</span></div></td><td><span class="gap-pos">+0.016</span></td></tr>
+        <tr><td><strong>Budapest</strong></td><td><div class="score-bar"><div class="sbar" style="width:33px"></div><span class="score-num">0.326</span></div></td><td><div class="score-bar"><div class="sbar" style="width:10px"></div><span class="score-num">0.100</span></div></td><td><span class="gap-neg">−0.226</span></td></tr>
+      </tbody>
+    </table>
+    <div style="background:var(--teal-faint);border:1px solid var(--teal-pale);border-radius:var(--radius-sm);padding:14px 16px;font-size:13px;color:var(--teal-dark);line-height:1.65">
+      <strong>Reading the gap column:</strong> Copenhagen's +0.146 gap suggests strong governance is helping translate foundational capacity into outcomes beyond what scores alone would predict. Budapest's −0.226 gap is the most important diagnostic signal in the dataset: health outcomes are substantially worse than the structural floor would predict, suggesting either that factors beyond Foundational are driving poor outcomes, or that existing investments are not reaching the populations who most need them.
+    </div>
+  </div>
+
+  <div class="tab-panel" id="tab-equity">
+    <p style="font-size:13px;color:var(--text-muted);margin-bottom:16px;line-height:1.6">The CII is a city-level instrument. These are the three questions it opens but cannot answer at city resolution. Each requires disaggregated data — district-level, population-stratified — that complements the CII's framework.</p>
+
+    <div class="eq-card">
+      <p class="eq-num">Equity question 01</p>
+      <p class="eq-q">Who benefits from this city's performance on each pillar — and who does not?</p>
+      <p class="eq-body">A strong aggregate Foundational score tells you that average performance on digital access, educational attainment, and social cohesion is high. It tells you nothing about which populations fall below that average — or by how much. In every city in the CII dataset, Foundational performance is unevenly distributed across income groups, districts, and demographic communities.</p>
+      <div class="eq-apply">For your city: which population groups are most likely to be below the Foundational average — and does your data system allow you to see their specific performance rather than the aggregate?</div>
+    </div>
+
+    <div class="eq-card">
+      <p class="eq-num">Equity question 02</p>
+      <p class="eq-q">Are the populations excluded from the city's Foundational investments the same populations experiencing the worst Healthy Society outcomes?</p>
+      <p class="eq-body">The strong Foundational–Healthy Society correlation is a city-level relationship. Within cities, the critical question is whether the same structural exclusion that produces low Foundational performance also produces poor health outcomes — or whether the pathways differ. The answer shapes whether a structural intervention should target Foundational access or address health determinants through a different route.</p>
+      <div class="eq-apply">Compare your city's district-level Foundational performance data with district-level health outcome data. Are the lowest-Foundational and lowest-Healthy Society districts the same ones?</div>
+    </div>
+
+    <div class="eq-card">
+      <p class="eq-num">Equity question 03</p>
+      <p class="eq-q">Does the intervention I am designing improve the average, the distribution, or both — and if only one, which one and why?</p>
+      <p class="eq-body">An intervention designed to raise a city-level CII score can improve the aggregate without reaching the populations who carry the gap. An intervention designed to improve distribution may not show strongly in the aggregate. These are different interventions with different designs, different delivery mechanisms, and different political economies.</p>
+      <div class="eq-apply">For the intervention you designed in Section 6: name explicitly which it does. If it improves the average, who is excluded from the improvement? If it improves the distribution, what does the aggregate metric fail to show about its impact?</div>
+    </div>
+  </div>
+
+  <div class="tab-panel" id="tab-limits">
+    <p style="font-size:13px;color:var(--text-muted);margin-bottom:16px;line-height:1.6">These are structural limits — not flaws, but design choices that shape what any city-level index can and cannot see. Every index embeds these choices. Responsible use requires naming them.</p>
+
+    <div class="limit-card">
+      <span class="lc-badge">Geographic scope</span>
+      <p class="lc-title">A European comparison group — not a universal benchmark</p>
+      <p class="lc-body">The CII's comparison cities are European. The calibration of what constitutes strong, moderate, or weak performance is anchored to European governance environments, data systems, and institutional contexts. The diagnostic logic of the framework is transferable. What is not directly transferable is score interpretation: a score of 0.45 carries a specific meaning within the European comparison group that does not automatically apply in a different governance context.</p>
+      <div class="lc-impl"><strong>Responsible use:</strong> When applying the CII outside the comparison group, recalibrate what scores mean in that context — do not treat European benchmarks as universal standards.</div>
+    </div>
+
+    <div class="limit-card">
+      <span class="lc-badge">Unit of analysis</span>
+      <p class="lc-title">City-level averages — not population-level distributions</p>
+      <p class="lc-body">All six pillars measure city-level aggregate performance. The CII cannot see within-city inequality — the gap between best-performing and worst-performing populations. A city can improve its CII score while structural inequalities deepen, if the improvement is concentrated in already-strong areas.</p>
+      <div class="lc-impl"><strong>Responsible use:</strong> Always ask which populations carry the gap between your city's current CII score and your target. The aggregate score names the gap. Disaggregated data reveals who bears it.</div>
+    </div>
+
+    <div class="limit-card">
+      <span class="lc-badge">Temporal dimension</span>
+      <p class="lc-title">Cross-sectional measurement — trajectory requires repeated reading</p>
+      <p class="lc-body">The CII produces a structural profile at a point in time. To know whether an intervention is working requires measuring CII profiles at multiple points and reading the direction of change, not just the absolute score. A city with a score of 0.55 that was 0.42 two years ago is in a fundamentally different situation than a city with a score of 0.55 that was 0.68 two years ago. The score is identical. The trajectory is opposite. This is addressed in Section 11.</p>
+      <div class="lc-impl"><strong>Responsible use:</strong> The monitoring framework for a compounding strategy must include repeated CII measurement at defined intervals — so the strategy can be assessed by trajectory, not only by current position.</div>
+    </div>
+
+    <div class="limit-card">
+      <span class="lc-badge">Theory of intelligence</span>
+      <p class="lc-title">A particular account of what cities should optimise for</p>
+      <p class="lc-body">The six pillars reflect a theory: cities should be foundationally strong, innovative, coordinated, regenerative, connected, and producing healthy societies. This is a well-grounded theory — but it is a theory. It was built from European urban policy priorities, from available data, and from specific choices about what to measure and how to weight it.</p>
+      <div class="lc-impl"><strong>Responsible use:</strong> Using the CII is not a neutral act — it is a choice to apply this particular theory of urban intelligence. Make that choice consciously and communicate it explicitly when presenting the framework to decision-makers or research audiences.</div>
+    </div>
+  </div>
+
+  <div class="pdf-btn-wrap">
+    <button class="pdf-btn" onclick="window.print()">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17v-6M9 14l3 3 3-3"/><rect x="3" y="3" width="18" height="14" rx="2"/><path d="M3 17h18v4H3z"/></svg>
+      Save this analysis as PDF
+    </button>
+    <p class="pdf-hint">Opens your browser's print dialog — choose "Save as PDF" as the destination</p>
+  </div>
+</div>
+<script>
+function showTab(id,btn){
+  document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.remove('active')});
+  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active')});
+  document.getElementById('tab-'+id).classList.add('active');
+  btn.classList.add('active');
+}
+</script>
+</body>
+</html>

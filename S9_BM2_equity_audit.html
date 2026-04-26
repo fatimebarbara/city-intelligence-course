@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Section 10 · Ethics, power and data — Equity audit</title>
+<style>
+  :root{
+    --teal-dark:#085041;--teal-mid:#0F6E56;--teal:#1D9E75;--teal-light:#5DCAA5;--teal-pale:#E1F5EE;--teal-faint:#F0FAF6;
+    --purple:#534AB7;--purple-pale:#EEEDFE;--purple-mid:#3C3489;
+    --amber:#BA7517;--amber-pale:#FAEEDA;--blue:#185FA5;--blue-pale:#E6F1FB;
+    --coral:#D85A30;--coral-pale:#FAECE7;--green:#3B6D11;--green-pale:#EAF3DE;
+    --text:#1a1a1a;--text-mid:#444;--text-muted:#6b6b6b;
+    --border:#e2e2e2;--border-light:#f0f0f0;--bg:#fff;--bg-soft:#f8f9fa;
+    --radius:10px;--radius-sm:6px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Helvetica Neue',Arial,sans-serif;color:var(--text);background:var(--bg);font-size:15px;line-height:1.65}
+  .page{max-width:760px;margin:0 auto;padding:48px 24px 80px}
+  .bm-label{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--teal-mid);background:var(--teal-pale);padding:5px 14px;border-radius:20px;margin-bottom:18px}
+  .bm-title{font-size:28px;font-weight:700;color:var(--text);line-height:1.25;margin-bottom:10px;letter-spacing:-.3px;font-family:'Georgia',serif}
+  .bm-sub{font-size:14px;color:var(--text-muted);line-height:1.65;max-width:580px;margin-bottom:20px}
+  .intro-note{background:var(--bg-soft);border:1px solid var(--border-light);border-radius:var(--radius);padding:16px 20px;font-size:13px;color:var(--text-muted);line-height:1.65;margin-bottom:28px}
+  .divider{border:none;border-top:1px solid var(--border-light);margin:28px 0}
+  textarea{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 12px;font-family:'Helvetica Neue',Arial,sans-serif;font-size:14px;color:var(--text);line-height:1.6;resize:vertical;min-height:72px;outline:none;transition:border-color .15s}
+  textarea:focus{border-color:var(--teal-light)}
+  textarea::placeholder{color:#b0b0b0}
+  .field-label{font-size:12px;font-weight:600;color:var(--text-mid);margin-bottom:5px;display:block}
+  .field-sub{font-size:12px;color:var(--text-muted);margin-bottom:6px;line-height:1.55}
+  .field-group{margin-bottom:16px}
+
+  /* Aud toggle */
+  .aud-toggle{display:flex;gap:8px;margin-bottom:20px}
+  .aud-btn{border:1px solid var(--border);border-radius:20px;padding:7px 18px;font-size:13px;font-weight:500;cursor:pointer;background:var(--bg-soft);color:var(--text-muted);transition:all .15s;font-family:'Helvetica Neue',Arial,sans-serif}
+  .aud-btn.pm-active{background:var(--teal-pale);color:var(--teal-dark);border-color:var(--teal-light);font-weight:600}
+  .aud-btn.rs-active{background:var(--purple-pale);color:var(--purple-mid);border-color:#AFA9EC;font-weight:600}
+
+  /* Progress */
+  .progress-row{display:flex;align-items:center;gap:12px;margin-bottom:24px}
+  .progress-label{font-size:12px;color:var(--text-muted);white-space:nowrap}
+  .progress-outer{flex:1;height:5px;background:var(--border-light);border-radius:3px;overflow:hidden}
+  .progress-inner{height:100%;background:var(--teal);border-radius:3px;transition:width .4s ease}
+  .progress-pct{font-size:12px;font-weight:700;color:var(--teal);min-width:36px;text-align:right}
+
+  /* Audit blocks */
+  .audit-block{border:1px solid var(--border);border-radius:var(--radius);padding:22px;margin-bottom:16px}
+  .ab-header{display:flex;align-items:flex-start;gap:12px;margin-bottom:14px}
+  .ab-num{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:3px 10px;border-radius:12px;flex-shrink:0;margin-top:2px}
+  .eq1 .ab-num{background:var(--blue-pale);color:var(--blue)}
+  .eq2 .ab-num{background:var(--purple-pale);color:var(--purple-mid)}
+  .eq3 .ab-num{background:var(--teal-pale);color:var(--teal-dark)}
+  .ab-q{font-size:15px;font-weight:700;font-family:'Georgia',serif;color:var(--text);line-height:1.45;flex:1}
+  .aud-ctx{border-radius:var(--radius-sm);padding:10px 13px;margin-bottom:12px;font-size:13px;line-height:1.6}
+  .aud-ctx.pm{background:var(--teal-faint);border-left:3px solid var(--teal-light);color:var(--teal-dark)}
+  .aud-ctx.rs{background:#F5F0FF;border-left:3px solid #AFA9EC;color:var(--purple-mid)}
+  .aud-ctx-label{font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:3px;display:block}
+
+  /* Equity statement output */
+  .equity-output{background:var(--teal-faint);border:1px solid var(--teal-pale);border-radius:var(--radius);padding:22px;margin-top:24px}
+  .eo-title{font-size:15px;font-weight:700;font-family:'Georgia',serif;color:var(--teal-dark);margin-bottom:14px}
+  .eo-row{margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid var(--teal-pale)}
+  .eo-row:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+  .eo-label{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--teal-mid);margin-bottom:3px}
+  .eo-val{font-size:13px;color:var(--teal-dark);line-height:1.6;font-family:'Georgia',serif;font-style:italic;min-height:18px}
+  .eo-empty{color:var(--text-muted);font-style:normal;font-family:'Helvetica Neue',Arial,sans-serif;font-size:12px}
+
+  /* PDF */
+  .pdf-btn-wrap{text-align:center;margin-top:32px;padding-top:24px;border-top:1px solid var(--border-light)}
+  .pdf-btn{display:inline-flex;align-items:center;gap:8px;background:var(--teal-dark);color:#fff;border:none;border-radius:24px;padding:11px 28px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Helvetica Neue',Arial,sans-serif;transition:background .15s}
+  .pdf-btn:hover{background:var(--teal-mid)}
+  .pdf-hint{font-size:11px;color:var(--text-muted);margin-top:8px}
+  @media print{
+    .pdf-btn-wrap,.progress-row,.aud-toggle,button{display:none!important}
+    body{font-size:13px}
+    .page{max-width:100%!important;padding:20px!important}
+    textarea{border:none!important;background:transparent!important;resize:none!important;min-height:0!important;font-size:13px!important}
+    .audit-block,.equity-output{break-inside:avoid}
+    a[href]:after{content:''}
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="bm-label">Ethics, power and data · Equity audit</div>
+  <h1 class="bm-title">Applying the equity lens to your city and your work</h1>
+  <p class="bm-sub">Three equity questions applied to your specific city, intervention, and research or policy context. Output: an equity statement you can use in your diagnostic presentations, research papers, or strategy documents.</p>
+  <div class="intro-note">An equity audit is not a disclaimer. It is a substantive analytical contribution — the part of the diagnosis that names what the city-level aggregate conceals, and what a responsible practitioner or researcher does with that knowledge.</div>
+
+  <div class="aud-toggle">
+    <button class="aud-btn pm-active" id="btn-pm" onclick="setAud('pm')">I am a policymaker</button>
+    <button class="aud-btn" id="btn-rs" onclick="setAud('rs')">I am a researcher</button>
+  </div>
+  <div class="progress-row">
+    <span class="progress-label">Audit completion</span>
+    <div class="progress-outer"><div class="progress-inner" id="pbar" style="width:0%"></div></div>
+    <span class="progress-pct" id="pct">0%</span>
+  </div>
+
+  <!-- EQ1 -->
+  <div class="audit-block eq1">
+    <div class="ab-header">
+      <span class="ab-num">Question 01</span>
+      <p class="ab-q">Who benefits from your city's performance on each pillar — and who does not?</p>
+    </div>
+    <div class="aud-ctx pm" id="e1-pm"><span class="aud-ctx-label">Policymaker</span>Look at your city's strongest pillar. Who — specifically — benefits from that strength? Name a population group that does not benefit from it, and describe the structural reason they are excluded from the performance your city is achieving on that dimension.</div>
+    <div class="aud-ctx rs" id="e1-rs" style="display:none"><span class="aud-ctx-label">Researcher</span>For your study city: which population groups are systematically underrepresented in the data sources that feed the pillar you are analysing? The same question applies across cities in any comparative analysis. The question is not only who benefits from performance — but who is invisible in the measurement.</div>
+    <div class="field-group">
+      <label class="field-label">Your city's strongest pillar — and who it does not reach</label>
+      <textarea id="f-e1a" placeholder="My city's strongest pillar is [pillar]. The population most excluded from this strength is [group], because [structural reason — not individual]. The structural mechanism of exclusion is [access barrier / institutional design / geographic distribution / historical pattern]..." oninput="u()"></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">The data you would need to see the exclusion precisely</label>
+      <p class="field-sub">What disaggregated data — by district, income, age, ethnicity, or other dimension — would make the exclusion visible rather than hidden behind the aggregate?</p>
+      <textarea id="f-e1b" placeholder="To see this exclusion precisely, I would need [specific data type] disaggregated by [dimension] at [geographic level — district / neighbourhood / ward]..." oninput="u()" style="min-height:52px"></textarea>
+    </div>
+  </div>
+
+  <!-- EQ2 -->
+  <div class="audit-block eq2">
+    <div class="ab-header">
+      <span class="ab-num">Question 02</span>
+      <p class="ab-q">Are the populations excluded from your city's Foundational investments the same populations experiencing the worst Healthy Society outcomes?</p>
+    </div>
+    <div class="aud-ctx pm" id="e2-pm"><span class="aud-ctx-label">Policymaker</span>This question tests whether your city's Foundational and Healthy Society gaps are structurally linked — whether addressing one would address the other — or whether they are driven by different structural mechanisms requiring different interventions.</div>
+    <div class="aud-ctx rs" id="e2-rs" style="display:none"><span class="aud-ctx-label">Researcher</span>The research question here is whether the Foundational–Healthy Society correlation (r=0.911 at city level) holds at the sub-city level — and whether it is driven by the same populations in each city or whether the mechanism varies. This is a testable hypothesis that district-level data can address.</div>
+    <div class="field-group">
+      <label class="field-label">What you know — or can reasonably infer — about the overlap between Foundational exclusion and health outcomes in your city</label>
+      <textarea id="f-e2a" placeholder="In my city, the populations most excluded from Foundational investments are [groups / districts]. The populations with the worst health outcomes are [groups / districts]. The overlap is [substantial / partial / unclear], because [what you know or can infer about the structural connection]..." oninput="u()"></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">What this means for your intervention design</label>
+      <p class="field-sub">If the same populations carry both gaps, a single structural intervention can address both. If different populations carry different gaps, the sequence needs to be designed accordingly.</p>
+      <textarea id="f-e2b" placeholder="This means my intervention design should [target the overlap / address different populations separately / first establish whether the overlap exists through disaggregated data collection]..." oninput="u()" style="min-height:52px"></textarea>
+    </div>
+  </div>
+
+  <!-- EQ3 -->
+  <div class="audit-block eq3">
+    <div class="ab-header">
+      <span class="ab-num">Question 03</span>
+      <p class="ab-q">Does the intervention you designed in Section 6 improve the average, the distribution, or both — and if only one, which one and why?</p>
+    </div>
+    <div class="aud-ctx pm" id="e3-pm"><span class="aud-ctx-label">Policymaker</span>This is the most politically difficult question in Section 10. An intervention that improves the average is easier to sell — it produces a headline CII score improvement. An intervention that improves the distribution may produce a smaller headline improvement while reducing structural inequality. Name which yours does, honestly.</div>
+    <div class="aud-ctx rs" id="e3-rs" style="display:none"><span class="aud-ctx-label">Researcher</span>This is the most methodologically important question for evaluation design. The primary outcome of your study should specify whether you are measuring average improvement, distributional change, or both — because these require different measurement frameworks and different sample designs.</div>
+    <div class="field-group">
+      <label class="field-label">What your intervention does — average, distribution, or both</label>
+      <textarea id="f-e3a" placeholder="The intervention I designed in Section 6 primarily improves [the average / the distribution / both], because [specific mechanism — who it reaches, through what pathway, and whether that reach is concentrated in already-strong areas or directed toward excluded populations]..." oninput="u()"></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">If only the average: what would need to change to also improve the distribution?</label>
+      <p class="field-sub">Or if only the distribution: how would you make the distributional improvement visible in the aggregate metric, so it is not invisible to decision-makers who track CII scores?</p>
+      <textarea id="f-e3b" placeholder="To also address [the distribution / the aggregate visibility], the intervention would need [specific design change — targeted delivery mechanism / disaggregated monitoring / supplementary distributional metric]..." oninput="u()" style="min-height:52px"></textarea>
+    </div>
+  </div>
+
+  <!-- Equity statement -->
+  <div class="equity-output">
+    <p class="eo-title">Your equity statement</p>
+    <p style="font-size:12px;color:var(--teal-mid);margin-bottom:12px;line-height:1.6">This statement synthesises your three equity audit responses. It is designed to be included directly in a diagnostic presentation, research paper, or strategy document — not as a disclaimer at the end, but as a substantive analytical section.</p>
+    <div class="eo-row"><p class="eo-label">Who does not benefit — and the structural mechanism</p><p class="eo-val" id="out-e1"><span class="eo-empty">Complete Question 01 above</span></p></div>
+    <div class="eo-row"><p class="eo-label">Foundational–Healthy Society overlap in this city</p><p class="eo-val" id="out-e2"><span class="eo-empty">—</span></p></div>
+    <div class="eo-row" style="border-bottom:none;padding-bottom:0;margin-bottom:0"><p class="eo-label">What the intervention improves — average, distribution, or both</p><p class="eo-val" id="out-e3"><span class="eo-empty">—</span></p></div>
+  </div>
+
+  <div class="pdf-btn-wrap">
+    <button class="pdf-btn" onclick="window.print()">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17v-6M9 14l3 3 3-3"/><rect x="3" y="3" width="18" height="14" rx="2"/><path d="M3 17h18v4H3z"/></svg>
+      Save my equity audit as PDF
+    </button>
+    <p class="pdf-hint">Opens your browser's print dialog — choose "Save as PDF" as the destination</p>
+  </div>
+</div>
+<script>
+var aud='pm';
+function setAud(a){
+  aud=a;
+  document.getElementById('btn-pm').className='aud-btn'+(a==='pm'?' pm-active':'');
+  document.getElementById('btn-rs').className='aud-btn'+(a==='rs'?' rs-active':'');
+  ['1','2','3'].forEach(function(n){
+    document.getElementById('e'+n+'-pm').style.display=a==='pm'?'block':'none';
+    document.getElementById('e'+n+'-rs').style.display=a==='rs'?'block':'none';
+  });
+}
+function u(){
+  var ids=['f-e1a','f-e1b','f-e2a','f-e2b','f-e3a','f-e3b'];
+  var filled=ids.filter(function(id){var el=document.getElementById(id);return el&&el.value.trim().length>15;}).length;
+  var pct=Math.round((filled/ids.length)*100);
+  document.getElementById('pbar').style.width=pct+'%';
+  document.getElementById('pct').textContent=pct+'%';
+  function setOut(outId,srcId){
+    var val=document.getElementById(srcId).value.trim();
+    document.getElementById(outId).innerHTML=val?val:'<span class="eo-empty">—</span>';
+  }
+  setOut('out-e1','f-e1a');
+  setOut('out-e2','f-e2a');
+  setOut('out-e3','f-e3a');
+}
+</script>
+</body>
+</html>
