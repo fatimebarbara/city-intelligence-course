@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Section 7 · End-of-Section Reflection</title>
+<style>
+ :root{
+ --teal-dark:#085041;--teal-mid:#0F6E56;--teal:#1D9E75;--teal-light:#5DCAA5;--teal-pale:#E1F5EE;--teal-faint:#F0FAF6;
+ --purple:#534AB7;--purple-pale:#EEEDFE;--purple-mid:#3C3489;
+ --amber:#BA7517;--amber-pale:#FAEEDA;--blue:#185FA5;--blue-pale:#E6F1FB;
+ --text:#1a1a1a;--text-mid:#444;--text-muted:#6b6b6b;
+ --border:#e2e2e2;--border-light:#f0f0f0;--bg:#fff;--bg-soft:#f8f9fa;
+ --radius:10px;--radius-sm:6px;
+ }
+ *{box-sizing:border-box;margin:0;padding:0}
+ body{font-family:'Helvetica Neue',Arial,sans-serif;color:var(--text);background:var(--bg);font-size:15px;line-height:1.65}
+ .page{max-width:760px;margin:0 auto;padding:48px 24px 80px}
+ .bm-label{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--teal-mid);background:var(--teal-pale);padding:5px 14px;border-radius:20px;margin-bottom:18px}
+ .bm-title{font-size:28px;font-weight:700;color:var(--text);line-height:1.25;margin-bottom:10px;letter-spacing:-.3px;font-family:'Georgia',serif}
+ .bm-sub{font-size:14px;color:var(--text-muted);line-height:1.65;max-width:580px;margin-bottom:20px}
+ .intro-note{background:var(--bg-soft);border:1px solid var(--border-light);border-radius:var(--radius);padding:16px 20px;font-size:13px;color:var(--text-muted);line-height:1.65;margin-bottom:32px}
+ .divider{border:none;border-top:1px solid var(--border-light);margin:32px 0}
+ .progress-row{display:flex;align-items:center;gap:12px;margin-bottom:32px}
+ .progress-label{font-size:12px;color:var(--text-muted);white-space:nowrap}
+ .progress-outer{flex:1;height:5px;background:var(--border-light);border-radius:3px;overflow:hidden}
+ .progress-inner{height:100%;background:var(--teal);border-radius:3px;transition:width .4s ease}
+ .progress-pct{font-size:12px;font-weight:700;color:var(--teal);min-width:36px;text-align:right}
+ .r-block{margin-bottom:28px}
+ .r-num{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:6px}
+ .r-q{font-size:16px;font-weight:600;color:var(--text);line-height:1.5;margin-bottom:10px;font-family:'Georgia',serif}
+ .r-why{font-size:13px;color:var(--text-muted);line-height:1.65;border-left:2px solid var(--border);padding-left:14px;margin-bottom:12px}
+ .r-aud{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+ .r-aud-card{border-radius:var(--radius-sm);padding:10px 12px;font-size:12px;line-height:1.55}
+ .r-aud-card.pm{background:var(--teal-faint);border:1px solid var(--teal-pale);color:var(--teal-dark)}
+ .r-aud-card.rs{background:#F5F0FF;border:1px solid #D8D4F8;color:var(--purple-mid)}
+ .r-aud-label{font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:3px;display:block;opacity:.8}
+ textarea{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px;font-family:'Helvetica Neue',Arial,sans-serif;font-size:14px;color:var(--text);line-height:1.65;resize:vertical;min-height:80px;transition:border-color .15s;outline:none}
+ textarea:focus{border-color:var(--teal-light)}
+ textarea::placeholder{color:#b0b0b0}
+ .journey-table{width:100%;border-collapse:collapse;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;font-size:13px;margin-bottom:28px}
+ .journey-table th{background:var(--bg-soft);padding:9px 13px;text-align:left;font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);border-bottom:1px solid var(--border)}
+ .journey-table td{padding:10px 13px;border-bottom:1px solid var(--border-light);vertical-align:top;font-size:13px}
+ .journey-table tr:last-child td{border-bottom:none}
+ .stag{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;margin-bottom:3px}
+ .s1{background:#FEF3C7;color:#92400E}.s2{background:var(--purple-pale);color:var(--purple-mid)}
+ .s3{background:var(--teal-pale);color:var(--teal-dark)}.s4{background:var(--blue-pale);color:#0C447C}
+ .s5{background:#EAF3DE;color:#27500A}.s6{background:#FAEEDA;color:#633806}
+ .s7{background:var(--teal-pale);color:var(--teal-dark);opacity:.85}
+ .check-item{display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid var(--border-light)}
+ .check-item:last-child{border-bottom:none}
+ .check-item input[type="checkbox"]{width:17px;height:17px;cursor:pointer;flex-shrink:0;margin-top:1px;accent-color:var(--teal)}
+ .check-item label{font-size:14px;color:var(--text);line-height:1.55;cursor:pointer}
+ .ready-box{display:none;background:var(--teal-pale);border-radius:var(--radius);padding:28px 32px;text-align:center;margin-top:32px;border:1px solid var(--teal-light)}
+ .ready-text{font-size:15px;color:var(--teal-dark);line-height:1.7}
+ .forward-box{background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius);padding:22px 24px;margin-top:28px}
+ .forward-label{font-size:10px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px}
+ .forward-text{font-size:14px;color:var(--text-mid);line-height:1.75}
+ .forward-text strong{color:var(--text)}
+ @media(max-width:560px){.r-aud{grid-template-columns:1fr}}
+
+ /* ===== PDF / PRINT ===== */
+ .pdf-btn-wrap{text-align:center;margin-top:32px;padding-top:24px;border-top:1px solid var(--border-light)}
+ .pdf-btn{display:inline-flex;align-items:center;gap:8px;background:var(--teal-dark);color:#fff;border:none;border-radius:24px;padding:11px 28px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Helvetica Neue',Arial,sans-serif;transition:background .15s;letter-spacing:.01em}
+ .pdf-btn:hover{background:var(--teal-mid)}
+ .pdf-btn svg{width:16px;height:16px;flex-shrink:0}
+ .pdf-hint{font-size:11px;color:var(--text-muted);margin-top:8px}
+ @media print{
+ .pdf-btn-wrap,.progress-row,.aud-toggle,.check-item,.ready-box,.forward-box,
+ .bm-label,button,.next-btn,.retry-btn,.results-detail,.pass-badge,
+ .tc-header .tc-toggle,.sev-btns,.check-match-btn,.submit-blank,
+ .gap-opt.disabled-opt,.psel-btn,.trap-btn,.nav-btn{display:none!important}
+ body{background:#fff!important;font-size:13px;line-height:1.6;color:#1a1a1a}
+ .page,.quiz-wrap{max-width:100%!important;padding:20px!important}
+ textarea,input[type=text],.blank-input{border:none!important;background:transparent!important;padding:4px 0!important;resize:none!important;min-height:0!important;font-size:13px!important;color:#1a1a1a!important}
+ .r-block,.seq-block,.canvas-section,.audit-block,.threat-card,.an-card,
+ .brief-out,.brief-row,.csum-row,.op-row,.summary-card,.seq-step{break-inside:avoid}
+ .tc-body{display:block!important}
+ .bm-title,.q-title{font-size:20px!important}
+ .r-q,.q-text{font-size:15px!important}
+ .results-circle{display:none!important}
+ .results-card{display:block!important;border:none!important;padding:0!important}
+ .results-title{font-size:18px!important}
+ .feedback-box{font-size:12px!important}
+ .opt.correct{background:#e8f5f0!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+ .opt.wrong{background:#fef2f2!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+ h1,h2,h3{break-after:avoid}
+ a[href]:after{content:''}
+ }
+</style>
+</head>
+<body>
+<div class="page">
+ <div class="bm-label">From one intervention to a strategy · End-of-section reflection</div>
+ <h1 class="bm-title">From one intervention to a strategy — synthesising your learning</h1>
+ <p class="bm-sub">Section 7 asked you to move from designing interventions to designing the sequence that makes them compound. These five reflections test whether that shift has happened — and prepare you for Sections 7 and 8, where the sequence meets the institutional reality of implementation.</p>
+ <div class="intro-note">Section 7 is the boundary between design and implementation. The reflections here are harder because they ask you to hold two things simultaneously: the logic of the sequence and the political and institutional context it must actually navigate. Both matter.</div>
+
+ <div class="progress-row">
+ <span class="progress-label">Completion</span>
+ <div class="progress-outer"><div class="progress-inner" id="pbar" style="width:0%"></div></div>
+ <span class="progress-pct" id="pct">0%</span>
+ </div>
+
+ <div class="r-block">
+ <p class="r-num">Reflection 01 — The sequencing logic you arrived at</p>
+ <p class="r-q">You have used the dependency mapper and the sequence design tool. Looking at the three-step sequence you built: is the starting point the structural priority — or the political priority? And if they are different, what does that gap tell you about the city or system you are working in?</p>
+ <p class="r-why">The sequencing question is not purely analytical — it is political. The structurally correct starting point and the politically viable starting point are often different pillars. The most important diagnostic insight Section 7 can produce is naming that gap precisely: not pretending it doesn't exist, but not letting it permanently override the structural logic either.</p>
+ <div class="r-aud">
+ <div class="r-aud-card pm"><span class="r-aud-label">Policymaker</span>If the political starting point and the structural starting point are different, what would it take to make the structural starting point politically viable? Name a specific framing, stakeholder, or timeline shift.</div>
+ <div class="r-aud-card rs"><span class="r-aud-label">Researcher</span>If the political starting point consistently differs from the structural priority across cities, what does that pattern reveal about how urban governance systems select their intervention entry points?</div>
+ </div>
+ <textarea placeholder="My structural starting point is [pillar]. My political starting point is [pillar]. The gap between them exists because [structural or institutional reason]. This tells me [diagnostic insight about the system]..." oninput="u()"></textarea>
+ </div>
+
+ <div class="r-block">
+ <p class="r-num">Reflection 02 — The compounding test result</p>
+ <p class="r-q">Apply the strictest version of the compounding test to your sequence: if you removed Step 1, would Steps 2 and 3 still work? If the answer is yes — even partially — your sequence is parallel, not compounding. What would need to change in the design to make the dependency genuine?</p>
+ <p class="r-why">The compounding test is harder than it looks. It is easy to write a sequence that sounds like each step enables the next. It is much harder to design one where the dependency is real — where Step 2 is structurally blocked without Step 1, and Step 3 would produce a meaningfully different outcome if done after Steps 1 and 2 than if done alone. This reflection asks you to be honest about whether your sequence passes that test.</p>
+ <div class="r-aud">
+ <div class="r-aud-card pm"><span class="r-aud-label">Policymaker</span>The practical compounding test: if the administration changed after Step 1, and the new administration abandoned Steps 2 and 3, would Step 1 still have been worth doing on its own? If yes, that is a good sign — structural first moves should have standalone value even if the sequence is interrupted.</div>
+ <div class="r-aud-card rs"><span class="r-aud-label">Researcher</span>The analytical compounding test: what is the counterfactual for each step? What would the outcome be if Step 2 were done without Step 1 having preceded it? If the counterfactual is "roughly the same outcome," the compounding claim needs more precision.</div>
+ </div>
+ <textarea placeholder="If I removed Step 1, Steps 2 and 3 would [still work / not work, because...]. The dependency is [genuine / partial / not yet real], because [specific reasoning]. To make it genuinely compounding, I would need to [specific design change]..." oninput="u()"></textarea>
+ </div>
+
+ <div class="r-block">
+ <p class="r-num">Reflection 03 — The continuity problem</p>
+ <p class="r-q">A compounding sequence requires continuity — in accountability, in time horizon, and in institutional memory — across all three steps. What is the most significant continuity risk in your sequence? Not the most likely external disruption, but the most structurally embedded threat to the chain.</p>
+ <p class="r-why">The biggest threat to a compounding sequence is rarely external events. It is the institutional architecture of the system itself — the way governance structures fragment accountability, the way political cycles reset priorities, the way departmental mandates prevent anyone from being responsible for the sequence as a whole. This reflection asks you to name that structural threat specifically.</p>
+ <div class="r-aud">
+ <div class="r-aud-card pm"><span class="r-aud-label">Policymaker</span>Who is currently accountable for the sequence as a whole — not just for one step? If no one is, that is the most important structural gap in your sequence design. Name who would need to be accountable and what authority that would require.</div>
+ <div class="r-aud-card rs"><span class="r-aud-label">Researcher</span>Which institutional feature of this city's governance is most likely to break the chain? Is it a mandate structure, an electoral cycle, a resource allocation process, or an accountability gap? Name the mechanism, not just the outcome.</div>
+ </div>
+ <textarea placeholder="The most significant continuity risk in my sequence is [specific structural threat]. It is embedded in [governance structure / accountability gap / political cycle]. The way to design against it is [specific countermeasure]..." oninput="u()"></textarea>
+ </div>
+
+ <div class="r-block">
+ <p class="r-num">Reflection 04 — The floor question</p>
+ <p class="r-q">Section 7's central argument is that Foundational intelligence is the structural floor — that every other pillar's development is shaped by whether the conditions for participation exist. Does your city's Foundational performance set a ceiling on any of the other interventions in your sequence? If yes, is the ceiling manageable — or does it need to be raised before the sequence can fully work?</p>
+ <p class="r-why">The floor question is the most important structural question in Section 7. A city can have an excellent intervention sequence targeting Innovator and Integrator pillars — and still see the sequence underperform because the Foundational floor is too low for the populations the sequence is meant to benefit. This is not a reason to delay everything until Foundational is perfect — it is a reason to design the sequence with the floor explicitly in mind.</p>
+ <div class="r-aud">
+ <div class="r-aud-card pm"><span class="r-aud-label">Policymaker</span>Which population groups are most likely to be excluded from the benefits of your sequence by a Foundational gap? Is there a way to design Step 1 so that it simultaneously closes a Foundational gap and creates the structural condition for the next intervention?</div>
+ <div class="r-aud-card rs"><span class="r-aud-label">Researcher</span>Does your research context have evidence on how Foundational performance constrains or enables upper-pillar development? What is the threshold at which Foundational adequacy stops being a binding constraint in the CII comparison group?</div>
+ </div>
+ <textarea placeholder="In my sequence, the Foundational floor [sets a ceiling / does not set a ceiling] because [specific reasoning]. The populations most affected by any Foundational constraint are [specific groups]. My design [addresses / does not yet address] this by [specific design element or gap]..." oninput="u()"></textarea>
+ </div>
+
+ <div class="r-block">
+ <p class="r-num">Reflection 05 — What Section 7 has changed in your thinking</p>
+ <p class="r-q">Before Section 7, you had a diagnosis and an intervention design. After Section 7, you have a sequence. What has thinking about sequencing revealed that the diagnosis alone did not show? What question does the sequencing logic open that you did not have before?</p>
+ <p class="r-why">This is the integration reflection — the one that tests whether the section has added genuine analytical value or just added a layer of complexity to what you already knew. The sequencing lens should reveal something the diagnosis didn't show: a dependency that wasn't visible, a starting point that was counterintuitive, or a compounding possibility that changes the scale of what's achievable. If it has not revealed anything new, the sequencing work may not yet be concrete enough.</p>
+ <div class="r-aud">
+ <div class="r-aud-card pm"><span class="r-aud-label">Policymaker</span>What is the one thing your sequence suggests about your city's strategy that you could not have said before this section? Name the specific decision or conversation this changes.</div>
+ <div class="r-aud-card rs"><span class="r-aud-label">Researcher</span>What research question does the sequencing logic open that your diagnostic work alone did not generate? Name the comparative hypothesis and the data you would need to test it.</div>
+ </div>
+ <textarea style="min-height:100px;" placeholder="Before Section 7, I knew [what the diagnosis revealed]. After Section 7, I see [what the sequencing logic added]. The question this opens that I did not have before is [specific question]. This changes [what I would do differently / what I would now research]..." oninput="u()"></textarea>
+ </div>
+
+ <div class="divider"></div>
+
+ <div style="overflow-x:auto;margin-bottom:28px">
+ <table class="journey-table">
+ <thead><tr><th>Dimension</th><th>Sections 2–4</th><th>Sections 5–6</th><th>Section 7</th></tr></thead>
+ <tbody>
+ <tr><td>The question</td><td><span class="s1">Why cities fail</span> Why do systems fail?<br><span class="s2">City intelligence</span> What do they need?<br><span class="s3">Inside the CII</span> How is capacity measured?</td><td><span class="s4">Diagnosing</span> What is the structural gap?<br><span class="s5">Intervention design</span> What does a structural intervention look like?</td><td><span class="s6">Sequencing</span> In what order — and why?</td></tr>
+ <tr><td>The unit of analysis</td><td>Failure modes + conditions + pillars</td><td>One city · One gap · One intervention</td><td>A sequence of interventions across pillars</td></tr>
+ <tr><td>The output</td><td>Analytical frameworks</td><td>A diagnosis + intervention design</td><td>A three-step compounding strategy</td></tr>
+ <tr><td>Coming next</td><td colspan="3"><span class="s7">Implementation & governance</span> The strategy meets the institution: why good sequences fail in practice — and how to build the governance structures that protect them</td></tr>
+ </tbody>
+ </table>
+ </div>
+
+ <p style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:16px">Before the Section 7 quiz — a final self-check</p>
+ <div id="cl">
+ <div class="check-item"><input type="checkbox" id="c1" onchange="u()"><label for="c1">I can explain why the order of interventions matters — and why parallel interventions are not the same as a compounding sequence</label></div>
+ <div class="check-item"><input type="checkbox" id="c2" onchange="u()"><label for="c2">I have mapped the pillar dependencies for my city and identified the structural starting point for my sequence</label></div>
+ <div class="check-item"><input type="checkbox" id="c3" onchange="u()"><label for="c3">I can apply the compounding test — and I know whether my sequence genuinely passes it or not</label></div>
+ <div class="check-item"><input type="checkbox" id="c4" onchange="u()"><label for="c4">I have named the continuity risk in my sequence and can describe how I would design against it</label></div>
+ <div class="check-item"><input type="checkbox" id="c5" onchange="u()"><label for="c5">I have a specific question the sequencing logic has opened — one I did not have before this section</label></div>
+ </div>
+
+ <div class="forward-box">
+ <p class="forward-label">Section 8 — Why strategies fail in practice</p>
+ <p class="forward-text">You have a strategy: a diagnosis, an intervention design, and a compounding sequence. <strong>Section 8 asks the hardest question of all:</strong> why do strategies like this fail in practice — not because they are wrong, but because the institutional architecture they enter is not designed to support them? Section 8 examines the four implementation failure modes. Section 8 asks what governance structures are needed to protect a compounding sequence from the institutional forces that would break it.</p>
+ </div>
+
+ <div class="ready-box" id="readyBox">
+ <p class="ready-text">You are ready for the Section 7 quiz.<br>The quiz tests whether you can apply sequencing logic to a real city profile — and distinguish a compounding strategy from a parallel one.</p>
+ </div>
+</div>
+<script>
+function u(){
+ var t=document.querySelectorAll('textarea'),c=document.querySelectorAll('#cl input');
+ var tf=0;t.forEach(function(x){if(x.value.trim().length>25)tf++;});
+ var cf=0;c.forEach(function(x){if(x.checked)cf++;});
+ var total=t.length+c.length,done=tf+cf;
+ var pct=Math.round((done/total)*100);
+ document.getElementById('pbar').style.width=pct+'%';
+ document.getElementById('pct').textContent=pct+'%';
+ document.getElementById('readyBox').style.display=(pct>=75)?'block':'none';
+}
+</script>
+
+ <div class="pdf-btn-wrap">
+ <button class="pdf-btn" onclick="window.print()">
+ <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17v-6M9 14l3 3 3-3"/><rect x="3" y="3" width="18" height="14" rx="2"/><path d="M3 17h18v4H3z"/></svg>
+ Save my answers as PDF
+ </button>
+ <p class="pdf-hint">Opens your browser's print dialog — choose "Save as PDF" as the destination</p>
+ </div>
+</body>
+</html>
