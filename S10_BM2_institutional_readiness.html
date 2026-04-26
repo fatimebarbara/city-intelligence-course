@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Section 11 · The city intelligence mindset — Institutional readiness assessment</title>
+<style>
+  :root{
+    --teal-dark:#085041;--teal-mid:#0F6E56;--teal:#1D9E75;--teal-light:#5DCAA5;--teal-pale:#E1F5EE;--teal-faint:#F0FAF6;
+    --purple:#534AB7;--purple-pale:#EEEDFE;--purple-mid:#3C3489;
+    --amber:#BA7517;--amber-pale:#FAEEDA;--blue:#185FA5;--blue-pale:#E6F1FB;
+    --coral:#D85A30;--coral-pale:#FAECE7;--green:#3B6D11;--green-pale:#EAF3DE;
+    --text:#1a1a1a;--text-mid:#444;--text-muted:#6b6b6b;
+    --border:#e2e2e2;--border-light:#f0f0f0;--bg:#fff;--bg-soft:#f8f9fa;
+    --radius:10px;--radius-sm:6px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Helvetica Neue',Arial,sans-serif;color:var(--text);background:var(--bg);font-size:15px;line-height:1.65}
+  .page{max-width:760px;margin:0 auto;padding:48px 24px 80px}
+  .bm-label{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--teal-mid);background:var(--teal-pale);padding:5px 14px;border-radius:20px;margin-bottom:18px}
+  .bm-title{font-size:28px;font-weight:700;color:var(--text);line-height:1.25;margin-bottom:10px;letter-spacing:-.3px;font-family:'Georgia',serif}
+  .bm-sub{font-size:14px;color:var(--text-muted);line-height:1.65;max-width:580px;margin-bottom:20px}
+  .intro-note{background:var(--bg-soft);border:1px solid var(--border-light);border-radius:var(--radius);padding:16px 20px;font-size:13px;color:var(--text-muted);line-height:1.65;margin-bottom:28px}
+  .divider{border:none;border-top:1px solid var(--border-light);margin:28px 0}
+  textarea{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 12px;font-family:'Helvetica Neue',Arial,sans-serif;font-size:14px;color:var(--text);line-height:1.6;resize:vertical;min-height:64px;outline:none;transition:border-color .15s}
+  textarea:focus{border-color:var(--teal-light)}
+  textarea::placeholder{color:#b0b0b0}
+  input[type=text]{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 12px;font-family:'Helvetica Neue',Arial,sans-serif;font-size:14px;color:var(--text);outline:none;transition:border-color .15s}
+  input[type=text]:focus{border-color:var(--teal-light)}
+  .field-label{font-size:12px;font-weight:600;color:var(--text-mid);margin-bottom:5px;display:block}
+  .field-sub{font-size:12px;color:var(--text-muted);margin-bottom:6px;line-height:1.55}
+  .field-group{margin-bottom:14px}
+
+  /* Aud toggle */
+  .aud-toggle{display:flex;gap:8px;margin-bottom:20px}
+  .aud-btn{border:1px solid var(--border);border-radius:20px;padding:7px 18px;font-size:13px;font-weight:500;cursor:pointer;background:var(--bg-soft);color:var(--text-muted);transition:all .15s;font-family:'Helvetica Neue',Arial,sans-serif}
+  .aud-btn.pm-active{background:var(--teal-pale);color:var(--teal-dark);border-color:var(--teal-light);font-weight:600}
+  .aud-btn.rs-active{background:var(--purple-pale);color:var(--purple-mid);border-color:#AFA9EC;font-weight:600}
+
+  /* Progress */
+  .progress-row{display:flex;align-items:center;gap:12px;margin-bottom:24px}
+  .progress-label{font-size:12px;color:var(--text-muted);white-space:nowrap}
+  .progress-outer{flex:1;height:5px;background:var(--border-light);border-radius:3px;overflow:hidden}
+  .progress-inner{height:100%;background:var(--teal);border-radius:3px;transition:width .4s ease}
+  .progress-pct{font-size:12px;font-weight:700;color:var(--teal);min-width:36px;text-align:right}
+
+  /* Rating rows */
+  .sec-head{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin:24px 0 12px;display:flex;align-items:center;gap:10px}
+  .sec-head::after{content:'';flex:1;height:1px;background:var(--border-light)}
+
+  .ir-block{border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:12px}
+  .ir-q{font-size:14px;font-weight:700;font-family:'Georgia',serif;color:var(--text);margin-bottom:6px;line-height:1.45}
+  .ir-why{font-size:12px;color:var(--text-muted);line-height:1.6;margin-bottom:12px}
+  .aud-ctx{border-radius:var(--radius-sm);padding:9px 12px;margin-bottom:12px;font-size:12px;line-height:1.55}
+  .aud-ctx.pm{background:var(--teal-faint);border-left:3px solid var(--teal-light);color:var(--teal-dark)}
+  .aud-ctx.rs{background:#F5F0FF;border-left:3px solid #AFA9EC;color:var(--purple-mid)}
+  .aud-ctx-label{font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:2px;display:block}
+  .rating-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+  .rating-btn{border:1px solid var(--border);border-radius:14px;padding:5px 14px;font-size:12px;font-weight:600;cursor:pointer;background:var(--bg-soft);color:var(--text-muted);transition:all .15s;font-family:'Helvetica Neue',Arial,sans-serif}
+  .rating-btn.r1.active{background:#FEF2F2;border-color:#FECACA;color:#B91C1C}
+  .rating-btn.r2.active{background:var(--amber-pale);border-color:#E8C06A;color:var(--amber)}
+  .rating-btn.r3.active{background:var(--blue-pale);border-color:#6BA3D4;color:var(--blue)}
+  .rating-btn.r4.active{background:var(--green-pale);border-color:#97C459;color:var(--green)}
+
+  /* Readiness score */
+  .readiness-box{background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius);padding:22px;margin-top:24px}
+  .rb-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:14px}
+  .rb-score{font-size:40px;font-weight:700;font-family:'Georgia',serif;color:var(--teal);margin-bottom:6px;line-height:1}
+  .rb-label{font-size:12px;color:var(--text-muted);margin-bottom:14px}
+  .rb-analysis{font-size:13px;color:var(--text-mid);line-height:1.65;padding:12px 14px;background:var(--bg);border:1px solid var(--border-light);border-radius:var(--radius-sm)}
+  .rb-bars{margin-bottom:14px}
+  .rb-row{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+  .rb-name{font-size:12px;color:var(--text-mid);min-width:230px}
+  .rb-bar-outer{flex:1;height:6px;background:var(--border-light);border-radius:3px;overflow:hidden}
+  .rb-bar-inner{height:100%;border-radius:3px;background:var(--teal);transition:width .4s ease}
+
+  /* First move output */
+  .output-panel{background:var(--teal-faint);border:1px solid var(--teal-pale);border-radius:var(--radius);padding:22px;margin-top:20px}
+  .op-title{font-size:15px;font-weight:700;font-family:'Georgia',serif;color:var(--teal-dark);margin-bottom:14px}
+  .op-row{margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid var(--teal-pale)}
+  .op-row:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+  .op-label{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--teal-mid);margin-bottom:3px}
+  .op-val{font-size:13px;color:var(--teal-dark);line-height:1.6;font-family:'Georgia',serif;font-style:italic}
+  .op-empty{color:var(--text-muted);font-style:normal;font-family:'Helvetica Neue',Arial,sans-serif;font-size:12px}
+
+  /* PDF */
+  .pdf-btn-wrap{text-align:center;margin-top:32px;padding-top:24px;border-top:1px solid var(--border-light)}
+  .pdf-btn{display:inline-flex;align-items:center;gap:8px;background:var(--teal-dark);color:#fff;border:none;border-radius:24px;padding:11px 28px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Helvetica Neue',Arial,sans-serif;transition:background .15s}
+  .pdf-btn:hover{background:var(--teal-mid)}
+  .pdf-hint{font-size:11px;color:var(--text-muted);margin-top:8px}
+  @media print{
+    .pdf-btn-wrap,.progress-row,.aud-toggle,.rating-row,button{display:none!important}
+    body{font-size:13px}.page{max-width:100%!important;padding:20px!important}
+    textarea,input[type=text]{border:none!important;background:transparent!important;resize:none!important;min-height:0!important;font-size:13px!important}
+    .ir-block,.output-panel{break-inside:avoid}
+    a[href]:after{content:''}
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="bm-label">The city intelligence mindset in leadership · Institutional readiness assessment</div>
+  <h1 class="bm-title">How ready is your institution?</h1>
+  <p class="bm-sub">The mindset this course has built requires an institutional environment capable of supporting it. This assessment diagnoses how ready your institution is — and identifies the single most important structural move that would improve that readiness.</p>
+  <div class="intro-note">The goal is not a perfect institution. The goal is an honest map of the terrain you are working in — so that the city intelligence practice you build is calibrated to the actual conditions, not the ideal ones.</div>
+
+  <div class="aud-toggle">
+    <button class="aud-btn pm-active" id="btn-pm" onclick="setAud('pm')">I am a policymaker</button>
+    <button class="aud-btn" id="btn-rs" onclick="setAud('rs')">I am a researcher</button>
+  </div>
+  <div class="progress-row">
+    <span class="progress-label">Assessment completion</span>
+    <div class="progress-outer"><div class="progress-inner" id="pbar" style="width:0%"></div></div>
+    <span class="progress-pct" id="pct">0%</span>
+  </div>
+
+  <div class="field-group">
+    <label class="field-label">Your institution / organisation</label>
+    <input type="text" id="f-inst" placeholder="Name or type of institution..." oninput="u()">
+  </div>
+
+  <p class="sec-head">Dimension 1 — Diagnostic capacity</p>
+  <div class="ir-block">
+    <p class="ir-q">Does your institution have a standing capacity to read structural performance data and surface weak signals before they become crises?</p>
+    <p class="ir-why">Not a one-off study. Not an external evaluation. A standing, recurring practice that produces structural diagnostics — and whose findings formally enter the decision-making process.</p>
+    <div class="aud-ctx pm" id="r1-pm"><span class="aud-ctx-label">Policymaker</span>Is there a team or role with explicit mandate to diagnose the city's structural performance on a regular cycle? Do their findings appear in budget discussions, not just in reports?</div>
+    <div class="aud-ctx rs" id="r1-rs" style="display:none"><span class="aud-ctx-label">Researcher</span>Does your institution have a standing process for tracking emerging gaps in the evidence base — and does that process formally shape research priorities?</div>
+    <div class="rating-row">
+      <button class="rating-btn r1" onclick="setRating('r1',1,this)">Absent</button>
+      <button class="rating-btn r2" onclick="setRating('r1',2,this)">Ad hoc</button>
+      <button class="rating-btn r3" onclick="setRating('r1',3,this)">Established but limited</button>
+      <button class="rating-btn r4" onclick="setRating('r1',4,this)">Strong</button>
+    </div>
+    <textarea id="f-r1" placeholder="What exists: [what diagnostic capacity currently exists]. What is missing: [what would need to change for this to be a genuine standing capacity]. First structural move: [specific action that would begin to close this gap]..." oninput="u()"></textarea>
+  </div>
+
+  <p class="sec-head">Dimension 2 — Tolerance for structural analysis</p>
+  <div class="ir-block">
+    <p class="ir-q">Does your institution reward practitioners who surface uncomfortable structural findings — or does it systematically marginalise them?</p>
+    <p class="ir-why">The character demands of city intelligence leadership are only sustainable in an institution where intellectual honesty is valued above reassuring narratives. The incentive structure of the institution shapes what practitioners actually do with the diagnostic mindset.</p>
+    <div class="aud-ctx pm" id="r2-pm"><span class="aud-ctx-label">Policymaker</span>Think of the last time someone in your organisation presented a structural finding that was politically uncomfortable. What happened to that person's standing, career, or influence as a result?</div>
+    <div class="aud-ctx rs" id="r2-rs" style="display:none"><span class="aud-ctx-label">Researcher</span>Think of the last time a researcher in your institution or field published findings that challenged the dominant framework. What happened to their funding, citation, or professional standing as a result?</div>
+    <div class="rating-row">
+      <button class="rating-btn r1" onclick="setRating('r2',1,this)">Actively penalised</button>
+      <button class="rating-btn r2" onclick="setRating('r2',2,this)">Tolerated but marginalised</button>
+      <button class="rating-btn r3" onclick="setRating('r2',3,this)">Accepted in principle</button>
+      <button class="rating-btn r4" onclick="setRating('r2',4,this)">Genuinely valued</button>
+    </div>
+    <textarea id="f-r2" placeholder="The incentive structure in my institution [rewards / tolerates / marginalises / penalises] structural analysis that challenges the preferred narrative because [structural reason — not individual personalities]. What would need to change is [structural change in how performance is evaluated or rewarded]..." oninput="u()"></textarea>
+  </div>
+
+  <p class="sec-head">Dimension 3 — Cross-boundary working capacity</p>
+  <div class="ir-block">
+    <p class="ir-q">Can your institution support strategies that cross departmental or disciplinary boundaries — with shared accountability, shared metrics, and sustained commitment across transitions?</p>
+    <p class="ir-why">City intelligence strategies are by definition cross-boundary. An institution that cannot hold accountability across boundaries — that fragments mandates, substitutes metrics, and resets at every transition — will systematically undermine the strategies the mindset produces.</p>
+    <div class="aud-ctx pm" id="r3-pm"><span class="aud-ctx-label">Policymaker</span>Name a cross-departmental strategy currently operating in your institution. Does it have shared accountability across departments — or does each department report independently against its own metrics?</div>
+    <div class="aud-ctx rs" id="r3-rs" style="display:none"><span class="aud-ctx-label">Researcher</span>Name a cross-disciplinary research programme in your institution. Does it have a shared primary outcome that all teams are accountable for — or does each team report on its own sub-study independently?</div>
+    <div class="rating-row">
+      <button class="rating-btn r1" onclick="setRating('r3',1,this)">Not possible</button>
+      <button class="rating-btn r2" onclick="setRating('r3',2,this)">Possible in principle, rarely in practice</button>
+      <button class="rating-btn r3" onclick="setRating('r3',3,this)">Occasional examples exist</button>
+      <button class="rating-btn r4" onclick="setRating('r3',4,this)">Structurally supported</button>
+    </div>
+    <textarea id="f-r3" placeholder="Cross-boundary working in my institution [is / is not] structurally supported because [specific institutional feature — mandate design / budget structure / accountability framework]. The most recent cross-boundary strategy I was part of [succeeded / struggled / failed] because [structural reason]..." oninput="u()"></textarea>
+  </div>
+
+  <p class="sec-head">Dimension 4 — Time horizon of accountability</p>
+  <div class="ir-block">
+    <p class="ir-q">Does your institution's accountability system operate on a time horizon long enough for compounding strategies to show results — or does it reset at every budget cycle or political transition?</p>
+    <p class="ir-why">City intelligence compounds. But it only compounds on a timeline that institutional accountability systems often cannot sustain. The time horizon of accountability is the most underappreciated structural constraint on city intelligence practice.</p>
+    <div class="aud-ctx pm" id="r4-pm"><span class="aud-ctx-label">Policymaker</span>What is the effective time horizon of your institution's performance accountability? Not the official one — the real one, as experienced by the people making decisions. Is it the budget year? The electoral cycle? The tenure of the current leadership?</div>
+    <div class="aud-ctx rs" id="r4-rs" style="display:none"><span class="aud-ctx-label">Researcher</span>What is the effective time horizon of your research programme's accountability? The grant cycle? The publication cycle? The career stage of the lead researcher? And how does that horizon compare to the time horizon required to answer the research questions city intelligence opens?</div>
+    <div class="rating-row">
+      <button class="rating-btn r1" onclick="setRating('r4',1,this)">Budget year only</button>
+      <button class="rating-btn r2" onclick="setRating('r4',2,this)">Electoral / grant cycle</button>
+      <button class="rating-btn r3" onclick="setRating('r4',3,this)">Medium term (3–5 years)</button>
+      <button class="rating-btn r4" onclick="setRating('r4',4,this)">Long term with transition protection</button>
+    </div>
+    <textarea id="f-r4" placeholder="The effective time horizon of accountability in my institution is [specific duration — not the official one, the real one]. This means that strategies requiring [longer duration] will [what happens to them]. The structural change that would extend the time horizon is [specific change]..." oninput="u()"></textarea>
+  </div>
+
+  <!-- Readiness box -->
+  <div class="readiness-box" id="readiness-box" style="display:none">
+    <p class="rb-title">Your institutional readiness profile</p>
+    <div class="rb-bars" id="rb-bars"></div>
+    <div class="rb-analysis" id="rb-analysis"></div>
+  </div>
+
+  <p class="sec-head">The first structural move</p>
+  <p class="field-sub" style="margin-bottom:10px">Based on your assessment: the single most important structural change that would most improve your institution's capacity to support city intelligence practice. Not the most ambitious change — the first one. The one that would create the condition for the next move.</p>
+  <textarea id="f-move" placeholder="The first structural move is [specific institutional change — not a programme or initiative, a structural change in how accountability / time horizons / cross-boundary working / diagnostic capacity is organised]. This move creates the condition for [what becomes possible as a result]. The person or role who would need to act is [specific role]. The institutional mechanism through which it could happen is [specific mechanism — mandate change / governance decision / budget reallocation / policy design]..." oninput="u()" style="min-height:90px"></textarea>
+
+  <div class="output-panel">
+    <p class="op-title">Your institutional readiness summary</p>
+    <div class="op-row"><p class="op-label">Institution</p><p class="op-val" id="out-inst"><span class="op-empty">—</span></p></div>
+    <div class="op-row" id="out-weakest-row" style="display:none"><p class="op-label">Most significant readiness gap</p><p class="op-val" id="out-weakest"><span class="op-empty">—</span></p></div>
+    <div class="op-row" style="border-bottom:none;padding-bottom:0;margin-bottom:0"><p class="op-label">First structural move</p><p class="op-val" id="out-move"><span class="op-empty">Complete the field above</span></p></div>
+  </div>
+
+  <div class="pdf-btn-wrap">
+    <button class="pdf-btn" onclick="window.print()">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17v-6M9 14l3 3 3-3"/><rect x="3" y="3" width="18" height="14" rx="2"/><path d="M3 17h18v4H3z"/></svg>
+      Save my assessment as PDF
+    </button>
+    <p class="pdf-hint">Opens your browser's print dialog — choose "Save as PDF" as the destination</p>
+  </div>
+</div>
+<script>
+var aud='pm';
+var ratings={r1:null,r2:null,r3:null,r4:null};
+var dimNames={r1:'Diagnostic capacity',r2:'Tolerance for structural analysis',r3:'Cross-boundary working capacity',r4:'Time horizon of accountability'};
+var rLabels={1:'Absent / Actively penalised',2:'Ad hoc / Marginalised',3:'Established but limited / Accepted in principle',4:'Strong / Genuinely valued'};
+
+function setAud(a){
+  aud=a;
+  document.getElementById('btn-pm').className='aud-btn'+(a==='pm'?' pm-active':'');
+  document.getElementById('btn-rs').className='aud-btn'+(a==='rs'?' rs-active':'');
+  ['1','2','3','4'].forEach(function(n){
+    var pm=document.getElementById('r'+n+'-pm');
+    var rs=document.getElementById('r'+n+'-rs');
+    if(pm) pm.style.display=a==='pm'?'block':'none';
+    if(rs) rs.style.display=a==='rs'?'block':'none';
+  });
+}
+
+function setRating(dim,val,btn){
+  btn.closest('.ir-block').querySelectorAll('.rating-btn').forEach(function(b){b.classList.remove('active')});
+  btn.classList.add('active');
+  ratings[dim]=val;
+  updateReadiness();
+  u();
+}
+
+function updateReadiness(){
+  var rated=Object.entries(ratings).filter(function(e){return e[1]!==null});
+  if(rated.length===0) return;
+  document.getElementById('readiness-box').style.display='block';
+  var barsHtml='';
+  rated.forEach(function(e){
+    var pct=(e[1]/4)*100;
+    barsHtml+='<div class="rb-row"><span class="rb-name">'+dimNames[e[0]]+'</span><div class="rb-bar-outer"><div class="rb-bar-inner" style="width:'+pct+'%"></div></div></div>';
+  });
+  document.getElementById('rb-bars').innerHTML=barsHtml;
+
+  var minKey=null,minVal=5;
+  rated.forEach(function(e){if(e[1]<minVal){minVal=e[1];minKey=e[0];}});
+  var avg=rated.reduce(function(s,e){return s+e[1];},0)/rated.length;
+
+  var text='';
+  if(minVal===1){
+    text='Your institution has a critical gap in <strong>'+dimNames[minKey]+'</strong>. At this level, city intelligence practice faces active institutional resistance — not passive indifference. The first structural move must address this dimension specifically, because building diagnostic capacity, cross-boundary strategies, or longer time horizons in an institution that penalises structural analysis will produce work that cannot survive.';
+  } else if(minVal===2){
+    text='Your institution shows the most significant gap in <strong>'+dimNames[minKey]+'</strong>. At this level, city intelligence practice is possible but systematically disadvantaged. The work happens despite the institutional conditions, not because of them. Addressing this gap is the highest-leverage structural move available — it would amplify the effectiveness of everything else.';
+  } else if(avg>=3.5){
+    text='Your institution is relatively well-positioned for city intelligence practice. The question is no longer "which dimension to build" but "what is preventing the existing capacity from compounding?" Look for the connection points between dimensions — where strong diagnostic capacity is not yet feeding into cross-boundary strategy design, or where cross-boundary capacity is not yet protected by long-horizon accountability.';
+  } else {
+    text='Your institution has a mixed readiness profile. The most strategic development focus is <strong>'+dimNames[minKey]+'</strong> — it is the dimension that most constrains the effectiveness of your other institutional capacities. A first structural move in this dimension would have the highest multiplier effect on the rest.';
+  }
+  document.getElementById('rb-analysis').innerHTML=text;
+  if(minKey){
+    document.getElementById('out-weakest').textContent=dimNames[minKey]+' — '+rLabels[minVal];
+    document.getElementById('out-weakest-row').style.display='block';
+  }
+}
+
+function u(){
+  var textIds=['f-r1','f-r2','f-r3','f-r4','f-move'];
+  var inst=document.getElementById('f-inst').value.trim();
+  var filled=textIds.filter(function(id){var el=document.getElementById(id);return el&&el.value.trim().length>20;}).length+(inst.length>2?1:0);
+  var rated=Object.values(ratings).filter(function(v){return v!==null}).length;
+  var pct=Math.round(((filled+rated)/(textIds.length+1+4))*100);
+  document.getElementById('pbar').style.width=pct+'%';
+  document.getElementById('pct').textContent=pct+'%';
+  document.getElementById('out-inst').innerHTML=inst||'<span class="op-empty">—</span>';
+  var mv=document.getElementById('f-move').value.trim();
+  document.getElementById('out-move').innerHTML=mv||'<span class="op-empty">Complete the field above</span>';
+}
+</script>
+</body>
+</html>

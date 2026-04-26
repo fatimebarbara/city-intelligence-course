@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Section 11 · End-of-section reflection</title>
+<style>
+  :root{
+    --teal-dark:#085041;--teal-mid:#0F6E56;--teal:#1D9E75;--teal-light:#5DCAA5;--teal-pale:#E1F5EE;--teal-faint:#F0FAF6;
+    --purple:#534AB7;--purple-pale:#EEEDFE;--purple-mid:#3C3489;
+    --amber:#BA7517;--amber-pale:#FAEEDA;--blue:#185FA5;--blue-pale:#E6F1FB;
+    --text:#1a1a1a;--text-mid:#444;--text-muted:#6b6b6b;
+    --border:#e2e2e2;--border-light:#f0f0f0;--bg:#fff;--bg-soft:#f8f9fa;
+    --radius:10px;--radius-sm:6px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Helvetica Neue',Arial,sans-serif;color:var(--text);background:var(--bg);font-size:15px;line-height:1.65}
+  .page{max-width:760px;margin:0 auto;padding:48px 24px 80px}
+  .bm-label{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--teal-mid);background:var(--teal-pale);padding:5px 14px;border-radius:20px;margin-bottom:18px}
+  .bm-title{font-size:28px;font-weight:700;color:var(--text);line-height:1.25;margin-bottom:10px;letter-spacing:-.3px;font-family:'Georgia',serif}
+  .bm-sub{font-size:14px;color:var(--text-muted);line-height:1.65;max-width:580px;margin-bottom:20px}
+  .intro-note{background:var(--bg-soft);border:1px solid var(--border-light);border-radius:var(--radius);padding:16px 20px;font-size:13px;color:var(--text-muted);line-height:1.65;margin-bottom:32px}
+  .divider{border:none;border-top:1px solid var(--border-light);margin:32px 0}
+  .progress-row{display:flex;align-items:center;gap:12px;margin-bottom:32px}
+  .progress-label{font-size:12px;color:var(--text-muted);white-space:nowrap}
+  .progress-outer{flex:1;height:5px;background:var(--border-light);border-radius:3px;overflow:hidden}
+  .progress-inner{height:100%;background:var(--teal);border-radius:3px;transition:width .4s ease}
+  .progress-pct{font-size:12px;font-weight:700;color:var(--teal);min-width:36px;text-align:right}
+  .r-block{margin-bottom:28px}
+  .r-num{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:6px}
+  .r-q{font-size:16px;font-weight:600;color:var(--text);line-height:1.5;margin-bottom:10px;font-family:'Georgia',serif}
+  .r-why{font-size:13px;color:var(--text-muted);line-height:1.65;border-left:2px solid var(--border);padding-left:14px;margin-bottom:12px}
+  .r-aud{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+  .r-aud-card{border-radius:var(--radius-sm);padding:10px 12px;font-size:12px;line-height:1.55}
+  .r-aud-card.pm{background:var(--teal-faint);border:1px solid var(--teal-pale);color:var(--teal-dark)}
+  .r-aud-card.rs{background:#F5F0FF;border:1px solid #D8D4F8;color:var(--purple-mid)}
+  .r-aud-label{font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:3px;display:block;opacity:.8}
+  textarea{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px;font-family:'Helvetica Neue',Arial,sans-serif;font-size:14px;color:var(--text);line-height:1.65;resize:vertical;min-height:80px;transition:border-color .15s;outline:none}
+  textarea:focus{border-color:var(--teal-light)}
+  textarea::placeholder{color:#b0b0b0}
+
+  /* Full course arc table */
+  .arc-table{width:100%;border-collapse:collapse;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;font-size:12px;margin-bottom:28px}
+  .arc-table th{background:var(--bg-soft);padding:8px 12px;text-align:left;font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);border-bottom:1px solid var(--border)}
+  .arc-table td{padding:9px 12px;border-bottom:1px solid var(--border-light);vertical-align:top}
+  .arc-table tr:last-child td{border-bottom:none}
+  .stag{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;margin-bottom:3px;margin-right:2px}
+  .s1{background:#FEF3C7;color:#92400E}.s2{background:var(--purple-pale);color:var(--purple-mid)}
+  .s3{background:var(--teal-pale);color:var(--teal-dark)}.s4{background:var(--blue-pale);color:#0C447C}
+  .s5{background:#EAF3DE;color:#27500A}.s6{background:#FAEEDA;color:#633806}
+  .s7{background:var(--purple-pale);color:var(--purple-mid)}.s8{background:var(--teal-pale);color:var(--teal-dark)}
+  .s9{background:#FEF3C7;color:#92400E}.s10{background:var(--blue-pale);color:#0C447C}
+  .s11{background:var(--teal-pale);color:var(--teal-dark)}
+
+  /* Completion box */
+  .completion-box{background:var(--teal-dark);border-radius:var(--radius);padding:32px;text-align:center;margin-top:32px}
+  .cb-title{font-family:'Georgia',serif;font-size:22px;font-weight:700;color:#fff;margin-bottom:12px;line-height:1.3}
+  .cb-body{font-size:14px;color:rgba(255,255,255,.85);line-height:1.75;margin-bottom:20px}
+  .cb-commitment{background:rgba(255,255,255,.1);border-radius:var(--radius-sm);padding:16px 20px;font-size:14px;color:#fff;font-family:'Georgia',serif;font-style:italic;line-height:1.65;min-height:40px;text-align:left}
+  .cb-commitment-label{font-size:10px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:6px;text-align:left}
+
+  /* PDF */
+  .pdf-btn-wrap{text-align:center;margin-top:32px;padding-top:24px;border-top:1px solid var(--border-light)}
+  .pdf-btn{display:inline-flex;align-items:center;gap:8px;background:var(--teal-dark);color:#fff;border:none;border-radius:24px;padding:11px 28px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Helvetica Neue',Arial,sans-serif;transition:background .15s}
+  .pdf-btn:hover{background:var(--teal-mid)}
+  .pdf-hint{font-size:11px;color:var(--text-muted);margin-top:8px}
+  @media print{
+    .pdf-btn-wrap,.progress-row,button{display:none!important}
+    body{font-size:13px}.page{max-width:100%!important;padding:20px!important}
+    textarea{border:none!important;background:transparent!important;resize:none!important;min-height:0!important;font-size:13px!important}
+    .r-block,.completion-box{break-inside:avoid}
+    .completion-box{background:var(--teal-faint)!important;-webkit-print-color-adjust:exact}
+    a[href]:after{content:''}
+  }
+  @media(max-width:560px){.r-aud{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="bm-label">The city intelligence mindset in leadership · End-of-section reflection</div>
+  <h1 class="bm-title">What you are taking with you</h1>
+  <p class="bm-sub">Section 11 asked what this work requires of you personally. These five reflections complete the course — not by summarising what you have learned, but by asking what you will actually do with it. The course ends here. The practice does not.</p>
+  <div class="intro-note">These are the hardest reflections in the course — not because they are analytically demanding, but because they ask for honesty about the gap between what you have understood and what you will actually change. That gap is where all the real work happens.</div>
+
+  <div class="progress-row">
+    <span class="progress-label">Completion</span>
+    <div class="progress-outer"><div class="progress-inner" id="pbar" style="width:0%"></div></div>
+    <span class="progress-pct" id="pct">0%</span>
+  </div>
+
+  <div class="r-block">
+    <p class="r-num">Reflection 01 — The character demand that costs you the most</p>
+    <p class="r-q">Of the three character demands — intellectual honesty, patience with complexity, continuity of commitment — which one do you find hardest to sustain under institutional pressure? Not which one you are weakest at in the abstract. Which one the specific institutional conditions you work in most consistently undermine.</p>
+    <p class="r-why">The character demands are not equally difficult for everyone. They are differentially difficult depending on the institutional environment. A researcher in a field that rewards paradigm-confirming results faces a different challenge than a policymaker in a political environment that rewards decisive simplification. Naming the specific institutional condition that undermines your hardest demand is more useful than naming the demand in the abstract.</p>
+    <div class="r-aud">
+      <div class="r-aud-card pm"><span class="r-aud-label">Policymaker</span>Name the specific meeting format, reporting structure, or political pressure that most consistently makes the hardest demand difficult. That institutional mechanism — not your personal weakness — is what you are working against.</div>
+      <div class="r-aud-card rs"><span class="r-aud-label">Researcher</span>Name the specific incentive structure, publication norm, or funding dynamic that most consistently makes the hardest demand difficult. That structural feature of your field — not your personal weakness — is what you are working against.</div>
+    </div>
+    <textarea placeholder="The hardest character demand to sustain in my specific context is [demand]. The institutional mechanism that most consistently undermines it is [specific mechanism — not a general pressure, a named structural feature]. What I would need to change — in myself, or in the institutional conditions — to sustain it more reliably is [specific change]..." oninput="u()"></textarea>
+  </div>
+
+  <div class="r-block">
+    <p class="r-num">Reflection 02 — The practice you will actually build</p>
+    <p class="r-q">Of the three practices — the structural question habit, reading against the metric, the personal feedback loop — which one would produce the most significant change in your work if you built it consistently over the next six months? Not the most interesting one. The one that would most change the quality of your decisions or your research.</p>
+    <p class="r-why">The practices are not equally valuable in every context. The structural question habit is most valuable in organisations that systematically skip the diagnostic step. Reading against the metric is most valuable in organisations where metric substitution is already operating. The personal feedback loop is most valuable for practitioners who have accumulated experience but not yet built the habit of systematically learning from it. The question is which practice closes the most important gap in your specific context.</p>
+    <div class="r-aud">
+      <div class="r-aud-card pm"><span class="r-aud-label">Policymaker</span>Name the specific decision context — the type of meeting, budget discussion, or strategy review — where building this practice would most change the quality of what gets decided. The practice is only real if it is applied in a specific context.</div>
+      <div class="r-aud-card rs"><span class="r-aud-label">Researcher</span>Name the specific research context — the study design, literature review, or evaluation discussion — where building this practice would most change the quality of what gets produced. The practice is only real if it is applied in a specific methodological moment.</div>
+    </div>
+    <textarea placeholder="The practice that would most change the quality of my work if I built it consistently is [practice]. The specific context where it would make the most difference is [named meeting / decision / research moment]. The first time I can apply it is [specific upcoming context — within the next month]. The observable change it would produce is [what would be different about the output or decision]..." oninput="u()"></textarea>
+  </div>
+
+  <div class="r-block">
+    <p class="r-num">Reflection 03 — The city intelligence work this course did not cover</p>
+    <p class="r-q">Looking at the full course arc — from Section 2's failure modes to Section 11's leadership mindset — what is the most important topic, question, or analytical problem that this course did not address? Not a gap in your personal knowledge. A genuine analytical or practical gap in what the course covered that your work would benefit from.</p>
+    <p class="r-why">This is not an invitation to critique the course. It is the question that matters most for your continued development: what comes after this? What is the next course of study, the next research programme, the next practical experiment that the city intelligence framework opens for you but does not complete? Naming that gap precisely is the beginning of the learning that follows.</p>
+    <div class="r-aud">
+      <div class="r-aud-card pm"><span class="r-aud-label">Policymaker</span>Is the gap primarily analytical (a framework the course did not give you), practical (a tool or method you still need), or institutional (a governance design challenge the course named but did not fully resolve)?</div>
+      <div class="r-aud-card rs"><span class="r-aud-label">Researcher</span>Is the gap primarily methodological (a research design the course did not develop), empirical (a dataset or comparison group the course pointed toward but did not reach), or theoretical (a mechanism the course named but did not fully explain)?</div>
+    </div>
+    <textarea placeholder="The most important gap the course did not address is [specific analytical / practical / institutional gap]. This matters for my work because [specific reason — what I cannot do without it that I could do with it]. The next step I would take to address it is [specific action — reading, research, design, conversation, experiment]..." oninput="u()"></textarea>
+  </div>
+
+  <div class="r-block">
+    <p class="r-num">Reflection 04 — The city or community you are doing this for</p>
+    <p class="r-q">Section 11's first video ended with one question: what is the city — or the communities in it — that you are doing this for? Name them now, as precisely as you can. Not a category. Not a policy area. The specific human reality that makes the complexity, the continuity, and the institutional friction worth bearing.</p>
+    <p class="r-why">This is the course's most personal question — and also its most structural one. The specificity of the answer determines the durability of the commitment. A practitioner who can say "the children in the lowest-Foundational districts of Budapest who will live shorter lives than their counterparts two kilometres away" has a more durable foundation than one who says "urban populations facing inequality." Both are valid. Only one is specific enough to return to when the institution makes it easier to stop.</p>
+    <div class="r-aud">
+      <div class="r-aud-card pm"><span class="r-aud-label">Policymaker</span>Write the answer as if you were going to say it aloud in the meeting where you are tempted to soften the uncomfortable finding. Can you say it with that specificity in that room? If not — what is preventing the specificity, and is that something to address?</div>
+      <div class="r-aud-card rs"><span class="r-aud-label">Researcher</span>Write the answer as if you were going to include it in the opening of your next research paper — not as a rhetorical device, but as an honest statement of the human reality your research is ultimately in service of. Does your current research design serve that reality as directly as it could?</div>
+    </div>
+    <textarea style="min-height:100px;" placeholder="The city or communities I am doing this for are [specific description — not a category]. What their structural situation actually looks like is [precise description of the gap, the exclusion, the outcome that motivates the work]. What would change for them if the work succeeds is [specific, concrete improvement in their structural situation]. This is specific enough to return to because [honest reason — why this specificity holds under pressure]..." oninput="u()"></textarea>
+  </div>
+
+  <div class="r-block">
+    <p class="r-num">Reflection 05 — The first thing you do on Monday morning</p>
+    <p class="r-q">Every section of this course has asked: what will you do differently on Monday morning? This is the final version of that question — after ten sections, two video pairs, thirty bonus materials, and ten quizzes. Name one specific thing you will do differently on Monday morning as a direct result of what this course has built in you. Not a general change in orientation. A specific action, in a specific context, with a specific intended outcome.</p>
+    <p class="r-why">The test of a course is not what the learner knows at the end. It is what the learner does differently when they return to the work. A specific, concrete, named first action is not a small ambition — it is the honest account of what a course is actually capable of producing. Everything else is aspiration. This is practice.</p>
+    <div class="r-aud">
+      <div class="r-aud-card pm"><span class="r-aud-label">Policymaker</span>Name the meeting, the document, or the conversation — and what specifically will be different about your contribution to it as a result of this course.</div>
+      <div class="r-aud-card rs"><span class="r-aud-label">Researcher</span>Name the paper, the study design, the grant application, or the research conversation — and what specifically will be different about it as a result of this course.</div>
+    </div>
+    <textarea placeholder="On Monday morning I will [specific action — not a general orientation]. The context is [specific meeting / document / conversation / decision]. What will be different about my contribution is [specific, observable change from what I would have done before this course]. The intended outcome is [what I hope this produces — for the city, the research, or the institution]. I know this is real rather than aspirational because [specific reason]..." oninput="u()"></textarea>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Full course arc table -->
+  <p style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:12px">The complete course arc</p>
+  <div style="overflow-x:auto;margin-bottom:28px">
+    <table class="arc-table">
+      <thead><tr><th>Section</th><th>Title</th><th>What it built</th></tr></thead>
+      <tbody>
+        <tr><td><span class="stag s1">S2</span></td><td>Why cities fail despite good data</td><td>The ability to name failure structurally — not as bad luck or bad people</td></tr>
+        <tr><td><span class="stag s2">S3</span></td><td>What city intelligence actually is</td><td>A definition of intelligence as a systemic property — not a dataset or a technology</td></tr>
+        <tr><td><span class="stag s3">S4</span></td><td>Inside the city intelligence index</td><td>The instrument and its six pillars — what the CII measures and how to read it</td></tr>
+        <tr><td><span class="stag s4">S5</span></td><td>Diagnosing your city</td><td>The diagnostic frame — structural gaps, weak signals, the attribution question</td></tr>
+        <tr><td><span class="stag s5">S6</span></td><td>From insight to intervention</td><td>The difference between a symptom response and a structural intervention</td></tr>
+        <tr><td><span class="stag s6">S7</span></td><td>From one intervention to a strategy</td><td>The compounding sequence — why order matters and how to design it</td></tr>
+        <tr><td><span class="stag s7">S8</span></td><td>Why strategies fail in practice</td><td>The four implementation failure modes — structural, not motivational</td></tr>
+        <tr><td><span class="stag s8">S9</span></td><td>Building city intelligence systems</td><td>The four governance countermeasures and the four system components</td></tr>
+        <tr><td><span class="stag s9">S10</span></td><td>Ethics, power and data</td><td>The equity lens — what the aggregate conceals, and the obligations that follow</td></tr>
+        <tr><td><span class="stag s10">S11</span></td><td>The city intelligence mindset in leadership</td><td>The character demands and practices that make this work sustainable — and the question it keeps returning to</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Completion box -->
+  <div class="completion-box" id="completionBox">
+    <p class="cb-title">You have built something real.</p>
+    <p class="cb-body">Not a qualification. Not a framework you have memorised. A way of seeing cities — structurally, diagnostically, honestly — that will change the questions you ask in the work that follows this course. What you do with that way of seeing is the rest of it.</p>
+    <p class="cb-commitment-label">Your commitment — Monday morning</p>
+    <div class="cb-commitment" id="cb-text">Complete Reflection 05 above to see your commitment here.</div>
+  </div>
+
+  <div class="pdf-btn-wrap">
+    <button class="pdf-btn" onclick="window.print()">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17v-6M9 14l3 3 3-3"/><rect x="3" y="3" width="18" height="14" rx="2"/><path d="M3 17h18v4H3z"/></svg>
+      Save my final reflection as PDF
+    </button>
+    <p class="pdf-hint">Opens your browser's print dialog — choose "Save as PDF" as the destination</p>
+  </div>
+</div>
+<script>
+function u(){
+  var t=document.querySelectorAll('textarea');
+  var tf=0;t.forEach(function(x){if(x.value.trim().length>25)tf++;});
+  var pct=Math.round((tf/t.length)*100);
+  document.getElementById('pbar').style.width=pct+'%';
+  document.getElementById('pct').textContent=pct+'%';
+  var r5=document.querySelectorAll('textarea')[4];
+  if(r5&&r5.value.trim().length>20){
+    document.getElementById('cb-text').textContent=r5.value.trim();
+  }
+}
+</script>
+</body>
+</html>

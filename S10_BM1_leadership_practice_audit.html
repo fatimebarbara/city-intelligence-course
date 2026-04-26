@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Section 11 · The city intelligence mindset — Leadership practice audit</title>
+<style>
+  :root{
+    --teal-dark:#085041;--teal-mid:#0F6E56;--teal:#1D9E75;--teal-light:#5DCAA5;--teal-pale:#E1F5EE;--teal-faint:#F0FAF6;
+    --purple:#534AB7;--purple-pale:#EEEDFE;--purple-mid:#3C3489;
+    --amber:#BA7517;--amber-pale:#FAEEDA;--blue:#185FA5;--blue-pale:#E6F1FB;
+    --coral:#D85A30;--coral-pale:#FAECE7;--green:#3B6D11;--green-pale:#EAF3DE;
+    --text:#1a1a1a;--text-mid:#444;--text-muted:#6b6b6b;
+    --border:#e2e2e2;--border-light:#f0f0f0;--bg:#fff;--bg-soft:#f8f9fa;
+    --radius:10px;--radius-sm:6px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Helvetica Neue',Arial,sans-serif;color:var(--text);background:var(--bg);font-size:15px;line-height:1.65}
+  .page{max-width:760px;margin:0 auto;padding:48px 24px 80px}
+  .bm-label{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--teal-mid);background:var(--teal-pale);padding:5px 14px;border-radius:20px;margin-bottom:18px}
+  .bm-title{font-size:28px;font-weight:700;color:var(--text);line-height:1.25;margin-bottom:10px;letter-spacing:-.3px;font-family:'Georgia',serif}
+  .bm-sub{font-size:14px;color:var(--text-muted);line-height:1.65;max-width:580px;margin-bottom:20px}
+  .intro-note{background:var(--bg-soft);border:1px solid var(--border-light);border-radius:var(--radius);padding:16px 20px;font-size:13px;color:var(--text-muted);line-height:1.65;margin-bottom:28px}
+  .divider{border:none;border-top:1px solid var(--border-light);margin:28px 0}
+  textarea{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 12px;font-family:'Helvetica Neue',Arial,sans-serif;font-size:14px;color:var(--text);line-height:1.6;resize:vertical;min-height:64px;outline:none;transition:border-color .15s}
+  textarea:focus{border-color:var(--teal-light)}
+  textarea::placeholder{color:#b0b0b0}
+  .field-label{font-size:12px;font-weight:600;color:var(--text-mid);margin-bottom:5px;display:block}
+  .field-sub{font-size:12px;color:var(--text-muted);margin-bottom:6px;line-height:1.55}
+
+  /* Aud toggle */
+  .aud-toggle{display:flex;gap:8px;margin-bottom:20px}
+  .aud-btn{border:1px solid var(--border);border-radius:20px;padding:7px 18px;font-size:13px;font-weight:500;cursor:pointer;background:var(--bg-soft);color:var(--text-muted);transition:all .15s;font-family:'Helvetica Neue',Arial,sans-serif}
+  .aud-btn.pm-active{background:var(--teal-pale);color:var(--teal-dark);border-color:var(--teal-light);font-weight:600}
+  .aud-btn.rs-active{background:var(--purple-pale);color:var(--purple-mid);border-color:#AFA9EC;font-weight:600}
+
+  /* Progress */
+  .progress-row{display:flex;align-items:center;gap:12px;margin-bottom:28px}
+  .progress-label{font-size:12px;color:var(--text-muted);white-space:nowrap}
+  .progress-outer{flex:1;height:5px;background:var(--border-light);border-radius:3px;overflow:hidden}
+  .progress-inner{height:100%;background:var(--teal);border-radius:3px;transition:width .4s ease}
+  .progress-pct{font-size:12px;font-weight:700;color:var(--teal);min-width:36px;text-align:right}
+
+  /* Section headers */
+  .sec-head{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin:28px 0 14px;display:flex;align-items:center;gap:10px}
+  .sec-head::after{content:'';flex:1;height:1px;background:var(--border-light)}
+
+  /* Demand/practice cards */
+  .dp-card{border:1px solid var(--border);border-radius:var(--radius);padding:22px;margin-bottom:14px}
+  .dp-header{display:flex;align-items:flex-start;gap:12px;margin-bottom:14px}
+  .dp-badge{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:3px 10px;border-radius:12px;flex-shrink:0;margin-top:2px}
+  .demand-1 .dp-badge{background:var(--blue-pale);color:var(--blue)}
+  .demand-2 .dp-badge{background:var(--purple-pale);color:var(--purple-mid)}
+  .demand-3 .dp-badge{background:var(--teal-pale);color:var(--teal-dark)}
+  .practice-1 .dp-badge{background:var(--green-pale);color:var(--green)}
+  .practice-2 .dp-badge{background:var(--amber-pale);color:var(--amber)}
+  .practice-3 .dp-badge{background:var(--coral-pale);color:var(--coral)}
+  .dp-title{font-size:15px;font-weight:700;color:var(--text);margin-bottom:4px;font-family:'Georgia',serif}
+  .dp-def{font-size:13px;color:var(--text-muted);line-height:1.6}
+
+  /* Strength scale */
+  .strength-row{display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+  .str-label{font-size:12px;font-weight:600;color:var(--text-mid);white-space:nowrap}
+  .str-btns{display:flex;gap:6px}
+  .str-btn{border:1px solid var(--border);border-radius:14px;padding:4px 12px;font-size:12px;font-weight:600;cursor:pointer;background:var(--bg-soft);color:var(--text-muted);transition:all .15s;font-family:'Helvetica Neue',Arial,sans-serif}
+  .str-btn.absent.active{background:#FEF2F2;border-color:#FECACA;color:#B91C1C}
+  .str-btn.developing.active{background:var(--amber-pale);border-color:#E8C06A;color:var(--amber)}
+  .str-btn.present.active{background:var(--blue-pale);border-color:#6BA3D4;color:var(--blue)}
+  .str-btn.strong.active{background:var(--green-pale);border-color:#97C459;color:var(--green)}
+
+  /* Aud context */
+  .aud-ctx{border-radius:var(--radius-sm);padding:10px 13px;margin-bottom:12px;font-size:13px;line-height:1.6}
+  .aud-ctx.pm{background:var(--teal-faint);border-left:3px solid var(--teal-light);color:var(--teal-dark)}
+  .aud-ctx.rs{background:#F5F0FF;border-left:3px solid #AFA9EC;color:var(--purple-mid)}
+  .aud-ctx-label{font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:3px;display:block}
+
+  /* Profile visual */
+  .profile-box{background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-top:24px}
+  .pb-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:14px}
+  .pb-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+  .pb-name{font-size:13px;font-weight:600;color:var(--text-mid);min-width:200px}
+  .pb-bar-outer{flex:1;height:7px;background:var(--border-light);border-radius:4px;overflow:hidden}
+  .pb-bar-inner{height:100%;border-radius:4px;transition:width .4s ease;background:var(--teal)}
+  .pb-val{font-size:12px;font-weight:700;color:var(--teal-mid);min-width:90px;text-align:right}
+  .pb-analysis{margin-top:14px;font-size:13px;color:var(--text-mid);line-height:1.65;padding:12px 14px;background:var(--bg);border:1px solid var(--border-light);border-radius:var(--radius-sm)}
+
+  /* Commitment output */
+  .commitment-box{background:var(--teal-faint);border:1px solid var(--teal-pale);border-radius:var(--radius);padding:22px;margin-top:20px}
+  .cb-title{font-size:15px;font-weight:700;font-family:'Georgia',serif;color:var(--teal-dark);margin-bottom:14px}
+  .cb-row{margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid var(--teal-pale)}
+  .cb-row:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+  .cb-label{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--teal-mid);margin-bottom:3px}
+  .cb-val{font-size:13px;color:var(--teal-dark);line-height:1.6;font-family:'Georgia',serif;font-style:italic;min-height:18px}
+  .cb-empty{color:var(--text-muted);font-style:normal;font-family:'Helvetica Neue',Arial,sans-serif;font-size:12px}
+
+  /* PDF */
+  .pdf-btn-wrap{text-align:center;margin-top:32px;padding-top:24px;border-top:1px solid var(--border-light)}
+  .pdf-btn{display:inline-flex;align-items:center;gap:8px;background:var(--teal-dark);color:#fff;border:none;border-radius:24px;padding:11px 28px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Helvetica Neue',Arial,sans-serif;transition:background .15s}
+  .pdf-btn:hover{background:var(--teal-mid)}
+  .pdf-hint{font-size:11px;color:var(--text-muted);margin-top:8px}
+  @media print{
+    .pdf-btn-wrap,.progress-row,.aud-toggle,.str-btns,button{display:none!important}
+    body{font-size:13px}.page{max-width:100%!important;padding:20px!important}
+    textarea{border:none!important;background:transparent!important;resize:none!important;min-height:0!important;font-size:13px!important}
+    .dp-card,.commitment-box{break-inside:avoid}
+    a[href]:after{content:''}
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="bm-label">The city intelligence mindset in leadership · Leadership practice audit</div>
+  <h1 class="bm-title">Where is your mindset — right now?</h1>
+  <p class="bm-sub">An honest audit of the three character demands and three practices of city intelligence leadership. Not where you aspire to be. Where you actually are — and what the gap between those two tells you about the work ahead.</p>
+  <div class="intro-note">This audit is not a performance evaluation. It is a diagnostic — the same kind of structural reading you have applied to cities throughout this course, now applied to yourself. The most useful answers are the uncomfortable ones.</div>
+
+  <div class="aud-toggle">
+    <button class="aud-btn pm-active" id="btn-pm" onclick="setAud('pm')">I am a policymaker</button>
+    <button class="aud-btn" id="btn-rs" onclick="setAud('rs')">I am a researcher</button>
+  </div>
+  <div class="progress-row">
+    <span class="progress-label">Audit completion</span>
+    <div class="progress-outer"><div class="progress-inner" id="pbar" style="width:0%"></div></div>
+    <span class="progress-pct" id="pct">0%</span>
+  </div>
+
+  <p class="sec-head">Part 1 — The three character demands</p>
+
+  <!-- Demand 1: Intellectual honesty -->
+  <div class="dp-card demand-1">
+    <div class="dp-header">
+      <span class="dp-badge">Demand 01</span>
+      <div>
+        <p class="dp-title">Intellectual honesty</p>
+        <p class="dp-def">Saying what the diagnostic analysis shows — in the room where something will happen as a result. Not in a seminar. Not in a paper. In the meeting where the people who made the investment are present.</p>
+      </div>
+    </div>
+    <div class="aud-ctx pm" id="d1-pm"><span class="aud-ctx-label">Policymaker</span>Think of a specific recent meeting or decision. Did you present the diagnostic finding fully — including the parts that complicated the preferred narrative? Or did you soften, sequence, or omit the uncomfortable finding to manage the room?</div>
+    <div class="aud-ctx rs" id="d1-rs" style="display:none"><span class="aud-ctx-label">Researcher</span>Think of a specific paper, grant application, or presentation. Did you present the findings that challenged the dominant framework in your field as clearly as the findings that confirmed it? Or did you contextualise the disconfirming findings in ways that made them easier to absorb?</div>
+    <div class="strength-row">
+      <span class="str-label">Current strength:</span>
+      <div class="str-btns">
+        <button class="str-btn absent" onclick="setStr('d1','absent',0,this)">Not yet present</button>
+        <button class="str-btn developing" onclick="setStr('d1','developing',25,this)">Developing</button>
+        <button class="str-btn present" onclick="setStr('d1','present',65,this)">Present</button>
+        <button class="str-btn strong" onclick="setStr('d1','strong',100,this)">Strong</button>
+      </div>
+    </div>
+    <label class="field-label">The most recent situation where this demand was tested — and what you actually did</label>
+    <textarea id="f-d1" placeholder="The situation was [specific context]. The uncomfortable finding was [what the analysis showed]. What I did was [what actually happened in the room — honest account, not aspirational]. What I would do differently is [specific change]..." oninput="u()"></textarea>
+  </div>
+
+  <!-- Demand 2: Patience with complexity -->
+  <div class="dp-card demand-2">
+    <div class="dp-header">
+      <span class="dp-badge">Demand 02</span>
+      <div>
+        <p class="dp-title">Patience with complexity</p>
+        <p class="dp-def">Holding the structural analysis when the institution is pressing for simplification. Giving the institution what it needs rather than what it is asking for — when those two things are different.</p>
+      </div>
+    </div>
+    <div class="aud-ctx pm" id="d2-pm"><span class="aud-ctx-label">Policymaker</span>Think of the last time you were asked to reduce a complex diagnostic to three priorities or one headline recommendation. Did you hold the dependency structure — or did you produce the simplification? And if you produced it, was that a genuine judgment that simplification was appropriate, or a concession to institutional pressure?</div>
+    <div class="aud-ctx rs" id="d2-rs" style="display:none"><span class="aud-ctx-label">Researcher</span>Think of the last time a funder, editor, or conference audience asked you to simplify your findings into a clear policy implication. Did you hold the analytical precision — or did you produce a simplification that the evidence did not fully support?</div>
+    <div class="strength-row">
+      <span class="str-label">Current strength:</span>
+      <div class="str-btns">
+        <button class="str-btn absent" onclick="setStr('d2','absent',0,this)">Not yet present</button>
+        <button class="str-btn developing" onclick="setStr('d2','developing',25,this)">Developing</button>
+        <button class="str-btn present" onclick="setStr('d2','present',65,this)">Present</button>
+        <button class="str-btn strong" onclick="setStr('d2','strong',100,this)">Strong</button>
+      </div>
+    </div>
+    <label class="field-label">The structural analysis you most recently simplified — and what the simplification cost</label>
+    <textarea id="f-d2" placeholder="The analysis was [what the full diagnostic showed]. What I was asked to reduce it to was [what the institution/audience wanted]. What the simplification lost was [what disappeared from the analysis when it was reduced]. Whether that loss was acceptable: [honest assessment]..." oninput="u()"></textarea>
+  </div>
+
+  <!-- Demand 3: Continuity of commitment -->
+  <div class="dp-card demand-3">
+    <div class="dp-header">
+      <span class="dp-badge">Demand 03</span>
+      <div>
+        <p class="dp-title">Continuity of commitment</p>
+        <p class="dp-def">Staying in the work long enough for the compounding to happen. Not as discipline — as a clear answer to the question: what is the city, or the communities in it, that I am doing this for?</p>
+      </div>
+    </div>
+    <div class="aud-ctx pm" id="d3-pm"><span class="aud-ctx-label">Policymaker</span>Name the specific population or community whose structural situation motivates your commitment to city intelligence work. Not a category — a specific group of people whose circumstances you can describe precisely. That specificity is what makes the commitment durable.</div>
+    <div class="aud-ctx rs" id="d3-rs" style="display:none"><span class="aud-ctx-label">Researcher</span>Name the specific structural question that motivates your research commitment. Not a field — a question precise enough that you can imagine what it would mean to answer it, and what would change in the world if you did.</div>
+    <div class="strength-row">
+      <span class="str-label">Current strength:</span>
+      <div class="str-btns">
+        <button class="str-btn absent" onclick="setStr('d3','absent',0,this)">Not yet present</button>
+        <button class="str-btn developing" onclick="setStr('d3','developing',25,this)">Developing</button>
+        <button class="str-btn present" onclick="setStr('d3','present',65,this)">Present</button>
+        <button class="str-btn strong" onclick="setStr('d3','strong',100,this)">Strong</button>
+      </div>
+    </div>
+    <label class="field-label">Name the specific community or question that your commitment returns to when the institutional conditions make it easier to stop</label>
+    <textarea id="f-d3" placeholder="The specific community / question I return to is [precise description — not a category]. What makes this commitment durable rather than aspirational is [specific reason — personal connection / observed injustice / research evidence / direct experience]. When the institutional pressure to stop is highest, this commitment holds because [honest reason]..." oninput="u()"></textarea>
+  </div>
+
+  <p class="sec-head">Part 2 — The three practices</p>
+
+  <!-- Practice 1: The structural question -->
+  <div class="dp-card practice-1">
+    <div class="dp-header">
+      <span class="dp-badge">Practice 01</span>
+      <div>
+        <p class="dp-title">The habit of the structural question</p>
+        <p class="dp-def">Before asking "what should we do?" — asking "what structural mechanism is producing this?" Every time. In every context. Including the ones where the structural question will slow things down.</p>
+      </div>
+    </div>
+    <div class="aud-ctx pm" id="p1-pm"><span class="aud-ctx-label">Policymaker</span>In your last five policy discussions, how many times did the conversation start from the structural mechanism rather than the proposed solution? If the answer is "rarely," that is the practice gap — not a knowledge gap. You have the framework. The practice is applying it reflexively, before the solution discussion begins.</div>
+    <div class="aud-ctx rs" id="p1-rs" style="display:none"><span class="aud-ctx-label">Researcher</span>In your last five research conversations — with colleagues, students, or funders — how many times did you ask "what structural mechanism is producing this pattern?" before moving to methodology? The structural question is not a hypothesis — it is a prior that shapes what method is even appropriate.</div>
+    <div class="strength-row">
+      <span class="str-label">Current strength:</span>
+      <div class="str-btns">
+        <button class="str-btn absent" onclick="setStr('p1','absent',0,this)">Not yet present</button>
+        <button class="str-btn developing" onclick="setStr('p1','developing',25,this)">Developing</button>
+        <button class="str-btn present" onclick="setStr('p1','present',65,this)">Present</button>
+        <button class="str-btn strong" onclick="setStr('p1','strong',100,this)">Strong</button>
+      </div>
+    </div>
+    <label class="field-label">The last time you asked the structural question before the solution question — and what it changed</label>
+    <textarea id="f-p1" placeholder="The context was [meeting / paper / decision]. I asked [structural question]. The effect on the conversation / analysis was [what changed as a result of asking the structural question first]. If I had not asked it, the conversation would have [what it would have produced instead]..." oninput="u()"></textarea>
+  </div>
+
+  <!-- Practice 2: Reading against the metric -->
+  <div class="dp-card practice-2">
+    <div class="dp-header">
+      <span class="dp-badge">Practice 02</span>
+      <div>
+        <p class="dp-title">Reading against the metric</p>
+        <p class="dp-def">In any reporting context: asking what this metric is not showing. What structural outcome the organisation is not measuring. Whether that absence is intentional. This is the practice that protects against institutional self-deception.</p>
+      </div>
+    </div>
+    <div class="aud-ctx pm" id="p2-pm"><span class="aud-ctx-label">Policymaker</span>Name the reporting metric in your organisation that is most likely to be a substituted metric — one that measures output while a structural outcome goes unmeasured. Reading against that metric means naming it explicitly in the next performance review where it appears.</div>
+    <div class="aud-ctx rs" id="p2-rs" style="display:none"><span class="aud-ctx-label">Researcher</span>Name the primary outcome metric in your field that is most likely to be a substituted metric — one that measures what is easy to measure rather than what the intervention was designed to produce. Reading against that metric means designing research that measures both.</div>
+    <div class="strength-row">
+      <span class="str-label">Current strength:</span>
+      <div class="str-btns">
+        <button class="str-btn absent" onclick="setStr('p2','absent',0,this)">Not yet present</button>
+        <button class="str-btn developing" onclick="setStr('p2','developing',25,this)">Developing</button>
+        <button class="str-btn present" onclick="setStr('p2','present',65,this)">Present</button>
+        <button class="str-btn strong" onclick="setStr('p2','strong',100,this)">Strong</button>
+      </div>
+    </div>
+    <label class="field-label">The substituted metric you most need to read against — and what it is not showing</label>
+    <textarea id="f-p2" placeholder="The metric I most need to read against is [specific metric in my organisation or field]. What it is showing is [what the metric actually measures]. What it is not showing is [the structural outcome that goes unmeasured]. The reason the absence persists is [structural reason — not bad intention]..." oninput="u()"></textarea>
+  </div>
+
+  <!-- Practice 3: Personal feedback loop -->
+  <div class="dp-card practice-3">
+    <div class="dp-header">
+      <span class="dp-badge">Practice 03</span>
+      <div>
+        <p class="dp-title">The personal feedback loop</p>
+        <p class="dp-def">At the end of every major cycle: asking what the diagnostic frame missed, what the intervention produced that was not predicted, and what you would design differently. This is what makes a practitioner genuinely more accurate over time — not more confident, more accurate.</p>
+      </div>
+    </div>
+    <div class="aud-ctx pm" id="p3-pm"><span class="aud-ctx-label">Policymaker</span>Think of the most significant intervention or strategy you have been part of in the last three years. Apply the three questions now. What did the diagnostic frame miss? What did the intervention produce that you did not predict? What would you design differently?</div>
+    <div class="aud-ctx rs" id="p3-rs" style="display:none"><span class="aud-ctx-label">Researcher</span>Think of the most significant study or research programme you have been part of in the last three years. Apply the three questions now. What did the theoretical frame miss? What did the data show that you did not predict? What would you design differently?</div>
+    <div class="strength-row">
+      <span class="str-label">Current strength:</span>
+      <div class="str-btns">
+        <button class="str-btn absent" onclick="setStr('p3','absent',0,this)">Not yet present</button>
+        <button class="str-btn developing" onclick="setStr('p3','developing',25,this)">Developing</button>
+        <button class="str-btn present" onclick="setStr('p3','present',65,this)">Present</button>
+        <button class="str-btn strong" onclick="setStr('p3','strong',100,this)">Strong</button>
+      </div>
+    </div>
+    <label class="field-label">Apply the three personal feedback questions to your most significant recent work</label>
+    <textarea id="f-p3" placeholder="What the diagnostic / theoretical frame missed: [honest account]. What the intervention / study produced that I did not predict: [specific surprise — positive or negative]. What I would design differently: [specific design change — not a general improvement]..." oninput="u()"></textarea>
+  </div>
+
+  <!-- Profile visual -->
+  <div class="profile-box" id="profile-box" style="display:none">
+    <p class="pb-title">Your city intelligence leadership profile</p>
+    <div class="pb-row"><span class="pb-name">Intellectual honesty</span><div class="pb-bar-outer"><div class="pb-bar-inner" id="bar-d1" style="width:0%"></div></div><span class="pb-val" id="val-d1">—</span></div>
+    <div class="pb-row"><span class="pb-name">Patience with complexity</span><div class="pb-bar-outer"><div class="pb-bar-inner" id="bar-d2" style="width:0%"></div></div><span class="pb-val" id="val-d2">—</span></div>
+    <div class="pb-row"><span class="pb-name">Continuity of commitment</span><div class="pb-bar-outer"><div class="pb-bar-inner" id="bar-d3" style="width:0%"></div></div><span class="pb-val" id="val-d3">—</span></div>
+    <div class="pb-row" style="margin-top:10px"><span class="pb-name">Structural question habit</span><div class="pb-bar-outer"><div class="pb-bar-inner" id="bar-p1" style="width:0%"></div></div><span class="pb-val" id="val-p1">—</span></div>
+    <div class="pb-row"><span class="pb-name">Reading against the metric</span><div class="pb-bar-outer"><div class="pb-bar-inner" id="bar-p2" style="width:0%"></div></div><span class="pb-val" id="val-p2">—</span></div>
+    <div class="pb-row"><span class="pb-name">Personal feedback loop</span><div class="pb-bar-outer"><div class="pb-bar-inner" id="bar-p3" style="width:0%"></div></div><span class="pb-val" id="val-p3">—</span></div>
+    <div class="pb-analysis" id="pb-analysis"></div>
+  </div>
+
+  <!-- Commitment -->
+  <p style="font-size:14px;font-weight:700;font-family:'Georgia',serif;color:var(--text);margin:24px 0 8px">The one practice you commit to building first</p>
+  <p class="field-sub" style="margin-bottom:10px">Based on your audit profile: the weakest element that, if strengthened, would most change how you use city intelligence in the next six months. Not the one you find most comfortable to develop. The one that would actually change your practice.</p>
+  <textarea id="f-commit" placeholder="The practice I commit to building first is [specific demand or practice]. I am choosing this because [honest reason — it is the one I most avoid / the one that would most change my work / the one where the gap between aspiration and reality is largest]. The first observable change this would produce in my work is [specific, observable — in a meeting / paper / decision within the next month]..." oninput="u()" style="min-height:80px"></textarea>
+
+  <div class="commitment-box">
+    <p class="cb-title">Your leadership practice commitment</p>
+    <div class="cb-row"><p class="cb-label">The practice I commit to building first</p><p class="cb-val" id="out-commit"><span class="cb-empty">Complete the field above</span></p></div>
+  </div>
+
+  <div class="pdf-btn-wrap">
+    <button class="pdf-btn" onclick="window.print()">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17v-6M9 14l3 3 3-3"/><rect x="3" y="3" width="18" height="14" rx="2"/><path d="M3 17h18v4H3z"/></svg>
+      Save my audit as PDF
+    </button>
+    <p class="pdf-hint">Opens your browser's print dialog — choose "Save as PDF" as the destination</p>
+  </div>
+</div>
+<script>
+var aud='pm';
+var strengths={d1:null,d2:null,d3:null,p1:null,p2:null,p3:null};
+var strVals={absent:0,developing:25,present:65,strong:100};
+var strLabels={absent:'Not yet present',developing:'Developing',present:'Present',strong:'Strong'};
+var names={d1:'Intellectual honesty',d2:'Patience with complexity',d3:'Continuity of commitment',p1:'Structural question habit',p2:'Reading against the metric',p3:'Personal feedback loop'};
+
+function setAud(a){
+  aud=a;
+  document.getElementById('btn-pm').className='aud-btn'+(a==='pm'?' pm-active':'');
+  document.getElementById('btn-rs').className='aud-btn'+(a==='rs'?' rs-active':'');
+  ['d1','d2','d3','p1','p2','p3'].forEach(function(k){
+    var pm=document.getElementById(k+'-pm');
+    var rs=document.getElementById(k+'-rs');
+    if(pm) pm.style.display=a==='pm'?'block':'none';
+    if(rs) rs.style.display=a==='rs'?'block':'none';
+  });
+}
+
+function setStr(key,level,val,btn){
+  btn.closest('.dp-card').querySelectorAll('.str-btn').forEach(function(b){b.classList.remove('active')});
+  btn.classList.add('active');
+  strengths[key]=level;
+  document.getElementById('bar-'+key).style.width=val+'%';
+  document.getElementById('val-'+key).textContent=strLabels[level];
+  document.getElementById('profile-box').style.display='block';
+  updateAnalysis();
+  u();
+}
+
+function updateAnalysis(){
+  var rated=Object.entries(strengths).filter(function(e){return e[1]!==null});
+  if(rated.length===0) return;
+  var minKey=null,minVal=101;
+  rated.forEach(function(e){
+    if(strVals[e[1]]<minVal){minVal=strVals[e[1]];minKey=e[0];}
+  });
+  var avg=rated.reduce(function(sum,e){return sum+strVals[e[1]];},0)/rated.length;
+  var text='';
+  if(minVal===0){
+    text='<strong>'+names[minKey]+'</strong> is not yet present in your practice. This is the most important gap to address — not because it is the most interesting to develop, but because its absence most limits the effectiveness of your other capabilities. A practitioner with strong structural question habits but no intellectual honesty to act on what the analysis shows is well-equipped but underdeployed.';
+  } else if(minVal===25){
+    text='<strong>'+names[minKey]+'</strong> is developing but not yet reliable. The gap between knowing the practice and applying it consistently — especially under institutional pressure — is where leadership development actually happens. Name the specific condition under which this practice breaks down. That condition is what the development work needs to address.';
+  } else if(avg>=80){
+    text='Your leadership profile is strong across all dimensions assessed. The development question is no longer "which practice to build" but "where does consistency break down under the most intense institutional pressure?" That is where the next level of practice lives.';
+  } else {
+    text='Your profile shows a combination of developed and developing capabilities. The most strategic development focus is <strong>'+names[minKey]+'</strong> — strengthening your weakest dimension will amplify the effectiveness of your stronger ones.';
+  }
+  document.getElementById('pb-analysis').innerHTML=text;
+}
+
+function u(){
+  var textIds=['f-d1','f-d2','f-d3','f-p1','f-p2','f-p3','f-commit'];
+  var filled=textIds.filter(function(id){var el=document.getElementById(id);return el&&el.value.trim().length>20;}).length;
+  var rated=Object.values(strengths).filter(function(v){return v!==null}).length;
+  var pct=Math.round(((filled+rated)/(textIds.length+6))*100);
+  document.getElementById('pbar').style.width=pct+'%';
+  document.getElementById('pct').textContent=pct+'%';
+  var cv=document.getElementById('f-commit').value.trim();
+  document.getElementById('out-commit').innerHTML=cv?cv:'<span class="cb-empty">Complete the field above</span>';
+}
+</script>
+</body>
+</html>

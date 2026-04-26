@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Section 11 Quiz — The City Intelligence Mindset in Leadership</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=DM+Sans:wght@300;400;500;600&display=swap');
+:root{--teal-dark:#085041;--teal-mid:#0F6E56;--teal:#1D9E75;--teal-light:#5DCAA5;--teal-pale:#E1F5EE;--teal-faint:#F0FAF6;--correct:#0F6E56;--correct-pale:#E1F5EE;--correct-border:#5DCAA5;--wrong:#B91C1C;--wrong-pale:#FEF2F2;--wrong-border:#FECACA;--text:#1a1a1a;--text-mid:#3a3a3a;--text-muted:#777;--border:#E5E5E5;--bg:#FAFAF9;--card:#FFFFFF;--radius:12px;--radius-sm:8px;}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:15px;line-height:1.65}
+.quiz-wrap{max-width:680px;margin:0 auto;padding:40px 20px 80px}
+.quiz-header{text-align:center;margin-bottom:40px}
+.q-section-label{font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--teal-mid);margin-bottom:12px}
+.q-title{font-family:'Playfair Display',serif;font-size:28px;font-weight:700;color:var(--text);line-height:1.2;margin-bottom:10px}
+.q-desc{font-size:14px;color:var(--text-muted);line-height:1.6;max-width:500px;margin:0 auto}
+.progress-wrap{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px 20px;margin-bottom:28px;display:flex;align-items:center;gap:14px}
+.progress-outer{flex:1;height:6px;background:#E8EAE8;border-radius:3px;overflow:hidden}
+.progress-inner{height:100%;background:linear-gradient(90deg,var(--teal),var(--teal-light));border-radius:3px;transition:width .4s ease;width:0%}
+.progress-text{font-size:12px;font-weight:600;color:var(--teal-mid);white-space:nowrap}
+.score-display{font-size:12px;font-weight:600;color:var(--text-muted);white-space:nowrap}
+.q-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:28px;margin-bottom:16px;display:none;animation:slideIn .3s ease}
+.q-card.active{display:block}
+@keyframes slideIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.q-meta{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.q-num{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--teal-mid);background:var(--teal-pale);padding:3px 10px;border-radius:20px}
+.q-type{font-size:10px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--text-muted)}
+.q-text{font-family:'Playfair Display',serif;font-size:17px;font-weight:500;line-height:1.55;color:var(--text);margin-bottom:20px}
+.options{display:flex;flex-direction:column;gap:8px;margin-bottom:20px}
+.opt{display:flex;align-items:flex-start;gap:12px;padding:12px 14px;border:1px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;transition:all .15s;background:var(--card)}
+.opt:hover:not(.disabled){border-color:var(--teal-light);background:var(--teal-faint)}
+.opt.correct{border-color:var(--correct-border);background:var(--correct-pale)}
+.opt.wrong{border-color:var(--wrong-border);background:var(--wrong-pale)}
+.opt.disabled{cursor:default;opacity:.75}
+.opt-marker{width:22px;height:22px;border-radius:50%;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;font-size:11px;font-weight:700;color:var(--text-muted)}
+.opt.correct .opt-marker{border-color:var(--correct);background:var(--correct);color:#fff}
+.opt.wrong .opt-marker{border-color:var(--wrong);background:var(--wrong);color:#fff}
+.opt-text{font-size:14px;color:var(--text-mid);line-height:1.55;padding-top:1px}
+.tf-row{display:flex;gap:10px;margin-bottom:20px}
+.tf-btn{flex:1;padding:12px;border:1px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;font-size:14px;font-weight:600;text-align:center;transition:all .15s;background:var(--card);color:var(--text-muted)}
+.tf-btn:hover:not(.disabled){border-color:var(--teal-light);background:var(--teal-faint);color:var(--teal-dark)}
+.tf-btn.correct{border-color:var(--correct-border);background:var(--correct-pale);color:var(--correct)}
+.tf-btn.wrong{border-color:var(--wrong-border);background:var(--wrong-pale);color:var(--wrong)}
+.tf-btn.disabled{cursor:default}
+.feedback-box{display:none;padding:16px 18px;border-radius:var(--radius-sm);margin-bottom:20px;font-size:13px;line-height:1.7}
+.feedback-box.correct{background:var(--correct-pale);border:1px solid var(--correct-border);color:var(--teal-dark)}
+.feedback-box.wrong{background:var(--wrong-pale);border:1px solid var(--wrong-border);color:#7A1F1F}
+.feedback-box .fb-verdict{font-weight:700;display:block;margin-bottom:4px}
+.q-nav{display:flex;justify-content:flex-end}
+.next-btn{padding:10px 24px;background:var(--teal);color:#fff;border:none;border-radius:var(--radius-sm);font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background .15s;display:none}
+.next-btn:hover{background:var(--teal-mid)}
+.results-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:40px 32px;text-align:center;display:none}
+.results-circle{width:100px;height:100px;border-radius:50%;background:linear-gradient(135deg,var(--teal),var(--teal-light));display:flex;align-items:center;justify-content:center;margin:0 auto 20px;box-shadow:0 8px 24px rgba(29,158,117,.25)}
+.results-pct{font-family:'Playfair Display',serif;font-size:30px;font-weight:700;color:#fff}
+.results-title{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--text);margin-bottom:8px}
+.results-sub{font-size:14px;color:var(--text-muted);line-height:1.6;margin-bottom:24px}
+.results-detail{display:flex;gap:16px;justify-content:center;margin-bottom:24px}
+.rd-box{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 20px;text-align:center}
+.rd-num{font-family:'Playfair Display',serif;font-size:24px;font-weight:700;color:var(--teal)}
+.rd-label{font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.07em;margin-top:2px}
+.retry-btn{padding:11px 28px;background:var(--teal);color:#fff;border:none;border-radius:var(--radius-sm);font-size:14px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif}
+.pass-badge{display:inline-block;padding:4px 14px;border-radius:20px;font-size:12px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;margin-bottom:16px}
+.pass-badge.pass{background:var(--correct-pale);color:var(--correct);border:1px solid var(--correct-border)}
+.pass-badge.fail{background:var(--wrong-pale);color:var(--wrong);border:1px solid var(--wrong-border)}
+.pdf-btn{display:inline-flex;align-items:center;gap:7px;background:#085041;color:#fff;border:none;border-radius:24px;padding:10px 24px;font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;margin-top:12px}
+.course-complete{background:var(--teal-faint);border:1px solid var(--teal-pale);border-radius:var(--radius);padding:20px 24px;margin-top:20px;text-align:left}
+.cc-label{font-size:10px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--teal-mid);margin-bottom:6px}
+.cc-text{font-size:14px;color:var(--teal-dark);line-height:1.7;font-family:'Playfair Display',serif}
+</style>
+</head>
+<body>
+<div class="quiz-wrap">
+  <div class="quiz-header">
+    <p class="q-section-label">The city intelligence mindset in leadership · City Intelligence Mastercourse</p>
+    <h1 class="q-title">The mindset in practice</h1>
+    <p class="q-desc">The last quiz of the course. It does not test recall — it tests whether the character demands and practices of city intelligence leadership are clear enough to recognise in a real scenario. 10 questions.</p>
+  </div>
+  <div class="progress-wrap">
+    <div class="progress-outer"><div class="progress-inner" id="progress-bar"></div></div>
+    <span class="progress-text" id="progress-text">0 / 10</span>
+    <span class="score-display" id="score-display">Score: 0</span>
+  </div>
+
+  <div class="q-card active" id="q1">
+    <div class="q-meta"><span class="q-num">Question 1</span><span class="q-type">True / False</span></div>
+    <p class="q-text">"A mindset is an attitude — a general orientation toward complexity and honesty that practitioners either have or don't. It cannot be built through deliberate practice."</p>
+    <div class="tf-row">
+      <button class="tf-btn" onclick="checkTF('q1',this,'True','False')">True</button>
+      <button class="tf-btn" onclick="checkTF('q1',this,'False','False')">False</button>
+    </div>
+    <div class="feedback-box" id="fb-q1"></div>
+    <div class="q-nav"><button class="next-btn" id="next-q1" onclick="nextQ(1,2)">Next question →</button></div>
+  </div>
+
+  <div class="q-card" id="q2">
+    <div class="q-meta"><span class="q-num">Question 2</span><span class="q-type">Multiple choice</span></div>
+    <p class="q-text">A senior policymaker has been trained in the city intelligence framework. In a budget meeting, the CII diagnostic shows that the city's heavily invested programme is not translating into Healthy Society improvements. She presents the finding clearly and completely — including the parts that implicate the programme. Afterwards, a colleague tells her: "You didn't need to say all of that in that room." Which character demand did she demonstrate?</p>
+    <div class="options" id="opts-q2">
+      <div class="opt" data-v="A"><span class="opt-marker">A</span><span class="opt-text">Patience with complexity — she held the full diagnostic rather than simplifying it</span></div>
+      <div class="opt" data-v="B"><span class="opt-marker">B</span><span class="opt-text">Intellectual honesty — she said what the diagnostic showed in the room where something would happen as a result, not just in a seminar</span></div>
+      <div class="opt" data-v="C"><span class="opt-marker">C</span><span class="opt-text">Continuity of commitment — she stayed committed to the framework despite institutional pressure</span></div>
+      <div class="opt" data-v="D"><span class="opt-marker">D</span><span class="opt-text">The structural question habit — she asked the structural question before the solution question</span></div>
+    </div>
+    <div class="feedback-box" id="fb-q2"></div>
+    <div class="q-nav"><button class="next-btn" id="next-q2" onclick="nextQ(2,3)">Next question →</button></div>
+  </div>
+
+  <div class="q-card" id="q3">
+    <div class="q-meta"><span class="q-num">Question 3</span><span class="q-type">Multiple choice</span></div>
+    <p class="q-text">Section 11 says the three character demands are not skill gaps — they are character demands. What is the precise difference, and why does it matter?</p>
+    <div class="options" id="opts-q3">
+      <div class="opt" data-v="A"><span class="opt-marker">A</span><span class="opt-text">A skill gap can be closed with training; a character demand requires making a commitment to a way of working that must be actively sustained — it is not a gap to close but a practice to maintain</span></div>
+      <div class="opt" data-v="B"><span class="opt-marker">B</span><span class="opt-text">A skill gap is technical; a character demand is personal — and personal qualities cannot be developed through professional practice</span></div>
+      <div class="opt" data-v="C"><span class="opt-marker">C</span><span class="opt-text">A skill gap affects performance; a character demand affects personality — and personality cannot be changed</span></div>
+      <div class="opt" data-v="D"><span class="opt-marker">D</span><span class="opt-text">Character demands are harder to develop than skill gaps — therefore they should be the last priority in professional development</span></div>
+    </div>
+    <div class="feedback-box" id="fb-q3"></div>
+    <div class="q-nav"><button class="next-btn" id="next-q3" onclick="nextQ(3,4)">Next question →</button></div>
+  </div>
+
+  <div class="q-card" id="q4">
+    <div class="q-meta"><span class="q-num">Question 4</span><span class="q-type">Multiple choice</span></div>
+    <p class="q-text">A researcher completes a major study. At the end, she asks three questions: what did the theoretical frame miss? What did the data show that I did not predict? What would I design differently? Which of the three city intelligence leadership practices is she demonstrating?</p>
+    <div class="options" id="opts-q4">
+      <div class="opt" data-v="A"><span class="opt-marker">A</span><span class="opt-text">The structural question habit</span></div>
+      <div class="opt" data-v="B"><span class="opt-marker">B</span><span class="opt-text">Reading against the metric</span></div>
+      <div class="opt" data-v="C"><span class="opt-marker">C</span><span class="opt-text">The personal feedback loop</span></div>
+      <div class="opt" data-v="D"><span class="opt-marker">D</span><span class="opt-text">Patience with complexity</span></div>
+    </div>
+    <div class="feedback-box" id="fb-q4"></div>
+    <div class="q-nav"><button class="next-btn" id="next-q4" onclick="nextQ(4,5)">Next question →</button></div>
+  </div>
+
+  <div class="q-card" id="q5">
+    <div class="q-meta"><span class="q-num">Question 5</span><span class="q-type">Multiple choice</span></div>
+    <p class="q-text">In a performance review, a city director presents outputs that look successful. A city intelligence practitioner in the room asks: "What is this metric not showing? What structural outcome are we not measuring?" Which practice is this — and why does it protect against the most common form of institutional self-deception?</p>
+    <div class="options" id="opts-q5">
+      <div class="opt" data-v="A"><span class="opt-marker">A</span><span class="opt-text">The structural question habit — it asks for the mechanism behind the output</span></div>
+      <div class="opt" data-v="B"><span class="opt-marker">B</span><span class="opt-text">Reading against the metric — it identifies what the reporting system is optimising for rather than what the strategy was designed to produce, protecting against metric substitution dressed as success</span></div>
+      <div class="opt" data-v="C"><span class="opt-marker">C</span><span class="opt-text">Intellectual honesty — it names the uncomfortable finding in the room where it matters</span></div>
+      <div class="opt" data-v="D"><span class="opt-marker">D</span><span class="opt-text">The personal feedback loop — it asks what the measurement system missed</span></div>
+    </div>
+    <div class="feedback-box" id="fb-q5"></div>
+    <div class="q-nav"><button class="next-btn" id="next-q5" onclick="nextQ(5,6)">Next question →</button></div>
+  </div>
+
+  <div class="q-card" id="q6">
+    <div class="q-meta"><span class="q-num">Question 6</span><span class="q-type">True / False</span></div>
+    <p class="q-text">"The request for simplification — 'give us three priorities,' 'reduce this to a headline' — is always an unreasonable institutional pressure that city intelligence practitioners should resist."</p>
+    <div class="tf-row">
+      <button class="tf-btn" onclick="checkTF('q6',this,'True','False')">True</button>
+      <button class="tf-btn" onclick="checkTF('q6',this,'False','False')">False</button>
+    </div>
+    <div class="feedback-box" id="fb-q6"></div>
+    <div class="q-nav"><button class="next-btn" id="next-q6" onclick="nextQ(6,7)">Next question →</button></div>
+  </div>
+
+  <div class="q-card" id="q7">
+    <div class="q-meta"><span class="q-num">Question 7</span><span class="q-type">Multiple choice</span></div>
+    <p class="q-text">Section 11 argues that continuity of commitment is sustained not by discipline but by a clear answer to one question. What is that question — and why is the specificity of the answer important?</p>
+    <div class="options" id="opts-q7">
+      <div class="opt" data-v="A"><span class="opt-marker">A</span><span class="opt-text">"What is my theory of change?" — specific theories of change are more durable than general commitments</span></div>
+      <div class="opt" data-v="B"><span class="opt-marker">B</span><span class="opt-text">"What is the city — or the communities in it — that I am doing this for?" — because a specific, named human reality is more durable than a general policy commitment when the institutional conditions make it easier to stop</span></div>
+      <div class="opt" data-v="C"><span class="opt-marker">C</span><span class="opt-text">"What is the structural gap I am working to close?" — because structural framing produces more sustained commitment than human framing</span></div>
+      <div class="opt" data-v="D"><span class="opt-marker">D</span><span class="opt-text">"What does success look like?" — because a clear definition of success makes it possible to know when to stop</span></div>
+    </div>
+    <div class="feedback-box" id="fb-q7"></div>
+    <div class="q-nav"><button class="next-btn" id="next-q7" onclick="nextQ(7,8)">Next question →</button></div>
+  </div>
+
+  <div class="q-card" id="q8">
+    <div class="q-meta"><span class="q-num">Question 8</span><span class="q-type">Multiple choice</span></div>
+    <p class="q-text">A policymaker trained in city intelligence enters a meeting where the CII diagnostic clearly shows a structural gap. She knows the right structural question to ask. She asks it. The room moves on to a solution discussion without addressing the structural finding. She lets it go. What has failed — and why?</p>
+    <div class="options" id="opts-q8">
+      <div class="opt" data-v="A"><span class="opt-marker">A</span><span class="opt-text">The structural question habit has failed — she did not ask the question with enough precision</span></div>
+      <div class="opt" data-v="B"><span class="opt-marker">B</span><span class="opt-text">Patience with complexity has failed — she did not hold the structural analysis long enough for it to change the direction of the meeting</span></div>
+      <div class="opt" data-v="C"><span class="opt-marker">C</span><span class="opt-text">Nothing has failed — raising the structural question once is the practitioner's responsibility; what the room does with it is not</span></div>
+      <div class="opt" data-v="D"><span class="opt-marker">D</span><span class="opt-text">Intellectual honesty has failed — she did not surface the uncomfortable finding clearly enough</span></div>
+    </div>
+    <div class="feedback-box" id="fb-q8"></div>
+    <div class="q-nav"><button class="next-btn" id="next-q8" onclick="nextQ(8,9)">Next question →</button></div>
+  </div>
+
+  <div class="q-card" id="q9">
+    <div class="q-meta"><span class="q-num">Question 9</span><span class="q-type">Multiple choice</span></div>
+    <p class="q-text">Section 11 says that the three practices — the structural question habit, reading against the metric, and the personal feedback loop — make a practitioner "more accurate" over time. Why "more accurate" rather than "more confident" or "more effective"?</p>
+    <div class="options" id="opts-q9">
+      <div class="opt" data-v="A"><span class="opt-marker">A</span><span class="opt-text">Because confidence is a psychological state that does not correlate with analytical quality</span></div>
+      <div class="opt" data-v="B"><span class="opt-marker">B</span><span class="opt-text">Because the goal of city intelligence practice is to see what the city is actually doing — not what the strategy said it would do — and accuracy is the measure of how closely the practitioner's understanding matches structural reality</span></div>
+      <div class="opt" data-v="C"><span class="opt-marker">C</span><span class="opt-text">Because effectiveness depends on political conditions outside the practitioner's control</span></div>
+      <div class="opt" data-v="D"><span class="opt-marker">D</span><span class="opt-text">Because accuracy is a more measurable quality than confidence or effectiveness</span></div>
+    </div>
+    <div class="feedback-box" id="fb-q9"></div>
+    <div class="q-nav"><button class="next-btn" id="next-q9" onclick="nextQ(9,10)">Next question →</button></div>
+  </div>
+
+  <div class="q-card" id="q10">
+    <div class="q-meta"><span class="q-num">Question 10</span><span class="q-type">Multiple choice</span></div>
+    <p class="q-text">Section 11's second video ends: "The course ends here. Not because there is nothing left to say. Because the rest of it is practice." What does this statement mean for how the course should be evaluated — by the learner and by anyone assessing its impact?</p>
+    <div class="options" id="opts-q10">
+      <div class="opt" data-v="A"><span class="opt-marker">A</span><span class="opt-text">The course should be evaluated by what the learner knows at the end — the frameworks, models, and analytical tools they have acquired</span></div>
+      <div class="opt" data-v="B"><span class="opt-marker">B</span><span class="opt-text">The course should be evaluated by how well the learner can recall the content in an assessment context</span></div>
+      <div class="opt" data-v="C"><span class="opt-marker">C</span><span class="opt-text">The course should be evaluated by what the learner does differently when they return to the work — the specific changes in how they diagnose, design, govern, and lead that the course has made possible</span></div>
+      <div class="opt" data-v="D"><span class="opt-marker">D</span><span class="opt-text">The course cannot be evaluated — practice is by definition unmeasurable</span></div>
+    </div>
+    <div class="feedback-box" id="fb-q10"></div>
+    <div class="q-nav"><button class="next-btn" id="next-q10" onclick="showResults()">Complete the course →</button></div>
+  </div>
+
+  <div class="results-card" id="results">
+    <div class="results-circle"><span class="results-pct" id="res-pct">—</span></div>
+    <span class="pass-badge" id="pass-badge">—</span>
+    <h2 class="results-title" id="res-title">—</h2>
+    <p class="results-sub" id="res-sub">—</p>
+    <div class="results-detail">
+      <div class="rd-box"><div class="rd-num" id="res-correct">—</div><div class="rd-label">Correct</div></div>
+      <div class="rd-box"><div class="rd-num">10</div><div class="rd-label">Questions</div></div>
+      <div class="rd-box"><div class="rd-num" id="res-score">—</div><div class="rd-label">Points</div></div>
+    </div>
+    <button class="retry-btn" onclick="retryQuiz()">Retake quiz</button>
+    <div style="margin-top:12px"><button class="pdf-btn" onclick="window.print()"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17v-6M9 14l3 3 3-3"/><rect x="3" y="3" width="18" height="14" rx="2"/><path d="M3 17h18v4H3z"/></svg>Save results as PDF</button></div>
+    <div class="course-complete">
+      <p class="cc-label">The City Intelligence Mastercourse</p>
+      <p class="cc-text">You have completed the course. What you have built is not a qualification — it is a way of seeing cities that will change the questions you ask in the work that follows. The rest of it is practice.</p>
+    </div>
+  </div>
+</div>
+<script>
+var TOTAL=10;
+var state={answered:0,correct:0,points:0};
+var mcCorrect={'q2':'B','q3':'A','q4':'C','q5':'B','q7':'B','q8':'B','q9':'B','q10':'C'};
+var feedbacks={
+  'q1':'The correct answer is False. Section 11 makes a precise distinction: a mindset is not an attitude, it is a set of practices — specific habits of seeing, asking, and deciding that are built deliberately and maintained actively over time. The three practices — the structural question habit, reading against the metric, and the personal feedback loop — are each buildable through specific, consistent application in real working contexts. Attitude can be held without being applied. Practice cannot.',
+  'q2':'The correct answer is intellectual honesty. The defining characteristic of this demand is not the quality of the analysis — it is where it is delivered. The policymaker presented the finding in the room where something will happen as a result — in a budget meeting, not a seminar or a report. Her colleague\'s response ("you didn\'t need to say all of that in that room") is precisely the institutional pressure that intellectual honesty responds to: the pressure to soften, omit, or sequence the uncomfortable finding to manage the room.',
+  'q3':'The correct answer is that a skill gap can be closed with training, while a character demand requires making a commitment that must be actively sustained. This distinction matters practically: if the three demands were skill gaps, the appropriate response would be more training, more frameworks, more tools. Because they are character demands, the appropriate response is a commitment — to intellectual honesty, to patience with complexity, to continuity — that the practitioner must choose to maintain, especially when the institutional conditions make it easier not to.',
+  'q4':'The correct answer is the personal feedback loop. The three questions — what did the frame miss? what did the data show that I did not predict? what would I design differently? — are exactly the questions Section 11 names for the personal feedback loop. This practice makes a practitioner more accurate over time by systematically learning from the gap between what the frame predicted and what actually happened. It is distinct from the structural question habit (which is applied before the work begins) and reading against the metric (which is applied during reporting).',
+  'q5':'The correct answer is reading against the metric — specifically because it protects against metric substitution dressed as success. Metric substitution is the failure mode from Section 8 where departments report success on their own output metrics while the structural outcome goes unmeasured. The practice of reading against the metric asks precisely the question that catches this: what is this reporting system not showing? What structural outcome are we not measuring? Without this practice, a successful-looking performance review can conceal a strategy that is failing at the structural level.',
+  'q6':'The correct answer is False. Section 11 is explicit: the request for simplification is "not an unreasonable question. It reflects the real constraints of decision-making." Patience with complexity is not obstinacy — it is the capacity to hold complexity in service of better decisions. The demand is not to refuse simplification but to distinguish between simplifications that are appropriate to the genuine constraints of the decision and simplifications that produce conclusions the evidence does not support. The practice is making that distinction consciously — not defaulting to either obstinacy or concession.',
+  'q7':'The correct answer is "What is the city — or the communities in it — that I am doing this for?" — and the specificity of the answer is important because a specific, named human reality is more durable than a general policy commitment when the institutional conditions make it easier to stop. A practitioner who can say "the children in the lowest-Foundational districts" has a more durable foundation than one who says "urban populations." The specificity makes the commitment concrete enough to return to when the work is slow, costly, and institutionally unrewarded.',
+  'q8':'The correct answer is that patience with complexity has failed. The structural question habit worked — she asked the right question. Intellectual honesty worked — she surfaced the finding. What failed was the sustained commitment to holding the structural analysis long enough to change the direction of the conversation. Raising a structural question once and then letting it go when the room does not respond is not patience with complexity — it is raising the question for the record while conceding the conversation to the solution discussion. The demand is not just to ask the question. It is to hold it.',
+  'q9':'The correct answer is that accuracy is the measure of how closely the practitioner\'s understanding matches structural reality — because the goal of city intelligence practice is to see what the city is actually doing, not what the strategy said it would do. Confidence can increase independently of accuracy — a practitioner can become more confidently wrong over time if they are not learning from the gap between prediction and outcome. Effectiveness depends partly on political conditions outside the practitioner\'s control. Accuracy is the quality that is actually within the practitioner\'s reach to improve — through the personal feedback loop, through reading against the metric, through consistent application of the structural question.',
+  'q10':'The correct answer is that the course should be evaluated by what the learner does differently when they return to the work. The frameworks, models, and tools are the means. The changes in how the learner diagnoses, designs, governs, and leads are the end. A learner who can recall all ten section frameworks but has not changed a single meeting, document, or decision as a result has learned the course\'s content without acquiring the course\'s capability. The test is not what you know — it is what you do.'
+};
+
+function showFeedback(qId,isCorrect,p){
+  var el=document.getElementById('fb-'+qId);
+  el.style.display='block';
+  el.className='feedback-box '+(isCorrect?'correct':'wrong');
+  el.innerHTML='<span class="fb-verdict">'+(isCorrect?'✓ Correct':'✗ Not quite')+'</span>'+feedbacks[qId];
+  document.getElementById('next-'+qId).style.display='block';
+  state.answered++;
+  if(isCorrect){state.correct++;state.points+=(p||1);}
+  var pct=Math.round((state.answered/TOTAL)*100);
+  document.getElementById('progress-bar').style.width=pct+'%';
+  document.getElementById('progress-text').textContent=state.answered+' / '+TOTAL;
+  document.getElementById('score-display').textContent='Score: '+state.correct;
+}
+function checkTF(qId,btn,chosen,c){
+  document.getElementById(qId).querySelectorAll('.tf-btn').forEach(function(b){b.classList.add('disabled')});
+  btn.classList.add(chosen===c?'correct':'wrong');
+  showFeedback(qId,chosen===c,1);
+}
+function checkMC(qId,opt,chosen){
+  var c=mcCorrect[qId];
+  document.getElementById('opts-'+qId).querySelectorAll('.opt').forEach(function(o,i){
+    o.classList.add('disabled');o.onclick=null;
+    if(String.fromCharCode(65+i)===c) o.classList.add('correct');
+  });
+  if(chosen!==c) opt.classList.add('wrong');
+  var p=(qId==='q3'||qId==='q7'||qId==='q9'||qId==='q10')?2:1;
+  showFeedback(qId,chosen===c,p);
+}
+function nextQ(c,n){
+  document.getElementById('q'+c).classList.remove('active');
+  document.getElementById('q'+n).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function showResults(){
+  document.getElementById('q10').classList.remove('active');
+  document.getElementById('results').style.display='block';
+  var pct=Math.round((state.correct/TOTAL)*100);
+  var pass=pct>=70;
+  document.getElementById('res-pct').textContent=pct+'%';
+  document.getElementById('pass-badge').textContent=pass?'COURSE COMPLETE':'KEEP GOING';
+  document.getElementById('pass-badge').className='pass-badge '+(pass?'pass':'fail');
+  document.getElementById('res-title').textContent=pass?'The mindset is clear.':'Review and return.';
+  document.getElementById('res-sub').textContent=pass?'You can distinguish the character demands from the practices, apply them to real scenarios, and name what makes each one difficult to sustain under institutional pressure. The rest of it is practice.':'Review the two videos and the leadership practice audit. The core distinctions — mindset as practice not attitude, intellectual honesty as a room-level demand, patience with complexity as sustained holding rather than initial asking — are the ones to revisit.';
+  document.getElementById('res-correct').textContent=state.correct;
+  document.getElementById('res-score').textContent=state.points;
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function retryQuiz(){
+  state={answered:0,correct:0,points:0};
+  document.getElementById('progress-bar').style.width='0%';
+  document.getElementById('progress-text').textContent='0 / '+TOTAL;
+  document.getElementById('score-display').textContent='Score: 0';
+  document.getElementById('results').style.display='none';
+  document.querySelectorAll('.q-card').forEach(function(c){c.classList.remove('active')});
+  document.getElementById('q1').classList.add('active');
+  document.querySelectorAll('.feedback-box').forEach(function(f){f.style.display='none'});
+  document.querySelectorAll('.next-btn').forEach(function(b){b.style.display='none'});
+  document.querySelectorAll('.opt').forEach(function(o){o.className='opt'});
+  document.querySelectorAll('.tf-btn').forEach(function(b){b.className='tf-btn'});
+  bindAll();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function bindAll(){
+  for(var qId in mcCorrect){
+    (function(id){
+      document.getElementById('opts-'+id).querySelectorAll('.opt').forEach(function(o,i){
+        o.onclick=function(){checkMC(id,this,String.fromCharCode(65+i))};
+      });
+    })(qId);
+  }
+}
+bindAll();
+</script>
+</body>
+</html>
