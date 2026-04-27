@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What comes next — City Intelligence ecosystem</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=DM+Sans:wght@300;400;500;600&display=swap');
+  :root{
+    --teal-dark:#085041;--teal-mid:#0F6E56;--teal:#1D9E75;--teal-light:#5DCAA5;--teal-pale:#E1F5EE;--teal-faint:#F0FAF6;
+    --purple:#534AB7;--purple-pale:#EEEDFE;--purple-mid:#3C3489;
+    --amber:#BA7517;--amber-pale:#FAEEDA;
+    --blue:#185FA5;--blue-pale:#E6F1FB;
+    --coral:#D85A30;--coral-pale:#FAECE7;
+    --green:#3B6D11;--green-pale:#EAF3DE;
+    --text:#1a1a1a;--text-mid:#444;--text-muted:#6b6b6b;
+    --border:#e2e2e2;--border-light:#f0f0f0;--bg:#fff;--bg-soft:#f8f9fa;
+    --radius:12px;--radius-sm:8px;
+    --gold:#B8966A;--gold-pale:#F5EDD8;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'DM Sans',sans-serif;color:var(--text);background:var(--bg);font-size:15px;line-height:1.65}
+  .page{max-width:760px;margin:0 auto;padding:48px 24px 80px}
+
+  /* Opening */
+  .opening{margin-bottom:48px;text-align:center}
+  .open-label{font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--teal-mid);margin-bottom:16px}
+  .open-title{font-family:'Cormorant Garamond',serif;font-size:38px;font-weight:300;color:var(--text);line-height:1.2;margin-bottom:16px;letter-spacing:-.3px}
+  .open-title em{font-style:italic;color:var(--teal-dark)}
+  .open-body{font-size:16px;color:var(--text-muted);line-height:1.75;max-width:520px;margin:0 auto}
+
+  /* Section headers */
+  .sec-head{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted);margin:40px 0 16px;display:flex;align-items:center;gap:12px}
+  .sec-head::after{content:'';flex:1;height:1px;background:var(--border-light)}
+
+  /* Product cards */
+  .product-grid{display:grid;gap:14px;margin-bottom:8px}
+  .product-card{border:1px solid var(--border);border-radius:var(--radius);padding:24px;transition:border-color .2s,box-shadow .2s;position:relative}
+  .product-card:hover{border-color:var(--teal-light);box-shadow:0 4px 20px rgba(29,158,117,.08)}
+  .pc-status{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;padding:3px 10px;border-radius:20px;margin-bottom:14px}
+  .pc-status::before{content:'';width:6px;height:6px;border-radius:50%;flex-shrink:0}
+  .pc-status.live{background:var(--teal-pale);color:var(--teal-dark)}
+  .pc-status.live::before{background:var(--teal)}
+  .pc-status.coming{background:var(--amber-pale);color:var(--amber)}
+  .pc-status.coming::before{background:var(--amber)}
+  .pc-status.planned{background:var(--teal-pale);color:var(--teal-mid)}
+  .pc-status.planned::before{background:var(--teal-light)}
+  .pc-title{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;color:var(--text);margin-bottom:6px;line-height:1.3}
+  .pc-sub{font-size:13px;color:var(--text-muted);line-height:1.6;margin-bottom:14px}
+  .pc-for{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+  .pc-tag{font-size:11px;font-weight:600;padding:3px 10px;border-radius:12px;border:1px solid transparent}
+  .pc-body{font-size:14px;color:var(--text-mid);line-height:1.7}
+  .pc-highlight{margin-top:12px;padding:12px 14px;border-radius:var(--radius-sm);background:var(--teal-faint);border-left:3px solid var(--teal-pale);font-size:13px;color:var(--teal-dark);line-height:1.6}
+  .pc-coming-note{margin-top:12px;padding:10px 13px;border-radius:var(--radius-sm);background:var(--amber-pale);font-size:12px;color:#7A4C00;line-height:1.6;font-style:italic}
+
+  /* CII card */
+  .cii-card{background:var(--teal-dark);border-radius:var(--radius);padding:32px;margin-bottom:16px;color:#fff}
+  .cii-label{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:10px}
+  .cii-title{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:300;color:#fff;margin-bottom:10px;line-height:1.2}
+  .cii-body{font-size:14px;color:rgba(255,255,255,.8);line-height:1.75;margin-bottom:16px;max-width:560px}
+  .cii-features{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px}
+  .cii-feature{background:rgba(255,255,255,.08);border-radius:var(--radius-sm);padding:12px 14px}
+  .cii-feature-title{font-size:12px;font-weight:700;color:rgba(255,255,255,.9);margin-bottom:3px}
+  .cii-feature-body{font-size:12px;color:rgba(255,255,255,.65);line-height:1.55}
+  .cii-link{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.2);color:#fff;text-decoration:none;border-radius:24px;padding:10px 22px;font-size:13px;font-weight:600;transition:background .15s}
+  .cii-link:hover{background:rgba(255,255,255,.22)}
+  .cii-coming{display:inline-block;background:var(--amber);color:#fff;font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;padding:4px 12px;border-radius:12px;margin-top:12px}
+
+  /* Book card */
+  .book-card{border:2px solid var(--gold);border-radius:var(--radius);padding:28px;background:var(--gold-pale);margin-bottom:16px;position:relative}
+  .book-badge{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:3px 12px;border-radius:12px;background:var(--gold);color:#fff;margin-bottom:14px}
+  .book-title{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:600;color:var(--text);margin-bottom:4px;line-height:1.3}
+  .book-subtitle{font-size:13px;color:var(--text-muted);font-style:italic;margin-bottom:14px;line-height:1.5}
+  .book-body{font-size:14px;color:var(--text-mid);line-height:1.7;margin-bottom:14px}
+  .book-highlights{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
+  .book-highlight{background:#fff;border-radius:var(--radius-sm);padding:10px 12px;border:1px solid rgba(184,150,106,.2)}
+  .bh-icon{font-size:16px;margin-bottom:4px}
+  .bh-text{font-size:12px;color:var(--text-mid);line-height:1.5}
+  .book-links{display:flex;gap:8px;flex-wrap:wrap}
+  .book-link{font-size:12px;font-weight:600;color:var(--teal-mid);text-decoration:none;border:1px solid var(--teal-pale);border-radius:20px;padding:5px 14px;background:#fff;transition:all .15s}
+  .book-link:hover{background:var(--teal-pale);color:var(--teal-dark)}
+
+  /* Author block */
+  .author-block{background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius);padding:28px;margin-top:40px}
+  .author-label{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px}
+  .author-name{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;color:var(--text);margin-bottom:6px}
+  .author-body{font-size:14px;color:var(--text-mid);line-height:1.7;margin-bottom:16px}
+  .author-links{display:flex;gap:8px;flex-wrap:wrap}
+  .author-link{font-size:12px;font-weight:600;color:var(--teal-mid);text-decoration:none;border:1px solid var(--teal-pale);border-radius:20px;padding:6px 16px;transition:all .15s}
+  .author-link:hover{background:var(--teal-pale);color:var(--teal-dark)}
+
+  /* Closing */
+  .closing{text-align:center;margin-top:48px;padding:40px;background:var(--bg-soft);border-radius:var(--radius);border:1px solid var(--border-light)}
+  .closing-title{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:300;color:var(--text);line-height:1.3;margin-bottom:12px}
+  .closing-body{font-size:14px;color:var(--text-muted);line-height:1.75;max-width:480px;margin:0 auto}
+
+  @media(max-width:560px){.cii-features,.book-highlights{grid-template-columns:1fr}}
+  @media print{body{font-size:12px}.page{padding:20px!important}a[href]:after{content:''}}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="opening">
+    <p class="open-label">City Intelligence Mastercourse · What comes next</p>
+    <h1 class="open-title">You have built a way of seeing.<br><em>Here is what it connects you to.</em></h1>
+    <p class="open-body">This course is one part of a larger project — a research framework, a comparative instrument, a set of tools, and a growing community of practitioners and researchers using city intelligence to change how urban decisions are made.</p>
+  </div>
+
+  <!-- CII Website -->
+  <div class="cii-card">
+    <p class="cii-label">The central instrument</p>
+    <h2 class="cii-title">The City Intelligence Index — interactive platform</h2>
+    <p class="cii-body">The CII is being developed as a fully interactive platform — where you can explore every pillar, every indicator, and every city in the comparison group. Read cross-pillar patterns, run your own diagnostic analysis, and track trajectory over time as new data is published. Everything this course taught you to read analytically becomes directly explorable.</p>
+    <div class="cii-features">
+      <div class="cii-feature"><p class="cii-feature-title">Live city profiles</p><p class="cii-feature-body">All six pillars, all comparison cities, readable cross-sectionally and over time</p></div>
+      <div class="cii-feature"><p class="cii-feature-title">Cross-pillar analysis</p><p class="cii-feature-body">The Foundational–Healthy Society relationship and every cross-pillar pattern, visually explorable</p></div>
+      <div class="cii-feature"><p class="cii-feature-title">Diagnostic tools</p><p class="cii-feature-body">The framework from this course, applied to the live dataset — for your city, in your context</p></div>
+      <div class="cii-feature"><p class="cii-feature-title">Research hypotheses</p><p class="cii-feature-body">What the completed CII makes testable — including the coordination capacity and strategy outcomes question</p></div>
+    </div>
+    <a href="https://fatimebarbara.vision/en/city-intelligence-index/" class="cii-link" target="_blank">
+      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+      Explore the City Intelligence Index
+    </a>
+    <p class="cii-coming" style="display:block;margin-top:12px;display:inline-block">Interactive platform coming soon</p>
+  </div>
+
+  <p class="sec-head">The learning ecosystem</p>
+
+  <div class="product-grid">
+
+    <!-- 1. Corporate -->
+    <div class="product-card">
+      <span class="pc-status coming">In development</span>
+      <h3 class="pc-title">City Intelligence for Corporate Leaders</h3>
+      <p class="pc-sub">How corporations can read cities structurally — and participate in urban decision-making as genuine partners, not just stakeholders</p>
+      <div class="pc-for">
+        <span class="pc-tag" style="background:var(--blue-pale);color:var(--blue);border-color:var(--blue-pale)">Urban consultancies</span>
+        <span class="pc-tag" style="background:var(--blue-pale);color:var(--blue);border-color:var(--blue-pale)">Real estate & infrastructure</span>
+        <span class="pc-tag" style="background:var(--blue-pale);color:var(--blue);border-color:var(--blue-pale)">ESG teams</span>
+      </div>
+      <p class="pc-body">Corporations shape cities more than most urban policy does. But they do so without a structural map — without knowing which gaps their capacity could address, and where their investment would compound with what the city already has. Most corporate engagement with cities takes the form of lobbying on specific regulatory issues, CSR programmes that address symptoms rather than structural gaps, and procurement relationships that are transactional rather than strategic. None of these require understanding how cities actually work. This programme gives corporate leaders the diagnostic framework to read what a city structurally needs, identify where their organisation's capacity intersects with those gaps, and design the governance architecture for genuine urban partnership — the kind that survives political transitions, produces measurable structural outcomes, and creates compounding value for both the city and the organisation.</p>
+      <div class="pc-coming-note">In development. Contact Dr. Fatime Barbara Hegyi to express interest in cohort participation or in-house delivery.</div>
+    </div>
+
+    <!-- 2. University Leadership — NEW -->
+    <div class="product-card" style="border-color:var(--purple-pale)">
+      <span class="pc-status coming" style="background:var(--purple-pale);color:var(--purple-mid)">In development</span>
+      <h3 class="pc-title">City Intelligence for University Leadership</h3>
+      <p class="pc-sub">How universities can become genuine partners in urban development — not just knowledge providers</p>
+      <div class="pc-for">
+        <span class="pc-tag" style="background:var(--purple-pale);color:var(--purple-mid);border-color:var(--purple-pale)">Rectors & Vice-Rectors</span>
+        <span class="pc-tag" style="background:var(--purple-pale);color:var(--purple-mid);border-color:var(--purple-pale)">University strategy teams</span>
+        <span class="pc-tag" style="background:var(--purple-pale);color:var(--purple-mid);border-color:var(--purple-pale)">Knowledge transfer offices</span>
+      </div>
+      <p class="pc-body">Universities occupy a structural position in cities that no other institution holds: long-term institutional anchors with research capacity, talent formation, civic trust, and physical presence embedded across urban space. Unlike corporations, they cannot relocate. Unlike governments, they survive political cycles. That permanence — combined with the diagnostic and analytical capability that a research-intensive institution carries — makes universities potentially the most durable component of a city intelligence system. Yet most universities engage with their cities through fragmented third-mission activities, individual researcher partnerships, and community programmes that address visible needs without connecting to the city's structural priorities. This programme gives university leaders the framework to change that — to read the CII diagnostically, identify where their institution's structural capacity matches their city's structural gaps, and design the governance architecture for university-city partnerships that compound rather than dissipate.</p>
+      <div class="pc-coming-note">Universities that want to lead urban transformation — not just study it — will find this programme directly applicable to strategy, community engagement, and third mission accountability. Contact to discuss cohort or in-house delivery.</div>
+    </div>
+
+    <!-- 3. University academic module -->
+    <div class="product-card">
+      <span class="pc-status coming">Available for licensing</span>
+      <h3 class="pc-title">University Module: Urban Intelligence and Governance</h3>
+      <p class="pc-sub">Give your postgraduate programme the comparative instrument that no other urban course currently offers</p>
+      <div class="pc-for">
+        <span class="pc-tag" style="background:var(--purple-pale);color:var(--purple-mid);border-color:var(--purple-pale)">MSc Urban Policy</span>
+        <span class="pc-tag" style="background:var(--purple-pale);color:var(--purple-mid);border-color:var(--purple-pale)">Public Administration</span>
+        <span class="pc-tag" style="background:var(--purple-pale);color:var(--purple-mid);border-color:var(--purple-pale)">Urban Planning</span>
+      </div>
+      <p class="pc-body">The City Intelligence Index is a structured comparative framework for reading urban structural performance across six pillars — foundational capacity, innovation ecosystems, coordination architecture, ecological resilience, connectivity, and social outcomes. No other postgraduate urban course currently uses an instrument of this specificity to train structural diagnostic thinking. Students leave with the capability to read a city's CII profile analytically, design compounding interventions, and evaluate governance architecture — skills that are directly applicable in municipal government, international organisations, urban consultancies, and research careers. The module is available for licensing as a self-contained unit within MSc Urban Policy, Public Administration, Urban Planning, and related programmes, with adaptation support for specific programme contexts and learning outcomes.</p>
+      <div class="pc-coming-note">University partnerships welcome. Contact to discuss licensing, co-teaching, or programme integration.</div>
+    </div>
+
+    <!-- 4. Citizens -->
+    <div class="product-card">
+      <span class="pc-status planned">Planned</span>
+      <h3 class="pc-title">City Intelligence for Citizens</h3>
+      <p class="pc-sub">The diagnostic framework for community advocates, local activists, and engaged residents</p>
+      <div class="pc-for">
+        <span class="pc-tag" style="background:var(--teal-pale);color:var(--teal-dark);border-color:var(--teal-pale)">Community organisations</span>
+        <span class="pc-tag" style="background:var(--teal-pale);color:var(--teal-dark);border-color:var(--teal-pale)">Citizen advocates</span>
+        <span class="pc-tag" style="background:var(--teal-pale);color:var(--teal-dark);border-color:var(--teal-pale)">Local activists</span>
+      </div>
+      <p class="pc-body">City intelligence is not only a tool for policymakers and researchers. The diagnostic framework — understanding what structural mechanisms are producing the outcomes communities experience — is exactly what citizen advocacy needs but rarely has access to in an accessible form. A free or low-cost course designed for community groups, grounded in the same CII framework.</p>
+      <div class="pc-coming-note">Planned. If you work with community organisations or citizen groups that would benefit, get in touch.</div>
+    </div>
+
+    <!-- 5. Keynotes -->
+    <div class="product-card">
+      <span class="pc-status live">Available now</span>
+      <h3 class="pc-title">Keynotes and Executive Workshops</h3>
+      <p class="pc-sub">City intelligence arguments delivered live for conferences, ministerial retreats, and executive teams</p>
+      <div class="pc-for">
+        <span class="pc-tag" style="background:var(--green-pale);color:var(--green);border-color:var(--green-pale)">City conferences</span>
+        <span class="pc-tag" style="background:var(--green-pale);color:var(--green);border-color:var(--green-pale)">Ministerial retreats</span>
+        <span class="pc-tag" style="background:var(--green-pale);color:var(--green);border-color:var(--green-pale)">Executive development</span>
+      </div>
+      <p class="pc-body">Several sections of this course — the failure modes, the leadership mindset, the ethics of whose intelligence counts — work as standalone keynote arguments or half-day workshop sessions. The CII gives each one an empirical foundation that generic urban speakers cannot offer.</p>
+      <div class="pc-highlight">Available for booking. Half-day intensive workshops and 45-minute keynotes designed for senior policymakers, urban executives, and research leaders.</div>
+    </div>
+
+  </div>
+
+  <!-- Book card -->
+  <p class="sec-head">The research behind this course</p>
+
+  <div class="book-card">
+    <span class="book-badge">Book</span>
+    <h3 class="book-title">The Future of Cities</h3>
+    <p class="book-subtitle">A Data-Driven Approach to Tackling Grand Challenges and Building Sustainable, Resilient Communities</p>
+    <p class="book-body">The intellectual foundation for the city intelligence framework developed in this course. Drawing on data analysis and real-world urban examples across Europe, the book examines how place leaders — mayors, urban visionaries, and policy catalysts — can use evidence-based decision-making to tackle sustainability, health, education, security, and urban poverty. It makes the case for data-driven public leadership as the mechanism through which cities can generate the structural change their citizens need.</p>
+    <div class="book-highlights">
+      <div class="book-highlight">
+        <p class="bh-icon">📊</p>
+        <p class="bh-text">Data-driven leadership frameworks applied to real cities and real structural challenges</p>
+      </div>
+      <div class="book-highlight">
+        <p class="bh-icon">🏙️</p>
+        <p class="bh-text">16 chapters covering sustainability, health, education, poverty, innovation, and governance</p>
+      </div>
+      <div class="book-highlight">
+        <p class="bh-icon">🔬</p>
+        <p class="bh-text">Grounded in research from the Joint Research Centre of the European Commission</p>
+      </div>
+      <div class="book-highlight">
+        <p class="bh-icon">🎨</p>
+        <p class="bh-text">Cover artwork painted by the author — reflecting the intersection of creativity and urban development</p>
+      </div>
+    </div>
+    <div class="book-links">
+      <a href="https://fatimebarbara.vision/en/books-future-of-cities/" class="book-link" target="_blank">About the book</a>
+      <a href="https://www.amazon.com.be/-/en/Fatime-Barbara-Hegyi-PhD/dp/8409655810" class="book-link" target="_blank">Buy on Amazon (BE)</a>
+      <a href="https://www.amazon.com/Future-Cities-Data-Driven-Sustainable-Communities-ebook/dp/B0DSQ521Q5" class="book-link" target="_blank">Buy on Amazon (US)</a>
+      <a href="https://www.amazon.co.uk/Future-Cities-Data-Driven-Sustainable-Communities/dp/8409655810" class="book-link" target="_blank">Buy on Amazon (UK)</a>
+    </div>
+  </div>
+
+  <!-- Author block -->
+  <div class="author-block">
+    <p class="author-label">Course author</p>
+    <p class="author-name">Dr. Fatime Barbara Hegyi</p>
+    <p class="author-body">City intelligence researcher, author of the City Intelligence Index, and founder of the Future of Cities Learning Hub. Her work at the Joint Research Centre of the European Commission focused on urban intelligence, innovation ecosystems, and policy evaluation. She combines data-driven research with a commitment to making city intelligence accessible to the practitioners and researchers who can use it to change what happens to the people living in cities.</p>
+    <div class="author-links">
+      <a href="https://fatimebarbara.vision/learning-hub/" class="author-link" target="_blank">Future of Cities Learning Hub</a>
+      <a href="https://fatimebarbara.vision/publications/" class="author-link" target="_blank">Research publications</a>
+      <a href="https://fatimebarbara.vision/en/bio/" class="author-link" target="_blank">Speaking enquiries</a>
+      <a href="https://fatimebarbara.vision/en/books-future-of-cities/" class="author-link" target="_blank">The book</a>
+    </div>
+  </div>
+
+  <div class="closing">
+    <h2 class="closing-title">The diagnostic question does not stop<br>at the edge of this course.</h2>
+    <p class="closing-body">Every city you encounter from here is a system producing specific outcomes for specific populations through specific structural mechanisms. You now have the framework to read it — and the obligation to say what you find.</p>
+  </div>
+
+</div>
+</body>
+</html>

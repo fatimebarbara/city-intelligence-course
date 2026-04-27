@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>City Intelligence Mastercourse — Certificate of Completion</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Cinzel:wght@400;600&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap');
+
+  :root{
+    --teal-dark:#085041;--teal-mid:#0F6E56;--teal:#1D9E75;--teal-pale:#E1F5EE;
+    --gold:#B8966A;--gold-light:#D4B483;--gold-pale:#F5EDD8;
+    --text:#1a1a1a;--text-mid:#3a3a3a;--text-muted:#7a7a7a;
+    --border:#e2e2e2;--bg:#FAFAF7;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:'EB Garamond',serif;
+    background:var(--bg);
+    color:var(--text);
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding:40px 20px 60px;
+  }
+
+  /* Controls */
+  .controls{
+    max-width:720px;width:100%;
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:20px 24px;
+    margin-bottom:32px;
+    display:flex;
+    gap:16px;
+    align-items:flex-end;
+    flex-wrap:wrap;
+  }
+  .ctrl-group{display:flex;flex-direction:column;gap:6px;flex:1;min-width:200px}
+  .ctrl-label{font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--text-muted);font-family:'EB Garamond',serif}
+  .ctrl-input{border:1px solid var(--border);border-radius:6px;padding:9px 12px;font-family:'EB Garamond',serif;font-size:16px;color:var(--text);outline:none;transition:border-color .15s;background:#fff}
+  .ctrl-input:focus{border-color:var(--teal)}
+  .ctrl-btn{padding:10px 24px;background:var(--teal-dark);color:#fff;border:none;border-radius:6px;font-family:'EB Garamond',serif;font-size:15px;cursor:pointer;white-space:nowrap;transition:background .15s}
+  .ctrl-btn:hover{background:var(--teal-mid)}
+
+  /* Certificate container */
+  .cert-outer{
+    max-width:800px;width:100%;
+    position:relative;
+  }
+
+  /* The certificate */
+  .certificate{
+    background:#FFFDF8;
+    border:1px solid #e8e0cc;
+    border-radius:4px;
+    padding:60px 72px;
+    position:relative;
+    overflow:hidden;
+    box-shadow:0 8px 40px rgba(0,0,0,.08), 0 2px 8px rgba(0,0,0,.05);
+  }
+
+  /* Corner ornaments */
+  .certificate::before,.certificate::after{
+    content:'';
+    position:absolute;
+    width:80px;height:80px;
+    border-color:var(--gold);
+    border-style:solid;
+    opacity:.5;
+  }
+  .certificate::before{top:20px;left:20px;border-width:2px 0 0 2px}
+  .certificate::after{bottom:20px;right:20px;border-width:0 2px 2px 0}
+
+  /* Inner border */
+  .cert-inner-border{
+    border:1px solid var(--gold-pale);
+    padding:48px 56px;
+    position:relative;
+  }
+  .cert-inner-border::before,.cert-inner-border::after{
+    content:'';
+    position:absolute;
+    width:60px;height:60px;
+    border-color:var(--gold-light);
+    border-style:solid;
+    opacity:.4;
+  }
+  .cert-inner-border::before{top:-1px;right:-1px;border-width:2px 2px 0 0}
+  .cert-inner-border::after{bottom:-1px;left:-1px;border-width:0 0 2px 2px}
+
+  /* Header */
+  .cert-org{
+    font-family:'Cinzel',serif;
+    font-size:11px;
+    font-weight:400;
+    letter-spacing:.25em;
+    text-transform:uppercase;
+    color:var(--teal-mid);
+    text-align:center;
+    margin-bottom:28px;
+  }
+
+  /* Divider */
+  .cert-divider{
+    display:flex;
+    align-items:center;
+    gap:16px;
+    margin:0 auto 28px;
+    max-width:420px;
+  }
+  .cert-divider-line{flex:1;height:1px;background:var(--gold-light);opacity:.6}
+  .cert-divider-ornament{color:var(--gold);font-size:18px;opacity:.8;line-height:1}
+
+  /* Certificate title */
+  .cert-title{
+    font-family:'Cinzel',serif;
+    font-size:11px;
+    font-weight:400;
+    letter-spacing:.3em;
+    text-transform:uppercase;
+    color:var(--text-muted);
+    text-align:center;
+    margin-bottom:18px;
+  }
+
+  .cert-subtitle{
+    font-family:'Cormorant Garamond',serif;
+    font-size:15px;
+    font-weight:300;
+    color:var(--text-muted);
+    text-align:center;
+    letter-spacing:.05em;
+    margin-bottom:28px;
+    font-style:italic;
+  }
+
+  /* Recipient */
+  .cert-recipient-label{
+    font-family:'Cinzel',serif;
+    font-size:10px;
+    letter-spacing:.2em;
+    text-transform:uppercase;
+    color:var(--text-muted);
+    text-align:center;
+    margin-bottom:10px;
+  }
+
+  .cert-recipient-name{
+    font-family:'Cormorant Garamond',serif;
+    font-size:46px;
+    font-weight:300;
+    color:var(--teal-dark);
+    text-align:center;
+    margin-bottom:28px;
+    line-height:1.1;
+    font-style:italic;
+    min-height:56px;
+  }
+
+  /* Body text */
+  .cert-body{
+    font-family:'EB Garamond',serif;
+    font-size:16px;
+    color:var(--text-mid);
+    text-align:center;
+    line-height:1.8;
+    max-width:480px;
+    margin:0 auto 28px;
+  }
+
+  /* Course name */
+  .cert-course{
+    font-family:'Cormorant Garamond',serif;
+    font-size:24px;
+    font-weight:600;
+    color:var(--text);
+    text-align:center;
+    margin-bottom:6px;
+    letter-spacing:.02em;
+  }
+
+  .cert-course-sub{
+    font-family:'EB Garamond',serif;
+    font-size:14px;
+    color:var(--text-muted);
+    text-align:center;
+    font-style:italic;
+    margin-bottom:32px;
+    letter-spacing:.05em;
+  }
+
+  /* Pillars */
+  .cert-pillars{
+    display:flex;
+    justify-content:center;
+    gap:8px;
+    flex-wrap:wrap;
+    margin-bottom:32px;
+  }
+  .cert-pillar{
+    font-family:'Cinzel',serif;
+    font-size:8px;
+    letter-spacing:.15em;
+    text-transform:uppercase;
+    color:var(--teal-mid);
+    padding:4px 10px;
+    border:1px solid var(--teal-pale);
+    border-radius:20px;
+    opacity:.8;
+  }
+
+  /* Footer */
+  .cert-footer{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+    padding-top:24px;
+    border-top:1px solid var(--gold-pale);
+  }
+  .cert-sig-block{text-align:center;flex:1}
+  .cert-sig-name{
+    font-family:'Cormorant Garamond',serif;
+    font-size:16px;
+    font-weight:400;
+    color:var(--text);
+    margin-bottom:4px;
+    font-style:italic;
+  }
+  .cert-sig-title{
+    font-family:'Cinzel',serif;
+    font-size:8px;
+    letter-spacing:.15em;
+    text-transform:uppercase;
+    color:var(--text-muted);
+    line-height:1.6;
+  }
+  .cert-sig-line{
+    width:120px;
+    height:1px;
+    background:var(--text-muted);
+    margin:8px auto;
+    opacity:.3;
+  }
+
+  .cert-date-block{text-align:center;flex:1}
+  .cert-date-label{
+    font-family:'Cinzel',serif;
+    font-size:8px;
+    letter-spacing:.15em;
+    text-transform:uppercase;
+    color:var(--text-muted);
+    margin-bottom:6px;
+  }
+  .cert-date-value{
+    font-family:'Cormorant Garamond',serif;
+    font-size:16px;
+    color:var(--text-mid);
+    font-style:italic;
+  }
+
+  .cert-seal{
+    text-align:center;
+    flex:1;
+  }
+  .cert-seal-circle{
+    width:72px;height:72px;
+    border-radius:50%;
+    border:2px solid var(--gold-light);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin:0 auto;
+    background:var(--gold-pale);
+    position:relative;
+  }
+  .cert-seal-inner{
+    width:58px;height:58px;
+    border-radius:50%;
+    border:1px solid var(--gold-light);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-direction:column;
+    gap:2px;
+  }
+  .cert-seal-text{
+    font-family:'Cinzel',serif;
+    font-size:7px;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    color:var(--gold);
+    text-align:center;
+    line-height:1.4;
+  }
+
+  /* Background watermark */
+  .cert-watermark{
+    position:absolute;
+    top:50%;left:50%;
+    transform:translate(-50%,-50%);
+    font-family:'Cinzel',serif;
+    font-size:120px;
+    font-weight:400;
+    color:var(--teal);
+    opacity:.025;
+    pointer-events:none;
+    white-space:nowrap;
+    letter-spacing:.1em;
+    user-select:none;
+  }
+
+  /* Print */
+  @media print{
+    body{background:#fff;padding:0}
+    .controls,.print-note{display:none!important}
+    .cert-outer{max-width:100%}
+    .certificate{
+      box-shadow:none;
+      border-color:#d4c4a0;
+      break-inside:avoid;
+    }
+    @page{margin:1cm;size:A4 landscape}
+  }
+
+  .print-note{
+    max-width:720px;width:100%;
+    text-align:center;
+    font-size:13px;
+    color:var(--text-muted);
+    margin-top:16px;
+    font-family:'EB Garamond',serif;
+    font-style:italic;
+  }
+</style>
+</head>
+<body>
+
+<div class="controls">
+  <div class="ctrl-group">
+    <label class="ctrl-label">Recipient name</label>
+    <input type="text" class="ctrl-input" id="name-input" placeholder="Enter full name..." oninput="updateName()">
+  </div>
+  <div class="ctrl-group">
+    <label class="ctrl-label">Completion date</label>
+    <input type="text" class="ctrl-input" id="date-input" placeholder="e.g. April 2026" oninput="updateDate()">
+  </div>
+  <button class="ctrl-btn" onclick="window.print()">Save as PDF</button>
+</div>
+
+<div class="cert-outer">
+  <div class="certificate">
+    <div class="cert-watermark">CII</div>
+    <div class="cert-inner-border">
+
+      <p class="cert-org">Future of Cities Learning Hub</p>
+
+      <div class="cert-divider">
+        <div class="cert-divider-line"></div>
+        <div class="cert-divider-ornament">◆</div>
+        <div class="cert-divider-line"></div>
+      </div>
+
+      <p class="cert-title">Certificate of Completion</p>
+      <p class="cert-subtitle">This is to certify that</p>
+
+      <p class="cert-recipient-label">Has successfully completed</p>
+
+      <p class="cert-recipient-name" id="cert-name">Your Name</p>
+
+      <p class="cert-body">
+        a rigorous programme of study in urban systems thinking, diagnostic analysis, and the design of city intelligence strategies for policymakers and researchers.
+      </p>
+
+      <p class="cert-course">City Intelligence Mastercourse</p>
+      <p class="cert-course-sub">Policymakers &amp; Researchers · Dr. Fatime Barbara Hegyi</p>
+
+      <div class="cert-pillars">
+        <span class="cert-pillar">Foundational</span>
+        <span class="cert-pillar">Innovator</span>
+        <span class="cert-pillar">Integrator</span>
+        <span class="cert-pillar">Regenerative</span>
+        <span class="cert-pillar">Connected</span>
+        <span class="cert-pillar">Healthy Society</span>
+      </div>
+
+      <div class="cert-footer">
+        <div class="cert-sig-block">
+          <div class="cert-sig-line"></div>
+          <p class="cert-sig-name">Dr. Fatime Barbara Hegyi</p>
+          <p class="cert-sig-title">City Intelligence Researcher<br>Future of Cities Learning Hub</p>
+        </div>
+
+        <div class="cert-seal">
+          <div class="cert-seal-circle">
+            <div class="cert-seal-inner">
+              <p class="cert-seal-text">City<br>Intelligence<br>Index</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="cert-date-block">
+          <div class="cert-sig-line"></div>
+          <p class="cert-date-label">Completed</p>
+          <p class="cert-date-value" id="cert-date">—</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<p class="print-note">Enter your name and date above, then click "Save as PDF" — choose landscape orientation for best results.</p>
+
+<script>
+function updateName(){
+  var val=document.getElementById('name-input').value.trim();
+  document.getElementById('cert-name').textContent=val||'Your Name';
+}
+function updateDate(){
+  var val=document.getElementById('date-input').value.trim();
+  document.getElementById('cert-date').textContent=val||'—';
+}
+// Set today's date as default
+var now=new Date();
+var months=['January','February','March','April','May','June','July','August','September','October','November','December'];
+document.getElementById('date-input').value=months[now.getMonth()]+' '+now.getFullYear();
+updateDate();
+</script>
+</body>
+</html>
