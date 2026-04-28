@@ -587,11 +587,23 @@ body {
   color: rgba(255,255,255,.35);
 }
 
+.hero-two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: center;
+}
+.hero-text {}
+.hero-video {
+  min-width: 0;
+}
+
 /* ── RESPONSIVE ── */
 @media (max-width: 640px) {
   .hero, .central-q, .capabilities, .arc-section,
   .build-section, .author-section, .closing { padding: 48px 20px; }
   .pillars-section { padding: 48px 20px; }
+  .hero-two-col { grid-template-columns: 1fr; gap: 28px; }
   .central-q-inner { grid-template-columns: 1fr; gap: 20px; }
   .pillars-grid { grid-template-columns: repeat(2, 1fr); }
   .build-grid { grid-template-columns: 1fr; }
@@ -620,56 +632,54 @@ body {
 <!-- ── HERO ── -->
 <section class="hero">
   <div class="hero-inner">
-    <div class="hero-eyebrow">
-      <span class="hero-badge">Future of Cities Learning Hub</span>
-      <div class="hero-line"></div>
-    </div>
-    <h1 class="hero-title">
-      City Intelligence<br>
-      <em>Mastercourse</em>
-    </h1>
-    <p class="hero-sub">
-      A rigorous programme for policymakers and researchers who need more than data — who need a framework for reading cities structurally, designing interventions that compound, and governing strategies that survive.
-    </p>
-    <div class="hero-meta">
-      <div class="hero-stat">
-        <span class="hero-stat-num">12</span>
-        <span class="hero-stat-label">Sections</span>
+    <div class="hero-two-col">
+      <!-- Left: text -->
+      <div class="hero-text">
+        <div class="hero-eyebrow">
+          <span class="hero-badge">Future of Cities Learning Hub</span>
+        </div>
+        <h1 class="hero-title">
+          City Intelligence<br>
+          <em>Mastercourse</em>
+        </h1>
+        <p class="hero-sub">
+          A rigorous programme for policymakers and researchers who need more than data — who need a framework for reading cities structurally, designing interventions that compound, and governing strategies that survive.
+        </p>
+        <div class="hero-meta">
+          <div class="hero-stat">
+            <span class="hero-stat-num">12</span>
+            <span class="hero-stat-label">Sections</span>
+          </div>
+          <div class="hero-divider"></div>
+          <div class="hero-stat">
+            <span class="hero-stat-num">4–5</span>
+            <span class="hero-stat-label">Hours of study</span>
+          </div>
+          <div class="hero-divider"></div>
+          <div class="hero-stat">
+            <span class="hero-stat-num">6</span>
+            <span class="hero-stat-label">CII pillars</span>
+          </div>
+        </div>
+        <div class="hero-audience">
+          <span class="aud-tag">Urban policymakers</span>
+          <span class="aud-tag">Urban researchers</span>
+          <span class="aud-tag">City strategy teams</span>
+          <span class="aud-tag">Public sector leaders</span>
+        </div>
       </div>
-      <div class="hero-divider"></div>
-      <div class="hero-stat">
-        <span class="hero-stat-num">4–5</span>
-        <span class="hero-stat-label">Hours of study</span>
+      <!-- Right: video -->
+      <div class="hero-video">
+        <div style="padding:56.25% 0 0 0;position:relative;border-radius:10px;overflow:hidden;box-shadow:0 12px 40px rgba(0,0,0,.4);">
+          <iframe src="https://player.vimeo.com/video/1187306030?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" frameborder="0" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" referrerpolicy="strict-origin-when-cross-origin" style="position:absolute;top:0;left:0;width:100%;height:100%;" title="City Intelligence Mastercourse"></iframe>
+        </div>
       </div>
-      <div class="hero-divider"></div>
-      <div class="hero-stat">
-        <span class="hero-stat-num">6</span>
-        <span class="hero-stat-label">CII pillars</span>
-      </div>
-      <div class="hero-divider"></div>
-      <div class="hero-stat">
-        <span class="hero-stat-num">1</span>
-        <span class="hero-stat-label">City intelligence blueprint</span>
-      </div>
-    </div>
-    <div class="hero-audience">
-      <span class="aud-tag">Urban policymakers</span>
-      <span class="aud-tag">Urban researchers</span>
-      <span class="aud-tag">City strategy teams</span>
-      <span class="aud-tag">Public sector leaders</span>
-    </div>
-  </div>
-</section>
-
-<!-- ── VIDEO ── -->
-<section style="background:var(--teal-dark);padding:0 40px 56px;">
-  <div style="max-width:860px;margin:0 auto;">
-    <div style="padding:56.25% 0 0 0;position:relative;border-radius:10px;overflow:hidden;box-shadow:0 16px 48px rgba(0,0,0,.35);">
-      <iframe src="https://player.vimeo.com/video/1187306030?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" frameborder="0" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" referrerpolicy="strict-origin-when-cross-origin" style="position:absolute;top:0;left:0;width:100%;height:100%;" title="City Intelligence Mastercourse"></iframe>
     </div>
   </div>
 </section>
 <script src="https://player.vimeo.com/api/player.js"></script>
+
+
 
 <!-- ── CENTRAL QUESTION ── -->
 <section class="central-q">
