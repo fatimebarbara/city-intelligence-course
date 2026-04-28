@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Application and certification · Reading your city's trajectory</title>
+<style>
+  :root{
+    --teal-dark:#085041;--teal-mid:#0F6E56;--teal:#1D9E75;--teal-light:#5DCAA5;--teal-pale:#E1F5EE;--teal-faint:#F0FAF6;
+    --purple:#534AB7;--purple-pale:#EEEDFE;--purple-mid:#3C3489;
+    --amber:#BA7517;--amber-pale:#FAEEDA;
+    --blue:#185FA5;--blue-pale:#E6F1FB;
+    --coral:#D85A30;--coral-pale:#FAECE7;
+    --green:#3B6D11;--green-pale:#EAF3DE;
+    --text:#1a1a1a;--text-mid:#444;--text-muted:#6b6b6b;
+    --border:#e2e2e2;--border-light:#f0f0f0;--bg:#fff;--bg-soft:#f8f9fa;
+    --radius:10px;--radius-sm:6px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Helvetica Neue',Arial,sans-serif;color:var(--text);background:var(--bg);font-size:15px;line-height:1.65}
+  .page{max-width:760px;margin:0 auto;padding:48px 24px 80px}
+
+  /* Header */
+  .bm-label{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--teal-mid);background:var(--teal-pale);padding:5px 14px;border-radius:20px;margin-bottom:18px}
+  .bm-title{font-size:28px;font-weight:700;color:var(--text);line-height:1.25;margin-bottom:10px;letter-spacing:-.3px;font-family:'Georgia',serif}
+  .bm-sub{font-size:14px;color:var(--text-muted);line-height:1.65;max-width:580px;margin-bottom:20px}
+  .intro-note{background:var(--bg-soft);border:1px solid var(--border-light);border-radius:var(--radius);padding:16px 20px;font-size:13px;color:var(--text-muted);line-height:1.65;margin-bottom:32px}
+
+  /* Tab nav */
+  .tab-nav{display:flex;gap:0;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:28px}
+  .tab-btn{flex:1;padding:11px 6px;text-align:center;cursor:pointer;background:var(--bg-soft);border:none;border-right:1px solid var(--border);font-family:'Helvetica Neue',Arial,sans-serif;font-size:12px;font-weight:600;color:var(--text-muted);transition:all .15s;line-height:1.3}
+  .tab-btn:last-child{border-right:none}
+  .tab-btn.active{background:var(--teal);color:#fff}
+  .tab-btn:hover:not(.active){background:var(--bg);color:var(--text)}
+  .tab-panel{display:none}
+  .tab-panel.active{display:block}
+
+  /* Section dividers */
+  .sec-head{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin:28px 0 14px;display:flex;align-items:center;gap:10px}
+  .sec-head::after{content:'';flex:1;height:1px;background:var(--border-light)}
+
+  /* Core concept cards */
+  .concept-card{border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:14px}
+  .cc-header{display:flex;align-items:flex-start;gap:12px;margin-bottom:12px}
+  .cc-badge{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:3px 10px;border-radius:12px;flex-shrink:0;margin-top:2px}
+  .leading .cc-badge{background:var(--green-pale);color:var(--green)}
+  .lagging .cc-badge{background:var(--blue-pale);color:var(--blue)}
+  .watch .cc-badge{background:var(--amber-pale);color:var(--amber)}
+  .limit .cc-badge{background:var(--purple-pale);color:var(--purple-mid)}
+  .cc-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:3px}
+  .cc-sub{font-size:12px;color:var(--text-muted);font-style:italic}
+  .cc-body{font-size:13px;color:var(--text-mid);line-height:1.65;margin-bottom:10px}
+  .cc-example{background:var(--bg-soft);border-radius:var(--radius-sm);padding:10px 13px;font-size:12px;line-height:1.6;color:var(--text-muted);border-left:3px solid var(--border)}
+  .cc-example strong{color:var(--text-mid)}
+
+  /* Pillar signal table */
+  .signal-table{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:16px}
+  .signal-table th{background:var(--bg-soft);padding:8px 12px;text-align:left;font-weight:700;font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:var(--text-muted);border-bottom:1px solid var(--border)}
+  .signal-table td{padding:9px 12px;border-bottom:1px solid var(--border-light);vertical-align:top;font-size:13px}
+  .signal-table tr:last-child td{border-bottom:none}
+  .sig-type{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px}
+  .sig-lead{background:var(--green-pale);color:var(--green)}
+  .sig-lag{background:var(--blue-pale);color:var(--blue)}
+  .sig-hs{background:var(--teal-pale);color:var(--teal-dark)}
+  .pillar-dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px;vertical-align:middle}
+
+  /* Trajectory scenarios */
+  .scenario-card{border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:14px;position:relative;overflow:hidden}
+  .scenario-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px}
+  .sc-positive::before{background:var(--teal)}
+  .sc-negative::before{background:var(--coral)}
+  .sc-ambiguous::before{background:var(--amber)}
+  .sc-label{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px}
+  .sc-positive .sc-label{color:var(--teal-mid)}
+  .sc-negative .sc-label{color:var(--coral)}
+  .sc-ambiguous .sc-label{color:var(--amber)}
+  .sc-scores{display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap}
+  .sc-score-box{background:var(--bg-soft);border-radius:var(--radius-sm);padding:8px 12px;text-align:center}
+  .sc-pillar{font-size:10px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px}
+  .sc-vals{font-size:13px;font-weight:700;color:var(--text)}
+  .sc-arrow{font-size:16px;color:var(--text-muted)}
+  .sc-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:6px;font-family:'Georgia',serif}
+  .sc-read{font-size:13px;color:var(--text-mid);line-height:1.65;margin-bottom:10px}
+  .sc-action{background:var(--teal-faint);border-radius:var(--radius-sm);padding:9px 12px;font-size:12px;color:var(--teal-dark);line-height:1.6;border-left:3px solid var(--teal-pale)}
+  .sc-negative .sc-action{background:var(--coral-pale);color:#7A1E0A;border-left-color:#F5C4B4}
+  .sc-ambiguous .sc-action{background:var(--amber-pale);color:#6B4200;border-left-color:#E8C06A}
+
+  /* Cadence designer */
+  .cadence-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+  .cadence-card{border:1px solid var(--border);border-radius:var(--radius);padding:16px}
+  .cad-q{font-size:13px;font-weight:700;color:var(--text);margin-bottom:6px}
+  .cad-body{font-size:12px;color:var(--text-muted);line-height:1.6;margin-bottom:10px}
+  .cad-recommendation{font-size:12px;color:var(--teal-dark);background:var(--teal-faint);padding:8px 10px;border-radius:var(--radius-sm);line-height:1.55}
+
+  /* Worksheet section */
+  textarea{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 12px;font-family:'Helvetica Neue',Arial,sans-serif;font-size:14px;color:var(--text);line-height:1.6;resize:vertical;min-height:56px;outline:none;transition:border-color .15s}
+  textarea:focus{border-color:var(--teal-light)}
+  textarea::placeholder{color:#b0b0b0}
+  .field-label{font-size:12px;font-weight:600;color:var(--text-mid);margin-bottom:5px;display:block}
+  .field-sub{font-size:12px;color:var(--text-muted);margin-bottom:6px;line-height:1.55}
+  .field-group{margin-bottom:16px}
+
+  /* Progress */
+  .progress-row{display:flex;align-items:center;gap:12px;margin-bottom:28px}
+  .progress-label{font-size:12px;color:var(--text-muted);white-space:nowrap}
+  .progress-outer{flex:1;height:5px;background:var(--border-light);border-radius:3px;overflow:hidden}
+  .progress-inner{height:100%;background:var(--teal);border-radius:3px;transition:width .4s ease}
+  .progress-pct{font-size:12px;font-weight:700;color:var(--teal);min-width:36px;text-align:right}
+
+  /* Output panel */
+  .output-panel{background:var(--teal-faint);border:1px solid var(--teal-pale);border-radius:var(--radius);padding:22px;margin-top:20px}
+  .op-title{font-size:15px;font-weight:700;font-family:'Georgia',serif;color:var(--teal-dark);margin-bottom:14px}
+  .op-row{margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid var(--teal-pale)}
+  .op-row:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+  .op-label{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--teal-mid);margin-bottom:3px}
+  .op-val{font-size:13px;color:var(--teal-dark);line-height:1.6;font-family:'Georgia',serif;font-style:italic}
+  .op-empty{color:var(--text-muted);font-style:normal;font-family:'Helvetica Neue',Arial,sans-serif;font-size:12px}
+
+  /* PDF */
+  .pdf-btn-wrap{text-align:center;margin-top:32px;padding-top:24px;border-top:1px solid var(--border-light)}
+  .pdf-btn{display:inline-flex;align-items:center;gap:8px;background:var(--teal-dark);color:#fff;border:none;border-radius:24px;padding:11px 28px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Helvetica Neue',Arial,sans-serif;transition:background .15s}
+  .pdf-btn:hover{background:var(--teal-mid)}
+  .pdf-hint{font-size:11px;color:var(--text-muted);margin-top:8px}
+
+  @media(max-width:560px){.cadence-grid{grid-template-columns:1fr}}
+  @media print{
+    .tab-nav,.pdf-btn-wrap,.progress-row,button{display:none!important}
+    .tab-panel{display:block!important}
+    body{font-size:12px}.page{max-width:100%!important;padding:20px!important}
+    textarea{border:none!important;background:transparent!important;resize:none!important;min-height:0!important;font-size:12px!important}
+    .scenario-card,.concept-card{break-inside:avoid}
+    a[href]:after{content:''}
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="bm-label">Application and certification · Monitoring framework</div>
+  <h1 class="bm-title">Reading your city's trajectory</h1>
+  <p class="bm-sub">The CII measures structural performance at a point in time. This tool teaches you to read change over time — how to interpret score movements, which signals to watch first, what trajectory confirms your strategy is working, and what would tell you to adjust.</p>
+  <div class="intro-note">A city with a Foundational score of 0.55 that was 0.42 eighteen months ago is in a fundamentally different situation than a city with a score of 0.55 that was 0.68 eighteen months ago. The score is identical. The trajectory is opposite. This tool is about reading the trajectory — not just the position.</div>
+
+  <div class="tab-nav">
+    <button class="tab-btn active" onclick="showTab('signals',this)">Leading vs lagging signals</button>
+    <button class="tab-btn" onclick="showTab('scenarios',this)">Reading scenarios</button>
+    <button class="tab-btn" onclick="showTab('cadence',this)">Monitoring cadence</button>
+    <button class="tab-btn" onclick="showTab('worksheet',this)">Your framework</button>
+  </div>
+
+  <!-- TAB 1: LEADING VS LAGGING -->
+  <div class="tab-panel active" id="tab-signals">
+    <p style="font-size:13px;color:var(--text-muted);margin-bottom:16px;line-height:1.6">Not all CII pillar movements tell you the same thing at the same time. Some pillars move first — they are leading signals that predict what Healthy Society will do next. Others move later — they confirm what structural investments have already produced. Knowing which is which determines what you watch first, and how long you wait before concluding that a strategy is or is not working.</p>
+
+    <div class="concept-card leading">
+      <div class="cc-header"><span class="cc-badge">Leading signals</span><div><p class="cc-title">Foundational and Integrator — they move first</p><p class="cc-sub">Watch these to know what is coming</p></div></div>
+      <p class="cc-body">Foundational and Integrator are leading pillars. They measure structural capacity — the conditions that make everything else possible. When these move upward, Healthy Society outcomes typically follow 12–24 months later. When these stagnate or decline, Healthy Society deterioration is predictable even before it appears in the data.</p>
+      <div class="cc-example"><strong>Why this matters for monitoring:</strong> If your strategy is investing in Foundational conditions (digital access, educational attainment, institutional trust), do not expect Healthy Society scores to move in the first year. The leading signal is the Foundational movement. The lagging confirmation is Healthy Society improvement. Expecting the lagging signal first will produce a premature conclusion that the strategy is not working.</div>
+    </div>
+
+    <div class="concept-card lagging">
+      <div class="cc-header"><span class="cc-badge">Lagging signals</span><div><p class="cc-title">Healthy Society — it moves last, but it matters most</p><p class="cc-sub">Watch this to confirm the strategy is landing</p></div></div>
+      <p class="cc-body">Healthy Society is the course's accountability layer — the question of whether structural investments are translating into actual wellbeing for residents. It moves last because it reflects the accumulated effect of structural capacity improvements. A strategy that produces strong Foundational and Integrator movement but no Healthy Society movement after three years has a translation problem — not a data problem.</p>
+      <div class="cc-example"><strong>Why this matters for monitoring:</strong> Healthy Society movement confirms your strategy. Foundational and Integrator movement predicts it. If you are twelve months in and Foundational has moved but Healthy Society has not — that is expected. If you are thirty-six months in and Healthy Society has not moved despite strong Foundational gains — that is the diagnostic signal that the translation mechanism is broken, and the attribution question from Section 5 needs to be asked again.</div>
+    </div>
+
+    <div class="concept-card watch">
+      <div class="cc-header"><span class="cc-badge">Watch carefully</span><div><p class="cc-title">Innovator, Regenerative, Connected — context-dependent</p><p class="cc-sub">Depends which pillar your sequence prioritised</p></div></div>
+      <p class="cc-body">These three pillars are neither universally leading nor universally lagging — their role in your monitoring framework depends on where they sit in your compounding sequence. If Innovator was your Step 2 intervention, it is a leading signal for the Connected or Integrator gains that follow. If Regenerative was your Step 3, it is itself the lagging confirmation of the structural investments in Steps 1 and 2.</p>
+      <div class="cc-example"><strong>Why this matters for monitoring:</strong> Read these pillars relative to the sequence you designed — not in isolation. A flat Innovator score in Year 1 may be entirely expected if Innovator was your Step 2 and Step 1 (Foundational) is still building. A flat Innovator score in Year 2 — when Step 1 has moved — is the signal that the handoff between steps is not happening.</div>
+    </div>
+
+    <p class="sec-head">All six pillars — signal type and what to watch for</p>
+
+    <table class="signal-table">
+      <thead><tr><th>Pillar</th><th>Signal type</th><th>What upward movement tells you</th><th>What flat movement after 24 months tells you</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><span class="pillar-dot" style="background:#185FA5"></span><strong>Foundational</strong></td>
+          <td><span class="sig-type sig-lead">Leading</span></td>
+          <td style="font-size:12px;color:var(--text-mid)">Structural participation conditions are improving. Healthy Society gains are likely 12–24 months away.</td>
+          <td style="font-size:12px;color:var(--text-mid)">The structural floor is not responding to investment. Review whether investments are reaching excluded populations or improving the aggregate without narrowing the distribution.</td>
+        </tr>
+        <tr>
+          <td><span class="pillar-dot" style="background:#534AB7"></span><strong>Innovator</strong></td>
+          <td><span class="sig-type sig-lead">Sequence-dependent</span></td>
+          <td style="font-size:12px;color:var(--text-mid)">Knowledge generation and translation capacity is building. Integrator and Connected gains may follow.</td>
+          <td style="font-size:12px;color:var(--text-mid)">Innovation investments are not translating into ecosystem gains. Check whether Foundational conditions are strong enough to support innovation uptake.</td>
+        </tr>
+        <tr>
+          <td><span class="pillar-dot" style="background:#3B6D11"></span><strong>Integrator</strong></td>
+          <td><span class="sig-type sig-lead">Leading</span></td>
+          <td style="font-size:12px;color:var(--text-mid)">Coordination architecture is strengthening. This amplifies the effectiveness of all other pillar investments — expect multi-pillar coherence to improve.</td>
+          <td style="font-size:12px;color:var(--text-mid)">Governance capacity is not responding. The four implementation failure modes from Section 8 should be reviewed — mandate fragmentation is the most likely cause.</td>
+        </tr>
+        <tr>
+          <td><span class="pillar-dot" style="background:#D85A30"></span><strong>Regenerative</strong></td>
+          <td><span class="sig-type sig-lead">Sequence-dependent</span></td>
+          <td style="font-size:12px;color:var(--text-mid)">Ecological governance is responding. This is often driven by political will rather than structural capacity — check whether the signal reflects systemic change or a single high-visibility intervention.</td>
+          <td style="font-size:12px;color:var(--text-mid)">Ecological transitions are slow and may require a longer monitoring horizon than other pillars. 24 months may be insufficient for meaningful Regenerative movement.</td>
+        </tr>
+        <tr>
+          <td><span class="pillar-dot" style="background:#BA7517"></span><strong>Connected</strong></td>
+          <td><span class="sig-type sig-lead">Sequence-dependent</span></td>
+          <td style="font-size:12px;color:var(--text-mid)">Connectivity investments are registering. Check whether the movement reflects aggregate improvement or whether excluded populations are being reached.</td>
+          <td style="font-size:12px;color:var(--text-mid)">Connectivity investments may be reaching already-connected populations. The equity question applies directly here.</td>
+        </tr>
+        <tr>
+          <td><span class="pillar-dot" style="background:#993556"></span><strong>Healthy Society</strong></td>
+          <td><span class="sig-type sig-hs">Lagging confirmation</span></td>
+          <td style="font-size:12px;color:var(--text-mid)">Structural investments are translating into lived outcomes. This is the confirmation that the strategy is working at the right level of the system.</td>
+          <td style="font-size:12px;color:var(--text-mid)">The translation mechanism is broken despite structural gains. The attribution question must be asked again: what structural mechanism is preventing Foundational capacity from reaching health outcomes?</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- TAB 2: READING SCENARIOS -->
+  <div class="tab-panel" id="tab-scenarios">
+    <p style="font-size:13px;color:var(--text-muted);margin-bottom:16px;line-height:1.6">Five trajectory scenarios drawn from the CII dataset. Each one shows a real pattern of score movement across two measurement points — and how to read it analytically rather than mechanically.</p>
+
+    <div class="scenario-card sc-positive">
+      <p class="sc-label">Scenario 01 — Strategy is compounding</p>
+      <div class="sc-scores">
+        <div class="sc-score-box"><p class="sc-pillar">Foundational</p><p class="sc-vals">0.42 → 0.54</p></div>
+        <span class="sc-arrow">+</span>
+        <div class="sc-score-box"><p class="sc-pillar">Integrator</p><p class="sc-vals">0.38 → 0.47</p></div>
+        <span class="sc-arrow">+</span>
+        <div class="sc-score-box"><p class="sc-pillar">Healthy Society</p><p class="sc-vals">0.31 → 0.29</p></div>
+      </div>
+      <p class="sc-title">Foundational and Integrator rising — Healthy Society not yet moving</p>
+      <p class="sc-read">This is the expected trajectory in Year 1–2 of a compounding strategy that began with Foundational and Integrator investment. The leading signals are moving. The lagging confirmation has not yet appeared — which is correct. Healthy Society typically lags 12–24 months behind structural capacity improvements.</p>
+      <div class="sc-action"><strong>What to do:</strong> Hold the strategy. The leading signals confirm the sequence is working. Review at Year 3 for Healthy Society movement. If Foundational and Integrator are still rising at that point and Healthy Society has not moved, then ask the attribution question.</div>
+    </div>
+
+    <div class="scenario-card sc-positive">
+      <p class="sc-label">Scenario 02 — Full confirmation</p>
+      <div class="sc-scores">
+        <div class="sc-score-box"><p class="sc-pillar">Foundational</p><p class="sc-vals">0.54 → 0.61</p></div>
+        <span class="sc-arrow">+</span>
+        <div class="sc-score-box"><p class="sc-pillar">Integrator</p><p class="sc-vals">0.47 → 0.53</p></div>
+        <span class="sc-arrow">+</span>
+        <div class="sc-score-box"><p class="sc-pillar">Healthy Society</p><p class="sc-vals">0.29 → 0.38</p></div>
+      </div>
+      <p class="sc-title">All three moving — the compounding effect is confirmed</p>
+      <p class="sc-read">Leading and lagging signals are moving together. Foundational and Integrator gains from the previous period are now showing up in Healthy Society outcomes. The translation mechanism is working. This is the trajectory a compounding strategy is designed to produce.</p>
+      <div class="sc-action"><strong>What to do:</strong> Continue the sequence. The governance architecture is holding. This is the moment to review Step 3 of the sequence — if it has not yet been activated, the conditions for it are now in place. Apply the equity lens: is the Healthy Society improvement reaching the populations who most needed it, or improving the aggregate while the distributional gap persists?</div>
+    </div>
+
+    <div class="scenario-card sc-negative">
+      <p class="sc-label">Scenario 03 — Translation failure</p>
+      <div class="sc-scores">
+        <div class="sc-score-box"><p class="sc-pillar">Foundational</p><p class="sc-vals">0.54 → 0.62</p></div>
+        <span class="sc-arrow">+</span>
+        <div class="sc-score-box"><p class="sc-pillar">Integrator</p><p class="sc-vals">0.47 → 0.55</p></div>
+        <span class="sc-arrow">but</span>
+        <div class="sc-score-box"><p class="sc-pillar">Healthy Society</p><p class="sc-vals">0.29 → 0.28</p></div>
+      </div>
+      <p class="sc-title">Leading signals rising — Healthy Society still flat at Year 3</p>
+      <p class="sc-read">The structural conditions are improving but not translating into outcomes. At Year 3, this is the diagnostic signal that the translation mechanism is broken — not that the data is wrong or that the strategy needs more time. Something between structural capacity and lived outcomes is failing. This is the attribution question from Section 5, asked again with new data.</p>
+      <div class="sc-action"><strong>What to do:</strong> Trigger a sequence adjustment review. Ask: are the Foundational investments reaching the populations with the worst Healthy Society outcomes — or improving the aggregate while the gap persists? Is there a specific structural mechanism (access barrier, institutional failure, distributional gap) that the CII cannot see at city level but that disaggregated data would reveal?</div>
+    </div>
+
+    <div class="scenario-card sc-negative">
+      <p class="sc-label">Scenario 04 — Strategy is being captured</p>
+      <div class="sc-scores">
+        <div class="sc-score-box"><p class="sc-pillar">Innovator</p><p class="sc-vals">0.61 → 0.74</p></div>
+        <span class="sc-arrow">but</span>
+        <div class="sc-score-box"><p class="sc-pillar">Foundational</p><p class="sc-vals">0.38 → 0.37</p></div>
+        <span class="sc-arrow">and</span>
+        <div class="sc-score-box"><p class="sc-pillar">Healthy Society</p><p class="sc-vals">0.31 → 0.30</p></div>
+      </div>
+      <p class="sc-title">Innovator rising fast — Foundational and Healthy Society flat</p>
+      <p class="sc-read">A high-visibility pillar is improving while the structural floor is not. This is the implementation failure mode of metric substitution at the pillar level — the city is producing results on the pillar that is easiest to show, while the pillar that most constrains Healthy Society outcomes is not being addressed. Innovation investment is compounding on itself rather than on the structural foundation it requires.</p>
+      <div class="sc-action"><strong>What to do:</strong> Review the governance architecture. Is the shared outcome metric — the one no single department can satisfy alone — still driving accountability? Or has Innovator performance become the de facto measure of success? The Section 9 governance countermeasures were designed for exactly this situation.</div>
+    </div>
+
+    <div class="scenario-card sc-ambiguous">
+      <p class="sc-label">Scenario 05 — Mixed signals requiring judgment</p>
+      <div class="sc-scores">
+        <div class="sc-score-box"><p class="sc-pillar">Foundational</p><p class="sc-vals">0.42 → 0.50</p></div>
+        <span class="sc-arrow"></span>
+        <div class="sc-score-box"><p class="sc-pillar">Integrator</p><p class="sc-vals">0.55 → 0.48</p></div>
+        <span class="sc-arrow"></span>
+        <div class="sc-score-box"><p class="sc-pillar">Healthy Society</p><p class="sc-vals">0.35 → 0.39</p></div>
+      </div>
+      <p class="sc-title">Foundational and Healthy Society rising — Integrator declining</p>
+      <p class="sc-read">Two signals are positive, one is negative. This is the ambiguous scenario that requires analytical judgment rather than mechanical response. Foundational progress is producing early Healthy Society gains — which confirms the leading-lagging relationship is working. But Integrator decline suggests the coordination architecture is weakening — which threatens the sustained compounding that depends on it.</p>
+      <div class="sc-action"><strong>What to do:</strong> Do not treat this as a success trajectory. The Integrator decline is the early-warning indicator from Section 8 — it predicts that mandate fragmentation or institutional capture is beginning. The strategy is currently producing results despite deteriorating governance. That is not sustainable. Address the Integrator decline before it undermines the Foundational and Healthy Society trajectory.</div>
+    </div>
+  </div>
+
+  <!-- TAB 3: MONITORING CADENCE -->
+  <div class="tab-panel" id="tab-cadence">
+    <p style="font-size:13px;color:var(--text-muted);margin-bottom:16px;line-height:1.6">The monitoring cadence is not a reporting schedule — it is a structural decision about when to read, what to read, and what the reading means for the strategy. Four design questions determine the right cadence for your specific context.</p>
+
+    <div class="cadence-grid">
+      <div class="cadence-card">
+        <p class="cad-q">How often should you measure?</p>
+        <p class="cad-body">Annual measurement is the minimum for a compounding strategy. Less frequent measurement means you may miss early-warning signals before they become strategy-threatening. More frequent measurement (quarterly) risks over-responding to noise.</p>
+        <div class="cad-recommendation">Annual for Healthy Society and Foundational. Biannual for Integrator (governance capacity can shift faster). Quarterly for the disaggregated distributional signals the CII cannot provide — those require supplementary monitoring.</div>
+      </div>
+      <div class="cadence-card">
+        <p class="cad-q">Which pillar do you read first?</p>
+        <p class="cad-body">Always read Foundational and Integrator before Healthy Society. They are the leading signals. Reading Healthy Society first creates the temptation to interpret the lagging signal as evidence of strategy failure when the leading signals are still moving.</p>
+        <div class="cad-recommendation">Review order: (1) Foundational, (2) Integrator, (3) your sequence-specific pillar (Step 2 of your compounding sequence), (4) Healthy Society. Only draw conclusions after reading all four in sequence.</div>
+      </div>
+      <div class="cadence-card">
+        <p class="cad-q">What is the adjustment threshold?</p>
+        <p class="cad-body">Define in advance what signal would trigger a sequence adjustment — before you start measuring, not after. An adjustment threshold defined after the fact is a rationalisation, not a governance decision.</p>
+        <div class="cad-recommendation">Example threshold: "If Foundational has moved +0.05 or more and Healthy Society has not moved after 36 months, we trigger an attribution review." The number is less important than the pre-commitment.</div>
+      </div>
+      <div class="cadence-card">
+        <p class="cad-q">Who reviews, and what authority do they have?</p>
+        <p class="cad-body">The monitoring review must be connected to the shared accountability framework from Section 9 — the body or role that owns the sequence as a whole. A review conducted by a single department will produce department-level conclusions, not strategy-level ones.</p>
+        <div class="cad-recommendation">The shared accountability framework owner conducts the review. The review produces one of three conclusions: continue, adjust, or escalate. Each conclusion must be recorded and the rationale preserved for transition-proofing.</div>
+      </div>
+    </div>
+
+    <p class="sec-head">What the CII cannot show about trajectory</p>
+    <div class="concept-card limit">
+      <div class="cc-header"><span class="cc-badge">Structural limit</span><div><p class="cc-title">The CII shows aggregate trajectory — not distributional change</p></div></div>
+      <p class="cc-body">A Healthy Society score that rises from 0.35 to 0.42 over two years is real progress. But that aggregate movement tells you nothing about whether the improvement reached the populations who most needed it. The aggregate can improve while the distributional gap between the city's best-served and worst-served populations widens — if the improvement is concentrated in already-strong areas.</p>
+      <div class="cc-example"><strong>What this means for your monitoring framework:</strong> The CII trajectory gives you the structural signal. You need supplementary data — district-level, population-stratified — to give you the distributional story. These are two different monitoring tracks. Both belong in your framework. The CII tells you whether the average is moving. The disaggregated data tells you whether the gap is narrowing.</div>
+    </div>
+
+    <div class="concept-card limit">
+      <div class="cc-header"><span class="cc-badge">Structural limit</span><div><p class="cc-title">Score movement is not evidence of causal impact</p></div></div>
+      <p class="cc-body">A Foundational score that rises after your intervention is consistent with your intervention having caused it. It is not evidence that your intervention caused it. Other factors — national policy changes, demographic shifts, economic cycles — also affect pillar scores. The CII tracks correlation in structural performance, not causal attribution.</p>
+      <div class="cc-example"><strong>What this means for your monitoring framework:</strong> The monitoring framework tracks whether the strategy is consistent with the expected trajectory — not whether it caused it. For causal claims, a research design (comparison cities, pre-post analysis, difference-in-differences) is required. The CII provides the outcome measure. The research design provides the attribution.</div>
+    </div>
+  </div>
+
+  <!-- TAB 4: YOUR FRAMEWORK WORKSHEET -->
+  <div class="tab-panel" id="tab-worksheet">
+    <p style="font-size:13px;color:var(--text-muted);margin-bottom:16px;line-height:1.6">Apply the trajectory reading framework to your specific strategy. This worksheet produces the monitoring logic for the 3-year framework in your City Intelligence Blueprint — the analytical rationale behind each cell of that table.</p>
+
+    <div class="progress-row">
+      <span class="progress-label">Completion</span>
+      <div class="progress-outer"><div class="progress-inner" id="pbar" style="width:0%"></div></div>
+      <span class="progress-pct" id="pct">0%</span>
+    </div>
+
+    <div class="field-group">
+      <label class="field-label">Your leading signal pillars — and what upward movement in Year 1 would tell you</label>
+      <p class="field-sub">Based on your compounding sequence: which pillar(s) are your leading indicators? What specific movement (direction and approximate magnitude) would confirm the strategy is on track at the 12-month mark?</p>
+      <textarea id="f1" placeholder="My leading signal pillar(s) are [Foundational / Integrator / Step 1 pillar]. At 12 months, upward movement of approximately [magnitude] would confirm [what it would mean for the strategy — not just that scores rose, but what structural mechanism that confirms]. I would read this as [conclusion about strategy trajectory]..." oninput="u()"></textarea>
+    </div>
+
+    <div class="field-group">
+      <label class="field-label">Your lagging confirmation — and how long you will wait before concluding there is a translation problem</label>
+      <p class="field-sub">Healthy Society is the lagging confirmation. How long will you hold the strategy before flat Healthy Society scores, despite rising leading signals, would trigger an attribution review?</p>
+      <textarea id="f2" placeholder="I will monitor Healthy Society movement from [baseline score]. If leading signals have moved by [threshold] and Healthy Society has not moved after [timeframe — specify in months], I will trigger an attribution review asking [specific attribution question — which mechanism between structural capacity and health outcomes is failing]..." oninput="u()"></textarea>
+    </div>
+
+    <div class="field-group">
+      <label class="field-label">Your adjustment threshold — defined in advance</label>
+      <p class="field-sub">Name the specific signal — not a general sense of things not going well — that would trigger a formal sequence adjustment. Pre-commitment is the standard; rationalisation after the fact is not.</p>
+      <textarea id="f3" placeholder="The signal that would trigger a sequence adjustment is [specific pillar movement or non-movement with specific timeframe]. For example: if [pillar] has not moved by [magnitude] after [months], or if [pillar] declines by [magnitude] at any point, we trigger [specific review process]. This threshold was set before measurement began — not after." oninput="u()"></textarea>
+    </div>
+
+    <div class="field-group">
+      <label class="field-label">Your supplementary monitoring — what disaggregated data you need beyond the CII</label>
+      <p class="field-sub">The CII shows aggregate trajectory. What district-level, population-stratified, or other disaggregated data would you need to monitor distributional change — to know whether the aggregate improvement is reaching the populations who most need it?</p>
+      <textarea id="f4" placeholder="The CII will show whether [pillar] aggregate scores are moving. To monitor whether the improvement is reaching [specific population / district], I need [specific data — district health records / neighbourhood digital access data / ward educational attainment]. This data is [available / needs to be requested / needs to be collected] through [source or mechanism]..." oninput="u()"></textarea>
+    </div>
+
+    <div class="field-group">
+      <label class="field-label">Your monitoring governance — who reviews, when, with what authority</label>
+      <p class="field-sub">The review must be connected to the shared accountability framework. Name the role or body, the review interval, and the three conclusions they are authorised to reach.</p>
+      <textarea id="f5" placeholder="The monitoring review is conducted by [role / body — the shared accountability framework owner]. Reviews occur [annually / biannually]. Each review produces one of three conclusions: (1) Continue — [what this means], (2) Adjust — [what triggers this and what it involves], (3) Escalate — [what would require escalation and to whom]. The rationale for each conclusion is recorded in [specific document / governance record] for transition-proofing." oninput="u()"></textarea>
+    </div>
+
+    <div class="output-panel">
+      <p class="op-title">Your trajectory monitoring logic</p>
+      <div class="op-row"><p class="op-label">Leading signal and Year 1 confirmation</p><p class="op-val" id="out1"><span class="op-empty">Complete the field above</span></p></div>
+      <div class="op-row"><p class="op-label">Lagging confirmation and attribution threshold</p><p class="op-val" id="out2"><span class="op-empty">—</span></p></div>
+      <div class="op-row"><p class="op-label">Adjustment trigger — defined in advance</p><p class="op-val" id="out3"><span class="op-empty">—</span></p></div>
+      <div class="op-row"><p class="op-label">Supplementary distributional data needed</p><p class="op-val" id="out4"><span class="op-empty">—</span></p></div>
+      <div class="op-row" style="border-bottom:none;padding-bottom:0;margin-bottom:0"><p class="op-label">Monitoring governance</p><p class="op-val" id="out5"><span class="op-empty">—</span></p></div>
+    </div>
+  </div>
+
+  <div class="pdf-btn-wrap">
+    <button class="pdf-btn" onclick="window.print()">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17v-6M9 14l3 3 3-3"/><rect x="3" y="3" width="18" height="14" rx="2"/><path d="M3 17h18v4H3z"/></svg>
+      Save my monitoring framework as PDF
+    </button>
+    <p class="pdf-hint">Opens your browser's print dialog — choose "Save as PDF" as the destination</p>
+  </div>
+
+</div>
+<script>
+function showTab(id,btn){
+  document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.remove('active')});
+  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active')});
+  document.getElementById('tab-'+id).classList.add('active');
+  btn.classList.add('active');
+}
+function u(){
+  var ids=['f1','f2','f3','f4','f5'];
+  var filled=ids.filter(function(id){var el=document.getElementById(id);return el&&el.value.trim().length>20;}).length;
+  var pct=Math.round((filled/ids.length)*100);
+  document.getElementById('pbar').style.width=pct+'%';
+  document.getElementById('pct').textContent=pct+'%';
+  ids.forEach(function(id,i){
+    var val=document.getElementById(id).value.trim();
+    var outEl=document.getElementById('out'+(i+1));
+    outEl.innerHTML=val?val:'<span class="op-empty">—</span>';
+  });
+}
+</script>
+</body>
+</html>
