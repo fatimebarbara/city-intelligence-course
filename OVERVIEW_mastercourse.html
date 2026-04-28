@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>City Intelligence Mastercourse — Policymakers & Researchers</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --teal-dark: #063D30;
+  --teal-deep: #085041;
+  --teal-mid: #0F6E56;
+  --teal: #1D9E75;
+  --teal-light: #5DCAA5;
+  --teal-pale: #E1F5EE;
+  --teal-faint: #F0FAF6;
+  --gold: #C4965A;
+  --gold-light: #D4AF7A;
+  --gold-pale: #FAF0E0;
+  --text: #1a1a1a;
+  --text-mid: #3a3a3a;
+  --text-muted: #6b6b6b;
+  --border: #e2e2e2;
+  --border-light: #f0f0f0;
+  --bg: #FAFAF7;
+  --white: #ffffff;
+  --radius: 12px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 15px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── HERO ── */
+.hero {
+  background: var(--teal-dark);
+  position: relative;
+  overflow: hidden;
+  padding: 72px 40px 64px;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -80px; right: -80px;
+  width: 400px; height: 400px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(29,158,117,.18) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero::after {
+  content: '';
+  position: absolute;
+  bottom: -40px; left: -60px;
+  width: 280px; height: 280px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(196,150,90,.1) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero-inner {
+  max-width: 860px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+.hero-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 28px;
+}
+.hero-badge {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--teal-light);
+  border: 1px solid rgba(93,202,165,.3);
+  border-radius: 20px;
+  padding: 4px 14px;
+}
+.hero-line {
+  flex: 1;
+  height: 1px;
+  background: rgba(255,255,255,.1);
+}
+.hero-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(38px, 6vw, 62px);
+  font-weight: 300;
+  color: var(--white);
+  line-height: 1.1;
+  letter-spacing: -.5px;
+  margin-bottom: 20px;
+}
+.hero-title em {
+  font-style: italic;
+  color: var(--teal-light);
+}
+.hero-sub {
+  font-size: 16px;
+  color: rgba(255,255,255,.7);
+  line-height: 1.75;
+  max-width: 560px;
+  margin-bottom: 36px;
+}
+.hero-meta {
+  display: flex;
+  gap: 28px;
+  flex-wrap: wrap;
+}
+.hero-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.hero-stat-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--white);
+  line-height: 1;
+}
+.hero-stat-label {
+  font-size: 11px;
+  color: rgba(255,255,255,.5);
+  letter-spacing: .07em;
+  text-transform: uppercase;
+}
+.hero-divider {
+  width: 1px;
+  height: 40px;
+  background: rgba(255,255,255,.15);
+  align-self: center;
+}
+.hero-audience {
+  display: flex;
+  gap: 8px;
+  margin-top: 28px;
+  flex-wrap: wrap;
+}
+.aud-tag {
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(255,255,255,.9);
+  background: rgba(255,255,255,.1);
+  border: 1px solid rgba(255,255,255,.15);
+  border-radius: 20px;
+  padding: 5px 14px;
+}
+
+/* ── CENTRAL QUESTION ── */
+.central-q {
+  background: var(--gold-pale);
+  border-top: 3px solid var(--gold);
+  padding: 48px 40px;
+}
+.central-q-inner {
+  max-width: 860px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 40px;
+  align-items: start;
+}
+.cq-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 8px;
+}
+.cq-aside {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 18px;
+  font-weight: 300;
+  color: var(--text-mid);
+  line-height: 1.55;
+  font-style: italic;
+  border-left: 2px solid var(--gold-light);
+  padding-left: 20px;
+}
+.cq-main {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(22px, 3vw, 30px);
+  font-weight: 300;
+  color: var(--text);
+  line-height: 1.45;
+  letter-spacing: -.2px;
+}
+.cq-main strong {
+  font-weight: 600;
+}
+
+/* ── FIVE CAPABILITIES ── */
+.capabilities {
+  padding: 64px 40px;
+  max-width: 860px;
+  margin: 0 auto;
+}
+.section-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--teal-mid);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.section-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border-light);
+}
+.cap-intro {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 24px;
+  font-weight: 300;
+  color: var(--text);
+  line-height: 1.5;
+  margin-bottom: 36px;
+  max-width: 600px;
+}
+.cap-grid {
+  display: grid;
+  gap: 1px;
+  background: var(--border-light);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.cap-item {
+  background: var(--white);
+  padding: 24px 28px;
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  transition: background .15s;
+}
+.cap-item:hover {
+  background: var(--teal-faint);
+}
+.cap-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 32px;
+  font-weight: 300;
+  color: var(--teal-light);
+  line-height: 1;
+  min-width: 36px;
+  margin-top: -3px;
+}
+.cap-body {}
+.cap-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 5px;
+}
+.cap-desc {
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.65;
+}
+.cap-desc em {
+  color: var(--teal-mid);
+  font-style: normal;
+  font-weight: 500;
+}
+
+/* ── SIX PILLARS ── */
+.pillars-section {
+  background: var(--teal-deep);
+  padding: 64px 40px;
+}
+.pillars-inner {
+  max-width: 860px;
+  margin: 0 auto;
+}
+.pillars-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.5);
+  margin-bottom: 12px;
+}
+.pillars-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(24px, 4vw, 36px);
+  font-weight: 300;
+  color: var(--white);
+  line-height: 1.3;
+  margin-bottom: 10px;
+}
+.pillars-sub {
+  font-size: 14px;
+  color: rgba(255,255,255,.6);
+  line-height: 1.7;
+  max-width: 520px;
+  margin-bottom: 40px;
+}
+.pillars-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: rgba(255,255,255,.08);
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.pillar-cell {
+  background: rgba(255,255,255,.04);
+  padding: 22px 20px;
+  transition: background .15s;
+  cursor: default;
+}
+.pillar-cell:hover {
+  background: rgba(255,255,255,.09);
+}
+.pillar-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  margin-bottom: 12px;
+}
+.p1 { background: #5B8ED4; }
+.p2 { background: #8B80E0; }
+.p3 { background: #5EAA7A; }
+.p4 { background: #E07A50; }
+.p5 { background: #D4A840; }
+.p6 { background: #C46080; }
+
+.pillar-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: rgba(255,255,255,.95);
+  margin-bottom: 4px;
+}
+.pillar-q {
+  font-size: 12px;
+  color: rgba(255,255,255,.5);
+  line-height: 1.55;
+  font-style: italic;
+  font-family: 'Cormorant Garamond', serif;
+}
+.pillar-hs-note {
+  margin-top: 20px;
+  padding: 16px 20px;
+  background: rgba(29,158,117,.15);
+  border: 1px solid rgba(93,202,165,.2);
+  border-radius: 8px;
+  font-size: 13px;
+  color: rgba(255,255,255,.8);
+  line-height: 1.65;
+}
+.pillar-hs-note strong {
+  color: var(--teal-light);
+}
+
+/* ── COURSE ARC ── */
+.arc-section {
+  padding: 64px 40px;
+  max-width: 860px;
+  margin: 0 auto;
+}
+.arc-intro {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 22px;
+  font-weight: 300;
+  color: var(--text);
+  line-height: 1.55;
+  margin-bottom: 36px;
+  max-width: 580px;
+}
+.arc-list {
+  display: grid;
+  gap: 2px;
+}
+.arc-item {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  padding: 14px 16px;
+  border-radius: 8px;
+  transition: background .15s;
+}
+.arc-item:hover {
+  background: var(--teal-faint);
+}
+.arc-ch {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--teal-light);
+  min-width: 28px;
+  padding-top: 1px;
+}
+.arc-line {
+  flex: 1;
+}
+.arc-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 2px;
+}
+.arc-desc {
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.55;
+}
+.arc-badge {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  padding: 2px 9px;
+  border-radius: 10px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.badge-foundation { background: var(--teal-pale); color: var(--teal-mid); }
+.badge-diagnostic { background: #E6F1FB; color: #185FA5; }
+.badge-design { background: #EAF3DE; color: #3B6D11; }
+.badge-governance { background: #FAEEDA; color: #BA7517; }
+.badge-ethics { background: #EEEDFE; color: #534AB7; }
+.badge-mindset { background: var(--teal-pale); color: var(--teal-dark); }
+.badge-capstone { background: #F5EDD8; color: #8B6020; }
+
+/* ── WHAT YOU BUILD ── */
+.build-section {
+  background: var(--bg);
+  border-top: 1px solid var(--border-light);
+  padding: 64px 40px;
+}
+.build-inner {
+  max-width: 860px;
+  margin: 0 auto;
+}
+.build-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+  margin-top: 28px;
+}
+.build-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 22px 24px;
+}
+.bc-icon {
+  font-size: 22px;
+  margin-bottom: 10px;
+}
+.bc-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 5px;
+}
+.bc-desc {
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.65;
+}
+
+/* ── AUTHOR ── */
+.author-section {
+  padding: 64px 40px;
+  max-width: 860px;
+  margin: 0 auto;
+}
+.author-block {
+  background: var(--teal-dark);
+  border-radius: var(--radius);
+  padding: 40px;
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 36px;
+  align-items: start;
+}
+.author-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.5);
+  margin-bottom: 8px;
+}
+.author-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 26px;
+  font-weight: 300;
+  color: var(--white);
+  line-height: 1.2;
+  margin-bottom: 12px;
+}
+.author-title {
+  font-size: 12px;
+  color: rgba(255,255,255,.55);
+  line-height: 1.6;
+}
+.author-body {
+  font-size: 14px;
+  color: rgba(255,255,255,.75);
+  line-height: 1.75;
+  margin-bottom: 20px;
+}
+.author-links {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.author-link {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--teal-light);
+  text-decoration: none;
+  border: 1px solid rgba(93,202,165,.25);
+  border-radius: 20px;
+  padding: 5px 14px;
+  transition: all .15s;
+}
+.author-link:hover {
+  background: rgba(93,202,165,.1);
+  border-color: rgba(93,202,165,.5);
+}
+
+/* ── CLOSING ── */
+.closing {
+  background: var(--teal-dark);
+  padding: 64px 40px;
+  text-align: center;
+}
+.closing-inner {
+  max-width: 580px;
+  margin: 0 auto;
+}
+.closing-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(26px, 4vw, 40px);
+  font-weight: 300;
+  color: var(--white);
+  line-height: 1.25;
+  margin-bottom: 16px;
+}
+.closing-title em {
+  font-style: italic;
+  color: var(--teal-light);
+}
+.closing-body {
+  font-size: 15px;
+  color: rgba(255,255,255,.65);
+  line-height: 1.75;
+  margin-bottom: 32px;
+}
+.closing-cta {
+  display: inline-block;
+  background: var(--teal);
+  color: var(--white);
+  text-decoration: none;
+  border-radius: 4px;
+  padding: 14px 36px;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: .03em;
+  transition: background .15s;
+}
+.closing-cta:hover {
+  background: var(--teal-mid);
+}
+.closing-sub {
+  margin-top: 14px;
+  font-size: 12px;
+  color: rgba(255,255,255,.35);
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 640px) {
+  .hero, .central-q, .capabilities, .arc-section,
+  .build-section, .author-section, .closing { padding: 48px 20px; }
+  .pillars-section { padding: 48px 20px; }
+  .central-q-inner { grid-template-columns: 1fr; gap: 20px; }
+  .pillars-grid { grid-template-columns: repeat(2, 1fr); }
+  .build-grid { grid-template-columns: 1fr; }
+  .author-block { grid-template-columns: 1fr; }
+  .hero-meta { gap: 16px; }
+}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.hero-title { animation: fadeUp .7s ease both; }
+.hero-sub { animation: fadeUp .7s .12s ease both; }
+.hero-meta { animation: fadeUp .7s .22s ease both; }
+.hero-audience { animation: fadeUp .7s .3s ease both; }
+
+@media print {
+  .closing-cta { display: none; }
+  .hero::before, .hero::after { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-eyebrow">
+      <span class="hero-badge">Future of Cities Learning Hub</span>
+      <div class="hero-line"></div>
+    </div>
+    <h1 class="hero-title">
+      City Intelligence<br>
+      <em>Mastercourse</em>
+    </h1>
+    <p class="hero-sub">
+      A rigorous programme for policymakers and researchers who need more than data — who need a framework for reading cities structurally, designing interventions that compound, and governing strategies that survive.
+    </p>
+    <div class="hero-meta">
+      <div class="hero-stat">
+        <span class="hero-stat-num">12</span>
+        <span class="hero-stat-label">Sections</span>
+      </div>
+      <div class="hero-divider"></div>
+      <div class="hero-stat">
+        <span class="hero-stat-num">4–5</span>
+        <span class="hero-stat-label">Hours of study</span>
+      </div>
+      <div class="hero-divider"></div>
+      <div class="hero-stat">
+        <span class="hero-stat-num">6</span>
+        <span class="hero-stat-label">CII pillars</span>
+      </div>
+      <div class="hero-divider"></div>
+      <div class="hero-stat">
+        <span class="hero-stat-num">1</span>
+        <span class="hero-stat-label">City intelligence blueprint</span>
+      </div>
+    </div>
+    <div class="hero-audience">
+      <span class="aud-tag">Urban policymakers</span>
+      <span class="aud-tag">Urban researchers</span>
+      <span class="aud-tag">City strategy teams</span>
+      <span class="aud-tag">Public sector leaders</span>
+    </div>
+  </div>
+</section>
+
+<!-- ── CENTRAL QUESTION ── -->
+<section class="central-q">
+  <div class="central-q-inner">
+    <div>
+      <p class="cq-label">The course question</p>
+      <p class="cq-aside">How do we move from measuring cities to understanding them — and from understanding them to governing and researching them with greater intelligence?</p>
+    </div>
+    <p class="cq-main">
+      Most cities have <strong>more data than they can use</strong>. They are failing not because of data scarcity — but because the people responsible for urban decisions do not have a framework for reading structural performance, connecting evidence to mechanism, and designing interventions that change the structural conditions rather than manage their symptoms.
+    </p>
+  </div>
+</section>
+
+<!-- ── FIVE CAPABILITIES ── -->
+<section style="padding: 64px 40px;">
+  <div class="capabilities" style="padding:0;max-width:860px;margin:0 auto">
+    <p class="section-label">What you will be able to do</p>
+    <p class="cap-intro">You leave this course with five capabilities that most practitioners and researchers do not currently have.</p>
+    <div class="cap-grid">
+      <div class="cap-item">
+        <span class="cap-num">01</span>
+        <div class="cap-body">
+          <p class="cap-title">Read a city's structural performance diagnostically</p>
+          <p class="cap-desc">Not as a ranking or a score. As a map of which structural conditions are producing which outcomes — and where the <em>blocking constraints</em> are that no amount of investment in the wrong place will remove.</p>
+        </div>
+      </div>
+      <div class="cap-item">
+        <span class="cap-num">02</span>
+        <div class="cap-body">
+          <p class="cap-title">Design interventions that address structural mechanisms</p>
+          <p class="cap-desc">Not symptoms. Not visible problems. The <em>structural conditions producing those problems</em> — and that, if changed, would change the outcome at scale rather than managing it at the surface.</p>
+        </div>
+      </div>
+      <div class="cap-item">
+        <span class="cap-num">03</span>
+        <div class="cap-body">
+          <p class="cap-title">Sequence those interventions so they compound</p>
+          <p class="cap-desc">So each step <em>raises the probability of success</em> for the next. So the strategy builds momentum rather than dissipating it across parallel initiatives that cannot reinforce each other.</p>
+        </div>
+      </div>
+      <div class="cap-item">
+        <span class="cap-num">04</span>
+        <div class="cap-body">
+          <p class="cap-title">Build the governance architecture that protects the strategy</p>
+          <p class="cap-desc">Against mandate fragmentation. Against metric substitution. Against the political cycle. Against institutional capture. The four structural failure modes that destroy well-designed strategies <em>after</em> they are built.</p>
+        </div>
+      </div>
+      <div class="cap-item">
+        <span class="cap-num">05</span>
+        <div class="cap-body">
+          <p class="cap-title">Apply the equity lens that a diagnostic instrument requires</p>
+          <p class="cap-desc">Not as a disclaimer — as a <em>substantive analytical question</em>: whose intelligence counts, who is invisible in the aggregate, and what responsible use of this framework actually demands of you professionally.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── SIX PILLARS ── -->
+<section class="pillars-section">
+  <div class="pillars-inner">
+    <p class="pillars-label">The City Intelligence Index</p>
+    <h2 class="pillars-title">Six pillars. One diagnostic instrument.</h2>
+    <p class="pillars-sub">The CII is a structured comparative framework measuring urban structural performance across six dimensions. The course builds the capability to read it analytically — not as a ranking, as a diagnostic.</p>
+    <div class="pillars-grid">
+      <div class="pillar-cell">
+        <div class="pillar-dot p1"></div>
+        <p class="pillar-name">Foundational</p>
+        <p class="pillar-q">Can people actually participate in the city's intelligence?</p>
+      </div>
+      <div class="pillar-cell">
+        <div class="pillar-dot p2"></div>
+        <p class="pillar-name">Innovator</p>
+        <p class="pillar-q">Can the city generate, translate, and deploy new knowledge?</p>
+      </div>
+      <div class="pillar-cell">
+        <div class="pillar-dot p3"></div>
+        <p class="pillar-name">Integrator</p>
+        <p class="pillar-q">Do the city's systems actually work together?</p>
+      </div>
+      <div class="pillar-cell">
+        <div class="pillar-dot p4"></div>
+        <p class="pillar-name">Regenerative</p>
+        <p class="pillar-q">Is the city restoring as well as consuming?</p>
+      </div>
+      <div class="pillar-cell">
+        <div class="pillar-dot p5"></div>
+        <p class="pillar-name">Connected</p>
+        <p class="pillar-q">How openly does the city link to the world and to its residents?</p>
+      </div>
+      <div class="pillar-cell">
+        <div class="pillar-dot p6"></div>
+        <p class="pillar-name">Healthy Society</p>
+        <p class="pillar-q">Are people actually living well?</p>
+      </div>
+    </div>
+    <div class="pillar-hs-note">
+      <strong>The accountability layer:</strong> Healthy Society is the pillar this course returns to throughout. It asks whether everything the city measures and invests in is translating into actual wellbeing for the people living in it. It is the question city intelligence never stops asking.
+    </div>
+  </div>
+</section>
+
+<!-- ── COURSE ARC ── -->
+<section class="arc-section">
+  <p class="section-label">The learning arc</p>
+  <p class="arc-intro">Twelve sections that move from analytical framework to working practice. Each section produces a deliverable you keep.</p>
+  <div class="arc-list">
+    <div class="arc-item">
+      <span class="arc-ch">01</span>
+      <div class="arc-line">
+        <p class="arc-title">Welcome</p>
+        <p class="arc-desc">The course's governing argument and how to use the framework across both policymaking and research contexts.</p>
+      </div>
+      <span class="arc-badge badge-foundation">Foundation</span>
+    </div>
+    <div class="arc-item">
+      <span class="arc-ch">02</span>
+      <div class="arc-line">
+        <p class="arc-title">Why cities fail despite good data</p>
+        <p class="arc-desc">The five failure modes. Why data abundance and decision quality are not correlated — and what the gap between them actually is.</p>
+      </div>
+      <span class="arc-badge badge-foundation">Foundation</span>
+    </div>
+    <div class="arc-item">
+      <span class="arc-ch">03</span>
+      <div class="arc-line">
+        <p class="arc-title">What city intelligence actually is</p>
+        <p class="arc-desc">Four conditions: circulation, feedback, alignment, time horizon. Intelligence as a systemic property — not a dataset or a technology.</p>
+      </div>
+      <span class="arc-badge badge-foundation">Foundation</span>
+    </div>
+    <div class="arc-item">
+      <span class="arc-ch">04</span>
+      <div class="arc-line">
+        <p class="arc-title">Inside the City Intelligence Index</p>
+        <p class="arc-desc">The CII in full: six pillars, composite methodology, reading rules. What the index measures and how to read it analytically rather than mechanically.</p>
+      </div>
+      <span class="arc-badge badge-diagnostic">Instrument</span>
+    </div>
+    <div class="arc-item">
+      <span class="arc-ch">05</span>
+      <div class="arc-line">
+        <p class="arc-title">Diagnosing your city</p>
+        <p class="arc-desc">The attribution question. Weak signals. The three diagnostic steps. Health as invisible infrastructure — and what that reveals about the accountability layer.</p>
+      </div>
+      <span class="arc-badge badge-diagnostic">Diagnostic</span>
+    </div>
+    <div class="arc-item">
+      <span class="arc-ch">06</span>
+      <div class="arc-line">
+        <p class="arc-title">From insight to intervention</p>
+        <p class="arc-desc">The four intelligence criteria. The five policy traps. What makes an intervention structural rather than symptomatic — and how to design one.</p>
+      </div>
+      <span class="arc-badge badge-design">Design</span>
+    </div>
+    <div class="arc-item">
+      <span class="arc-ch">07</span>
+      <div class="arc-line">
+        <p class="arc-title">From one intervention to a strategy</p>
+        <p class="arc-desc">The pillar dependency hierarchy. The Foundational floor. How compounding sequences work — and why order is the difference between momentum and waste.</p>
+      </div>
+      <span class="arc-badge badge-design">Strategy</span>
+    </div>
+    <div class="arc-item">
+      <span class="arc-ch">08</span>
+      <div class="arc-line">
+        <p class="arc-title">Why strategies fail in practice</p>
+        <p class="arc-desc">Mandate fragmentation. Metric substitution. Political cycle truncation. Institutional capture. Four structural failure modes — and their early-warning indicators.</p>
+      </div>
+      <span class="arc-badge badge-governance">Governance</span>
+    </div>
+    <div class="arc-item">
+      <span class="arc-ch">09</span>
+      <div class="arc-line">
+        <p class="arc-title">Building city intelligence systems</p>
+        <p class="arc-desc">Four governance countermeasures. The four-component city intelligence system: diagnostic, strategy, governance, and learning functions.</p>
+      </div>
+      <span class="arc-badge badge-governance">Systems</span>
+    </div>
+    <div class="arc-item">
+      <span class="arc-ch">10</span>
+      <div class="arc-line">
+        <p class="arc-title">Ethics, power and data</p>
+        <p class="arc-desc">Whose intelligence counts. What the aggregate conceals. The three equity questions. The difference between city intelligence and city efficiency.</p>
+      </div>
+      <span class="arc-badge badge-ethics">Ethics</span>
+    </div>
+    <div class="arc-item">
+      <span class="arc-ch">11</span>
+      <div class="arc-line">
+        <p class="arc-title">The city intelligence mindset in leadership</p>
+        <p class="arc-desc">Three character demands. Three deliberate practices. What makes a practitioner more accurate — not more confident — over time.</p>
+      </div>
+      <span class="arc-badge badge-mindset">Mindset</span>
+    </div>
+    <div class="arc-item">
+      <span class="arc-ch">12</span>
+      <div class="arc-line">
+        <p class="arc-title">Application and certification</p>
+        <p class="arc-desc">The city intelligence blueprint: diagnosis, intervention, sequence, governance architecture, equity statement, 3-year monitoring framework. Certificate of completion.</p>
+      </div>
+      <span class="arc-badge badge-capstone">Capstone</span>
+    </div>
+  </div>
+</section>
+
+<!-- ── WHAT YOU BUILD ── -->
+<section class="build-section">
+  <div class="build-inner">
+    <p class="section-label">What you build</p>
+    <div class="build-grid">
+      <div class="build-card">
+        <div class="bc-icon">🗺️</div>
+        <p class="bc-title">A city diagnostic</p>
+        <p class="bc-desc">A structured reading of your city's CII profile identifying the binding structural constraint, the translation gap, and the attribution question your intervention must answer.</p>
+      </div>
+      <div class="build-card">
+        <div class="bc-icon">⚙️</div>
+        <p class="bc-title">A structural intervention design</p>
+        <p class="bc-desc">An intervention that addresses the structural mechanism rather than the visible symptom — with an explicit account of what it does not do and why that is intentional.</p>
+      </div>
+      <div class="build-card">
+        <div class="bc-icon">🔗</div>
+        <p class="bc-title">A compounding sequence</p>
+        <p class="bc-desc">A three-step strategy in which each intervention raises the probability of success for the next — and produces a compounding outcome none could achieve alone.</p>
+      </div>
+      <div class="build-card">
+        <div class="bc-icon">🏛️</div>
+        <p class="bc-title">A governance architecture</p>
+        <p class="bc-desc">The four countermeasures protecting your strategy: shared accountability, shared outcome metric, transition-proofing protocol, and structural protection mechanism.</p>
+      </div>
+      <div class="build-card">
+        <div class="bc-icon">⚖️</div>
+        <p class="bc-title">An equity statement</p>
+        <p class="bc-desc">A substantive analytical contribution naming who is not visible in the aggregate, what the CII cannot show about your strategy's impact, and what that requires of you.</p>
+      </div>
+      <div class="build-card">
+        <div class="bc-icon">📋</div>
+        <p class="bc-title">A 3-year monitoring framework</p>
+        <p class="bc-desc">CII signals at defined intervals, trajectory indicators, and the threshold that would trigger a sequence adjustment. Your strategy assessed by direction, not just current position.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── AUTHOR ── -->
+<section class="author-section">
+  <div class="author-block">
+    <div>
+      <p class="author-label">Course author</p>
+      <p class="author-name">Dr. Fatime Barbara Hegyi</p>
+      <p class="author-title">City intelligence researcher<br>Founder, Future of Cities Learning Hub<br>Author of the City Intelligence Index</p>
+    </div>
+    <div>
+      <p class="author-body">Dr. Hegyi's work at the Joint Research Centre of the European Commission focused on urban intelligence, innovation ecosystems, and policy evaluation across European cities. The City Intelligence Index is her primary research instrument — a structured comparative framework for reading urban structural performance that forms the analytical spine of this course. Her book <em>The Future of Cities</em> provides the intellectual foundation for everything taught here.</p>
+      <div class="author-links">
+        <a href="https://fatimebarbara.vision/learning-hub/" class="author-link" target="_blank">Learning Hub</a>
+        <a href="https://fatimebarbara.vision/publications/" class="author-link" target="_blank">Research</a>
+        <a href="https://fatimebarbara.vision/en/bio/" class="author-link" target="_blank">Speaking</a>
+        <a href="https://fatimebarbara.vision/en/books-future-of-cities/" class="author-link" target="_blank">The book</a>
+        <a href="https://fatimebarbara.vision/en/city-intelligence-index/" class="author-link" target="_blank">CII platform</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CLOSING ── -->
+<section class="closing">
+  <div class="closing-inner">
+    <h2 class="closing-title">What you will not find here<br>is a <em>reassuring</em> set of best practices.</h2>
+    <p class="closing-body">What you will find is a framework rigorous enough to tell you what your city is actually doing — and honest enough to tell you what that requires of you.</p>
+    <a href="https://future-of-cities-academy.learnworlds.com/course/city-intelligence-policy-research" class="closing-cta" target="_blank">Begin the course</a>
+    <p class="closing-sub">12 sections · 4–5 hours · Certificate of completion</p>
+  </div>
+</section>
+
+</body>
+</html>
