@@ -12,919 +12,732 @@
   --ink:#0D0D0A;
   --ink-mid:#2E2E28;
   --ink-light:#5C5C54;
-  --ink-faint:#9E9E94;
+  --ink-faint:#A0A094;
   --green:#0F6E56;
   --green-mid:#1D9E75;
   --green-deep:#04342C;
   --green-pale:#E1F5EE;
-  --green-glass:rgba(15,110,86,0.08);
+  --purple:#534AB7;
+  --purple-dark:#3C3489;
+  --purple-deep:#1A1630;
+  --purple-pale:#EEEDFE;
   --amber:#BA7517;
-  --amber-pale:#FAEEDA;
-  --paper:#FAFAF6;
-  --paper-warm:#F2EEE4;
-  --paper-mid:#E6E0D4;
+  --paper:#F8F6F0;
+  --paper-warm:#F0EBE0;
+  --paper-mid:#E2DAC8;
   --white:#FDFCF9;
   --border:rgba(0,0,0,0.07);
-  --border-green:rgba(15,110,86,0.14);
 }
 
 html{scroll-behavior:smooth}
+body{font-family:'Outfit',sans-serif;background:var(--paper);color:var(--ink);line-height:1.7;font-size:16px;overflow-x:hidden}
 
-body{
-  font-family:'Outfit',sans-serif;
-  background:var(--paper);
-  color:var(--ink);
-  line-height:1.7;
-  font-size:16px;
-  overflow-x:hidden;
-}
-
-/* ── HEADER ── */
+/* ── PAGE HEADER ── */
 .page-header{
   background:var(--ink);
-  padding:3.5rem 2rem 3rem;
+  padding:3rem 2rem 2.5rem;
   position:relative;
   overflow:hidden;
 }
 
 .page-header::before{
-  content:'';
-  position:absolute;
-  inset:0;
+  content:'';position:absolute;inset:0;
   background:
-    repeating-linear-gradient(0deg,transparent,transparent 48px,rgba(255,255,255,.018) 48px,rgba(255,255,255,.018) 49px),
-    repeating-linear-gradient(90deg,transparent,transparent 48px,rgba(255,255,255,.012) 48px,rgba(255,255,255,.012) 49px);
+    repeating-linear-gradient(0deg,transparent,transparent 48px,rgba(255,255,255,.014) 48px,rgba(255,255,255,.014) 49px),
+    repeating-linear-gradient(90deg,transparent,transparent 48px,rgba(255,255,255,.009) 48px,rgba(255,255,255,.009) 49px);
 }
 
-.page-header::after{
-  content:'';
-  position:absolute;
-  top:-80px;right:-80px;
-  width:320px;height:320px;
-  border-radius:50%;
-  background:radial-gradient(circle,rgba(29,158,117,.1) 0%,transparent 70%);
+.ph-inner{
+  max-width:1160px;margin:0 auto;
+  position:relative;z-index:1;
+  display:flex;align-items:flex-end;justify-content:space-between;gap:2rem;flex-wrap:wrap;
 }
 
-.header-inner{
-  max-width:1140px;
-  margin:0 auto;
-  position:relative;
-  z-index:1;
-  display:flex;
-  align-items:flex-end;
-  justify-content:space-between;
-  gap:2rem;
-  flex-wrap:wrap;
+.ph-left{}
+
+.ph-eyebrow{
+  display:flex;align-items:center;gap:9px;margin-bottom:1.1rem;
 }
 
-.header-left{}
-
-.header-eyebrow{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  margin-bottom:1.25rem;
-}
-
-.eyebrow-dot{
-  width:7px;height:7px;
-  border-radius:50%;
-  background:var(--green-mid);
+.ph-dot{
+  width:7px;height:7px;border-radius:50%;background:var(--green-mid);
   animation:blink 2.5s ease-in-out infinite;
 }
 
-@keyframes blink{0%,100%{opacity:1}50%{opacity:.35}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
 
-.eyebrow-text{
-  font-size:11px;
-  letter-spacing:.18em;
-  text-transform:uppercase;
-  color:rgba(255,255,255,.45);
-  font-weight:400;
+.ph-academy{
+  font-size:11px;letter-spacing:.18em;text-transform:uppercase;
+  color:rgba(255,255,255,.4);font-weight:400;
 }
 
-.page-title{
+.ph-title{
   font-family:'Cormorant Garamond',serif;
-  font-size:clamp(2.8rem,6vw,5.5rem);
-  font-weight:300;
-  color:#fff;
-  line-height:.95;
-  letter-spacing:-.02em;
+  font-size:clamp(2.4rem,5.5vw,5rem);
+  font-weight:300;color:#fff;
+  line-height:.92;letter-spacing:-.02em;
 }
 
-.page-title em{
-  font-style:italic;
-  color:rgba(255,255,255,.3);
-  display:block;
+.ph-title .acc{color:#9FE1CB}
+.ph-title em{font-style:italic;color:rgba(255,255,255,.28);display:block}
+
+.ph-right{
+  text-align:right;padding-bottom:.2rem;
 }
 
-.page-title .accent{color:#9FE1CB}
-
-.header-right{
-  padding-bottom:.25rem;
-}
-
-.header-tagline{
-  font-size:1rem;
-  color:rgba(255,255,255,.55);
-  font-weight:300;
-  max-width:340px;
-  line-height:1.75;
-  text-align:right;
-}
-
-/* ── COURSE COUNT STRIP ── */
-.count-strip{
-  background:var(--green);
-  padding:1rem 2rem;
-  display:flex;
-  align-items:center;
-  gap:0;
-  flex-wrap:wrap;
-}
-
-.count-strip-inner{
-  max-width:1140px;
-  margin:0 auto;
-  width:100%;
-  display:flex;
-  align-items:center;
-  gap:2.5rem;
-  flex-wrap:wrap;
-}
-
-.count-item{
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
-
-.count-num{
-  font-family:'Cormorant Garamond',serif;
-  font-size:1.5rem;
-  font-weight:600;
-  color:#9FE1CB;
-  line-height:1;
-}
-
-.count-label{
-  font-size:12px;
-  color:rgba(255,255,255,.75);
-  font-weight:300;
-  letter-spacing:.03em;
-}
-
-.count-sep{
-  width:1px;height:24px;
-  background:rgba(255,255,255,.2);
+.ph-tagline{
+  font-size:.95rem;color:rgba(255,255,255,.48);
+  font-weight:300;max-width:300px;line-height:1.75;
+  margin-left:auto;
 }
 
 /* ── MAIN ── */
-main{
-  max-width:1140px;
-  margin:0 auto;
-  padding:4rem 2rem 6rem;
-}
+main{max-width:1160px;margin:0 auto;padding:0 2rem 5rem}
 
-/* ── SECTION HEADER ── */
-.section-header{
-  display:flex;
-  align-items:flex-end;
-  justify-content:space-between;
-  gap:1.5rem;
-  margin-bottom:2.5rem;
-  flex-wrap:wrap;
-}
-
-.section-eyebrow{
-  font-size:11px;
-  letter-spacing:.18em;
-  text-transform:uppercase;
-  color:var(--green);
-  font-weight:500;
-  margin-bottom:.6rem;
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
-
-.section-eyebrow::after{
-  content:'';
-  flex:0 0 28px;height:1px;
-  background:var(--green);opacity:.4;
-}
-
-.section-heading{
-  font-family:'Cormorant Garamond',serif;
-  font-size:clamp(1.8rem,4vw,3rem);
-  font-weight:300;
-  color:var(--ink);
-  line-height:1.1;
-  letter-spacing:-.01em;
-}
-
-.section-heading em{font-style:italic;color:var(--ink-light)}
-
-/* ── ACTIVE COURSES GRID ── */
-.courses-grid{
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:16px;
-  margin-bottom:5rem;
-}
-
-@media(max-width:760px){.courses-grid{grid-template-columns:1fr}}
-
-/* ── COURSE CARD ── */
-.course-card{
-  background:var(--white);
-  border:1px solid var(--border);
-  border-radius:4px;
-  overflow:hidden;
-  display:flex;
-  flex-direction:column;
-  transition:transform .2s,box-shadow .2s;
-  text-decoration:none;
-  color:inherit;
-}
-
-.course-card:hover{
-  transform:translateY(-3px);
-  box-shadow:0 12px 32px rgba(0,0,0,.07);
-}
-
-/* Featured card — Cities Are Alive — full width */
-.course-card.featured{
-  grid-column:1/-1;
-  flex-direction:row;
-}
-
-@media(max-width:760px){.course-card.featured{flex-direction:column}}
-
-.card-visual{
-  flex:0 0 320px;
-  min-height:240px;
-  position:relative;
-  overflow:hidden;
-  display:flex;
-  align-items:flex-end;
-  padding:1.75rem;
-}
-
-.course-card.featured .card-visual{
-  flex:0 0 380px;
-  min-height:auto;
-}
-
-@media(max-width:760px){
-  .card-visual{flex:none;min-height:200px}
-  .course-card.featured .card-visual{flex:none}
-}
-
-/* Visual backgrounds per course */
-.vis-caa{background:var(--ink)}
-.vis-caa::before{
-  content:'';position:absolute;inset:0;
-  background:
-    radial-gradient(ellipse at 20% 80%,rgba(29,158,117,.18) 0%,transparent 55%),
-    radial-gradient(ellipse at 80% 20%,rgba(15,110,86,.12) 0%,transparent 50%),
-    repeating-linear-gradient(0deg,transparent,transparent 48px,rgba(255,255,255,.012) 48px,rgba(255,255,255,.012) 49px);
-}
-
-.vis-mastercourse{background:#1A1A28}
-.vis-mastercourse::before{
-  content:'';position:absolute;inset:0;
-  background:
-    radial-gradient(ellipse at 70% 30%,rgba(83,74,183,.2) 0%,transparent 55%),
-    radial-gradient(ellipse at 20% 80%,rgba(29,158,117,.1) 0%,transparent 50%);
-}
-
-.card-visual-inner{
-  position:relative;
-  z-index:1;
-}
-
-.card-course-num{
-  font-family:'Cormorant Garamond',serif;
-  font-size:3.5rem;
-  font-weight:300;
-  color:rgba(255,255,255,.08);
-  line-height:1;
-  position:absolute;
-  top:1.25rem;right:1.25rem;
-}
-
-.card-tag{
-  display:inline-flex;
-  align-items:center;
-  gap:6px;
-  padding:4px 12px;
-  border-radius:20px;
-  font-size:11px;
-  font-weight:500;
-  letter-spacing:.06em;
+/* ── SECTION LABEL ── */
+.sec-label{
+  font-size:11px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--green);font-weight:500;
+  display:flex;align-items:center;gap:10px;
   margin-bottom:.75rem;
 }
 
-.tag-free{background:rgba(29,158,117,.2);color:#9FE1CB;border:1px solid rgba(29,158,117,.3)}
-.tag-paid{background:rgba(239,159,39,.15);color:#FAC775;border:1px solid rgba(239,159,39,.25)}
-.tag-live{background:rgba(29,158,117,.2);color:#9FE1CB;border:1px solid rgba(29,158,117,.3)}
+.sec-label::after{content:'';flex:0 0 28px;height:1px;background:var(--green);opacity:.4}
 
-.card-title-small{
+.sec-heading{
   font-family:'Cormorant Garamond',serif;
-  font-size:1.6rem;
-  font-weight:300;
-  color:#fff;
-  line-height:1.15;
+  font-size:clamp(1.7rem,3.5vw,2.6rem);
+  font-weight:300;color:var(--ink);
+  line-height:1.1;letter-spacing:-.01em;
 }
 
-.card-title-small em{font-style:italic;color:rgba(255,255,255,.5)}
+.sec-heading em{font-style:italic;color:var(--ink-light)}
 
-.card-body{
-  flex:1;
-  padding:1.75rem 2rem;
-  display:flex;
-  flex-direction:column;
-  justify-content:space-between;
-  gap:1.25rem;
-}
-
-.card-description{
-  font-size:.92rem;
-  color:var(--ink-light);
-  line-height:1.8;
-  font-weight:300;
-}
-
-.card-meta-row{
-  display:flex;
-  align-items:center;
+/* ── COURSES SPLIT — side by side ── */
+.courses-split{
+  display:grid;
+  grid-template-columns:1fr 1fr;
   gap:16px;
-  flex-wrap:wrap;
+  margin-top:2.5rem;
+  border-radius:6px;
+  overflow:hidden;
+  box-shadow:0 2px 32px rgba(0,0,0,.1);
 }
 
-.meta-item{
-  display:flex;
-  align-items:center;
-  gap:6px;
-  font-size:12px;
-  color:var(--ink-faint);
-  font-weight:400;
+@media(max-width:780px){.courses-split{grid-template-columns:1fr}}
+
+/* ── COURSE A — Cities Are Alive ── */
+.course-a{
+  background:var(--ink);
+  display:flex;flex-direction:column;
+  position:relative;overflow:hidden;
 }
 
-.meta-dot{
-  width:4px;height:4px;
-  border-radius:50%;
-  background:var(--ink-faint);
+.course-a::before{
+  content:'';position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse at 15% 85%,rgba(29,158,117,.22) 0%,transparent 55%),
+    radial-gradient(ellipse at 85% 10%,rgba(15,110,86,.14) 0%,transparent 50%),
+    repeating-linear-gradient(45deg,transparent,transparent 32px,rgba(255,255,255,.008) 32px,rgba(255,255,255,.008) 64px);
 }
 
-.card-modules{
-  margin-top:.25rem;
+/* ── COURSE B — Mastercourse ── */
+.course-b{
+  background:var(--purple-deep);
+  display:flex;flex-direction:column;
+  position:relative;overflow:hidden;
 }
+
+.course-b::before{
+  content:'';position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse at 85% 85%,rgba(83,74,183,.3) 0%,transparent 55%),
+    radial-gradient(ellipse at 20% 15%,rgba(29,158,117,.08) 0%,transparent 50%),
+    repeating-linear-gradient(-45deg,transparent,transparent 32px,rgba(255,255,255,.006) 32px,rgba(255,255,255,.006) 64px);
+}
+
+/* ── COURSE TOP BAND ── */
+.course-band{
+  padding:2.5rem 2.5rem 0;
+  position:relative;z-index:1;
+}
+
+.course-num{
+  font-family:'Cormorant Garamond',serif;
+  font-size:6rem;font-weight:300;
+  color:rgba(255,255,255,.06);
+  line-height:1;
+  position:absolute;
+  top:1.5rem;right:2rem;
+  letter-spacing:-.04em;
+  pointer-events:none;
+}
+
+.course-tag{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:5px 14px;border-radius:20px;
+  font-size:11px;font-weight:500;
+  letter-spacing:.06em;margin-bottom:1.5rem;
+}
+
+.tag-a-free{background:rgba(29,158,117,.2);color:#9FE1CB;border:1px solid rgba(29,158,117,.3)}
+.tag-b-paid{background:rgba(83,74,183,.25);color:#CECBF6;border:1px solid rgba(83,74,183,.35)}
+
+.course-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(1.8rem,3vw,2.8rem);
+  font-weight:300;color:#fff;
+  line-height:1.1;letter-spacing:-.01em;
+  margin-bottom:.5rem;
+}
+
+.course-title em{font-style:italic;color:rgba(255,255,255,.38)}
+
+.course-subtitle{
+  font-size:.88rem;font-weight:300;
+  line-height:1.7;margin-bottom:2rem;
+}
+
+.course-a .course-subtitle{color:rgba(255,255,255,.5)}
+.course-b .course-subtitle{color:rgba(255,255,255,.45)}
+
+/* ── DIVIDER LINE ── */
+.course-divider{
+  height:1px;
+  margin:0 2.5rem;
+  position:relative;z-index:1;
+}
+
+.course-a .course-divider{background:rgba(255,255,255,.07)}
+.course-b .course-divider{background:rgba(255,255,255,.06)}
+
+/* ── COURSE BODY ── */
+.course-body{
+  padding:2rem 2.5rem;
+  flex:1;display:flex;flex-direction:column;gap:1.5rem;
+  position:relative;z-index:1;
+}
+
+.course-desc{
+  font-size:.92rem;line-height:1.82;font-weight:300;
+}
+
+.course-a .course-desc{color:rgba(255,255,255,.65)}
+.course-b .course-desc{color:rgba(255,255,255,.6)}
+
+/* Meta pills */
+.course-meta{
+  display:flex;flex-wrap:wrap;gap:8px;
+}
+
+.meta-pill{
+  padding:4px 12px;
+  border-radius:20px;
+  font-size:11px;font-weight:400;
+  letter-spacing:.03em;
+}
+
+.course-a .meta-pill{background:rgba(255,255,255,.07);color:rgba(255,255,255,.55);border:1px solid rgba(255,255,255,.1)}
+.course-b .meta-pill{background:rgba(255,255,255,.06);color:rgba(255,255,255,.5);border:1px solid rgba(255,255,255,.09)}
+
+/* Modules preview */
+.modules-section{}
 
 .modules-label{
-  font-size:10px;
-  text-transform:uppercase;
-  letter-spacing:.12em;
-  color:var(--ink-faint);
-  margin-bottom:.6rem;
-  font-weight:500;
+  font-size:10px;text-transform:uppercase;letter-spacing:.14em;
+  font-weight:500;margin-bottom:.65rem;
 }
 
-.modules-chips{
-  display:flex;
+.course-a .modules-label{color:rgba(255,255,255,.3)}
+.course-b .modules-label{color:rgba(255,255,255,.28)}
+
+.modules-list{
+  display:flex;flex-direction:column;gap:5px;
+}
+
+.module-row{
+  display:flex;align-items:flex-start;gap:10px;
+  font-size:.82rem;line-height:1.4;
+}
+
+.module-dot{
+  width:5px;height:5px;border-radius:50%;flex-shrink:0;margin-top:5px;
+}
+
+.course-a .module-dot{background:rgba(29,158,117,.6)}
+.course-b .module-dot{background:rgba(83,74,183,.7)}
+
+.module-name{}
+.course-a .module-name{color:rgba(255,255,255,.55)}
+.course-b .module-name{color:rgba(255,255,255,.5)}
+
+.modules-more{
+  font-size:.8rem;margin-top:4px;
+  font-style:italic;
+}
+
+.course-a .modules-more{color:rgba(255,255,255,.3)}
+.course-b .modules-more{color:rgba(255,255,255,.28)}
+
+/* CTA FOOTER */
+.course-footer{
+  padding:1.75rem 2.5rem 2.25rem;
+  display:flex;align-items:center;justify-content:space-between;gap:1rem;
   flex-wrap:wrap;
-  gap:6px;
+  position:relative;z-index:1;
+  border-top:1px solid rgba(255,255,255,.06);
 }
 
-.module-chip{
-  padding:3px 10px;
-  border:1px solid var(--border);
+.cta-btn{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:12px 24px;
   border-radius:3px;
-  font-size:11px;
-  color:var(--ink-light);
-  background:var(--paper);
-  font-weight:300;
-}
-
-.card-cta{
-  display:inline-flex;
-  align-items:center;
-  gap:8px;
-  padding:11px 24px;
-  background:var(--green);
-  border-radius:3px;
-  color:#fff;
-  font-size:13px;
-  font-weight:500;
-  text-decoration:none;
-  transition:background .2s;
-  width:fit-content;
-  cursor:pointer;
-  border:none;
   font-family:'Outfit',sans-serif;
+  font-size:13px;font-weight:500;
+  cursor:pointer;transition:all .2s;
+  text-decoration:none;border:none;
+  letter-spacing:.02em;
 }
 
-.card-cta:hover{background:var(--green-mid)}
-.card-cta.secondary{background:transparent;border:1px solid var(--border);color:var(--ink-mid)}
-.card-cta.secondary:hover{border-color:var(--green);color:var(--green)}
+.cta-a{background:var(--green);color:#fff}
+.cta-a:hover{background:var(--green-mid)}
 
-.card-cta-row{
-  display:flex;
-  gap:10px;
-  align-items:center;
-  flex-wrap:wrap;
-}
+.cta-b{background:var(--purple);color:#fff}
+.cta-b:hover{background:#635BC7}
 
-.price-display{
+.price-tag{
   font-family:'Cormorant Garamond',serif;
-  font-size:1.3rem;
-  font-weight:400;
-  color:var(--ink-mid);
-  display:flex;
-  align-items:center;
-  gap:8px;
+  font-size:1.2rem;font-weight:400;
+  display:flex;align-items:center;gap:8px;
 }
 
-.price-was{
-  font-size:.9rem;
-  text-decoration:line-through;
-  color:var(--ink-faint);
+.price-was{font-size:.85rem;text-decoration:line-through;color:rgba(255,255,255,.3)}
+.price-now-free{color:#9FE1CB;font-weight:600}
+.price-now-paid{color:#CECBF6;font-weight:600}
+
+/* ── DISTINCTION BADGES ── */
+.distinction-strip{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:16px;
+  margin-top:0;
 }
 
-.price-now{color:var(--green);font-weight:600}
+@media(max-width:780px){.distinction-strip{grid-template-columns:1fr}}
 
-/* ── UPCOMING SECTION ── */
-.upcoming-section{
-  border-top:1px solid var(--border);
-  padding-top:3.5rem;
+.dist-item{
+  padding:1.25rem 2.5rem;
+  display:flex;align-items:center;gap:14px;
+}
+
+.dist-a{background:rgba(15,110,86,.08);border:1px solid rgba(15,110,86,.12);border-radius:4px;}
+.dist-b{background:rgba(83,74,183,.06);border:1px solid rgba(83,74,183,.1);border-radius:4px;}
+
+.dist-icon{font-size:22px;flex-shrink:0}
+.dist-text{}
+.dist-title{font-size:.85rem;font-weight:500;color:var(--ink);margin-bottom:2px}
+.dist-sub{font-size:.78rem;color:var(--ink-faint);font-weight:300}
+
+/* ── SECTION DIVIDER ── */
+.section-gap{
+  height:1px;
+  background:var(--border);
+  margin:4rem 0 3.5rem;
+}
+
+/* ── UPCOMING ── */
+.upcoming-header{
+  display:flex;align-items:flex-end;justify-content:space-between;
+  gap:1.5rem;flex-wrap:wrap;margin-bottom:2rem;
+}
+
+.upcoming-note{
+  font-size:.88rem;color:var(--ink-faint);
+  font-weight:300;max-width:300px;text-align:right;
+  line-height:1.65;
 }
 
 .upcoming-grid{
   display:grid;
   grid-template-columns:repeat(3,1fr);
-  gap:16px;
-  margin-top:2.5rem;
+  gap:14px;
 }
 
-@media(max-width:900px){.upcoming-grid{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:560px){.upcoming-grid{grid-template-columns:1fr}}
+@media(max-width:880px){.upcoming-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:540px){.upcoming-grid{grid-template-columns:1fr}}
 
-.upcoming-card{
-  border:1px solid var(--border);
-  border-radius:4px;
-  overflow:hidden;
+.up-card{
   background:var(--white);
-  position:relative;
-  transition:transform .2s;
+  border:1px solid var(--border);
+  border-radius:4px;overflow:hidden;
+  transition:transform .2s,box-shadow .2s;
 }
 
-.upcoming-card:hover{transform:translateY(-2px)}
+.up-card:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.06)}
 
-.upcoming-accent{
-  height:3px;
-  width:100%;
-}
-
-.acc-coral{background:linear-gradient(90deg,#D85A30,#F5A080)}
-.acc-purple{background:linear-gradient(90deg,#534AB7,#AFA9EC)}
+.up-accent{height:3px}
 .acc-blue{background:linear-gradient(90deg,#185FA5,#85B7EB)}
+.acc-purple{background:linear-gradient(90deg,#534AB7,#CECBF6)}
 .acc-amber{background:linear-gradient(90deg,#BA7517,#EF9F27)}
+.acc-coral{background:linear-gradient(90deg,#D85A30,#F5B8A0)}
 .acc-pink{background:linear-gradient(90deg,#993556,#ED93B1)}
 
-.upcoming-body{padding:1.5rem 1.5rem 1.25rem}
+.up-body{padding:1.4rem 1.4rem 1.1rem}
 
-.upcoming-status{
-  display:inline-flex;
-  align-items:center;
-  gap:5px;
-  font-size:10px;
-  font-weight:500;
-  letter-spacing:.1em;
-  text-transform:uppercase;
-  padding:3px 10px;
-  border-radius:20px;
-  margin-bottom:1rem;
+.up-status{
+  display:inline-flex;align-items:center;gap:5px;
+  font-size:10px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;
+  padding:3px 10px;border-radius:20px;margin-bottom:.9rem;
 }
 
-.status-dev{background:#FFF4E0;color:#8A5400;border:1px solid rgba(186,117,23,.2)}
-.status-plan{background:var(--paper);color:var(--ink-faint);border:1px solid var(--border)}
-.status-research{background:#EEF2FF;color:#3C3489;border:1px solid rgba(83,74,183,.2)}
+.s-dev{background:#FFF4E0;color:#7A4A00;border:1px solid rgba(186,117,23,.2)}
+.s-plan{background:var(--paper);color:var(--ink-faint);border:1px solid var(--border)}
+.s-res{background:#EEF2FF;color:#3C3489;border:1px solid rgba(83,74,183,.2)}
 
-.upcoming-title{
+.up-title{
   font-family:'Cormorant Garamond',serif;
-  font-size:1.3rem;
-  font-weight:400;
-  color:var(--ink);
-  line-height:1.25;
-  margin-bottom:.6rem;
+  font-size:1.2rem;font-weight:400;
+  color:var(--ink);line-height:1.25;margin-bottom:.55rem;
 }
 
-.upcoming-title em{font-style:italic;color:var(--ink-light)}
+.up-title em{font-style:italic;color:var(--ink-light)}
 
-.upcoming-desc{
-  font-size:.85rem;
-  color:var(--ink-light);
-  line-height:1.7;
-  font-weight:300;
-  margin-bottom:1.1rem;
+.up-desc{
+  font-size:.82rem;color:var(--ink-light);
+  line-height:1.7;font-weight:300;margin-bottom:1rem;
 }
 
-.upcoming-target{
-  display:flex;
-  gap:6px;
-  flex-wrap:wrap;
-}
+.up-chips{display:flex;gap:5px;flex-wrap:wrap}
 
-.target-chip{
-  font-size:11px;
-  padding:2px 9px;
+.up-chip{
+  font-size:11px;padding:2px 9px;
   border-radius:20px;
-  background:var(--paper-warm);
-  color:var(--ink-light);
+  background:var(--paper-warm);color:var(--ink-light);
   border:1px solid var(--paper-mid);
 }
 
-.upcoming-footer{
-  padding:.75rem 1.5rem 1rem;
+.up-footer{
+  padding:.7rem 1.4rem .85rem;
   border-top:1px solid var(--border);
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
+  display:flex;align-items:center;justify-content:space-between;
 }
 
 .notify-btn{
-  font-size:12px;
-  color:var(--green);
-  font-weight:500;
-  cursor:pointer;
-  background:none;
-  border:none;
-  font-family:'Outfit',sans-serif;
-  display:flex;
-  align-items:center;
-  gap:5px;
+  font-size:12px;color:var(--green);font-weight:500;
+  cursor:pointer;background:none;border:none;
+  font-family:'Outfit',sans-serif;padding:0;
+  display:flex;align-items:center;gap:4px;
   transition:color .2s;
-  padding:0;
 }
 
 .notify-btn:hover{color:var(--green-mid)}
+.notify-btn.done{color:var(--ink-faint);cursor:default}
 
-.upcoming-timeline{
-  font-size:11px;
-  color:var(--ink-faint);
-  font-weight:300;
-}
+.up-timeline{font-size:11px;color:var(--ink-faint);font-weight:300}
 
-/* ── PHILOSOPHY STRIP ── */
-.philosophy-strip{
+/* ── CLOSING ── */
+.closing{
   background:var(--green-deep);
-  margin:4rem -2rem -6rem;
+  margin:4rem -2rem -5rem;
   padding:3.5rem 2rem;
-  text-align:center;
-  position:relative;
-  overflow:hidden;
+  text-align:center;position:relative;overflow:hidden;
 }
 
-.philosophy-strip::before{
-  content:'';
-  position:absolute;
-  top:50%;left:50%;
+.closing::before{
+  content:'';position:absolute;top:50%;left:50%;
   transform:translate(-50%,-50%);
   width:500px;height:300px;
   background:radial-gradient(ellipse,rgba(29,158,117,.1) 0%,transparent 65%);
 }
 
-.philosophy-inner{
-  max-width:680px;
-  margin:0 auto;
-  position:relative;
-  z-index:1;
-}
+.closing-inner{max-width:640px;margin:0 auto;position:relative;z-index:1}
 
-.philosophy-quote{
+.closing-q{
   font-family:'Cormorant Garamond',serif;
-  font-size:clamp(1.4rem,3vw,2.2rem);
-  font-weight:300;
-  font-style:italic;
-  color:rgba(255,255,255,.85);
-  line-height:1.5;
-  margin-bottom:1.25rem;
+  font-size:clamp(1.3rem,2.8vw,2rem);
+  font-weight:300;font-style:italic;
+  color:rgba(255,255,255,.82);line-height:1.55;
+  margin-bottom:1.1rem;
 }
 
-.philosophy-attr{
-  font-size:12px;
-  color:rgba(255,255,255,.35);
-  letter-spacing:.1em;
-  text-transform:uppercase;
-}
+.closing-attr{font-size:11px;color:rgba(255,255,255,.3);letter-spacing:.12em;text-transform:uppercase}
 
-/* ── ANIMATIONS ── */
-.fade-in{
-  opacity:0;
-  transform:translateY(20px);
-  transition:opacity .6s ease,transform .6s ease;
-}
-
-.fade-in.visible{
-  opacity:1;
-  transform:translateY(0);
-}
+/* ANIMATIONS */
+.fi{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease}
+.fi.v{opacity:1;transform:translateY(0)}
 </style>
 </head>
 <body>
 
+<!-- PAGE HEADER -->
 <header class="page-header">
-  <div class="header-inner">
-    <div class="header-left">
-      <div class="header-eyebrow">
-        <span class="eyebrow-dot"></span>
-        <span class="eyebrow-text">Future of Cities Academy</span>
+  <div class="ph-inner">
+    <div class="ph-left">
+      <div class="ph-eyebrow">
+        <span class="ph-dot"></span>
+        <span class="ph-academy">Future of Cities Academy</span>
       </div>
-      <h1 class="page-title">
-        <span class="accent">Courses</span><br>
-        <em>& programmes</em>
+      <h1 class="ph-title">
+        <span class="acc">Courses</span><br>
+        <em>&amp; programmes</em>
       </h1>
     </div>
-    <div class="header-right">
-      <p class="header-tagline">Research-grounded learning for those who shape cities — and those who study them.</p>
+    <div class="ph-right">
+      <p class="ph-tagline">Research-grounded learning for those who shape cities — and those who study them.</p>
     </div>
   </div>
 </header>
 
-<div class="count-strip">
-  <div class="count-strip-inner">
-    <div class="count-item">
-      <span class="count-num">2</span>
-      <span class="count-label">courses available now</span>
-    </div>
-    <div class="count-sep"></div>
-    <div class="count-item">
-      <span class="count-num">5</span>
-      <span class="count-label">programmes in development</span>
-    </div>
-    <div class="count-sep"></div>
-    <div class="count-item">
-      <span class="count-num">17</span>
-      <span class="count-label">modules across all courses</span>
-    </div>
-    <div class="count-sep"></div>
-    <div class="count-item">
-      <span class="count-num">150</span>
-      <span class="count-label">CII indicators</span>
-    </div>
-  </div>
-</div>
-
 <main>
 
-  <!-- ACTIVE COURSES -->
-  <div class="section-header fade-in">
+  <!-- SECTION LABEL -->
+  <div style="padding-top:3.5rem;margin-bottom:0" class="fi">
+    <p class="sec-label">Available now</p>
+    <h2 class="sec-heading">Two courses.<br><em>One coherent journey.</em></h2>
+  </div>
+
+  <!-- COURSES SPLIT — THE MAIN EVENT -->
+  <div class="courses-split fi" style="margin-top:2rem">
+
+    <!-- COURSE A: CITIES ARE ALIVE -->
+    <div class="course-a">
+      <div class="course-band">
+        <div class="course-num">01</div>
+        <div class="course-tag tag-a-free">🆓 Free forever</div>
+        <h2 class="course-title">Cities Are Alive<br><em>A New Lens for the Future of Cities</em></h2>
+        <p class="course-subtitle">The beginning. A perceptual shift in how you see cities — from machine logic to living systems intelligence.</p>
+      </div>
+
+      <div class="course-divider"></div>
+
+      <div class="course-body">
+        <p class="course-desc">Cities have never had more data. And yet decisions keep producing the same blind spots. In under an hour, this free course shifts the lens — giving you the frameworks to read flows, feedback loops, and weak signals that dashboards don't show.</p>
+
+        <div class="course-meta">
+          <span class="meta-pill">⏱ ~1 hour</span>
+          <span class="meta-pill">5 sections</span>
+          <span class="meta-pill">Self-paced</span>
+          <span class="meta-pill">No prerequisites</span>
+          <span class="meta-pill">Certificate included</span>
+        </div>
+
+        <div class="modules-section">
+          <div class="modules-label">Five sections</div>
+          <div class="modules-list">
+            <div class="module-row"><span class="module-dot"></span><span class="module-name">01 · Rethinking Cities: A New Lens</span></div>
+            <div class="module-row"><span class="module-dot"></span><span class="module-name">02 · Cities as Living Systems</span></div>
+            <div class="module-row"><span class="module-dot"></span><span class="module-name">03 · The Three Shifts</span></div>
+            <div class="module-row"><span class="module-dot"></span><span class="module-name">04 · The Future of Cities Mindset</span></div>
+            <div class="module-row"><span class="module-dot"></span><span class="module-name">05 · From Insight to Action</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="course-footer">
+        <a href="#" class="cta-btn cta-a">Start the course — it's free →</a>
+        <div class="price-tag">
+          <span class="price-was">€99</span>
+          <span class="price-now-free">€0</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- COURSE B: MASTERCOURSE -->
+    <div class="course-b">
+      <div class="course-band">
+        <div class="course-num">02</div>
+        <div class="course-tag tag-b-paid">⭐ Mastercourse</div>
+        <h2 class="course-title">City Intelligence for<br><em>Policymakers &amp; Researchers</em></h2>
+        <p class="course-subtitle">The deep companion. From diagnosis to strategy — built on 150 indicators across 10 European cities.</p>
+      </div>
+
+      <div class="course-divider"></div>
+
+      <div class="course-body">
+        <p class="course-desc">Twelve modules built on the City Intelligence Index. Moves from why cities fail despite good data — through diagnosis, intervention design, strategy, and ethics — to a full City Intelligence Blueprint. Built for policymakers and researchers simultaneously.</p>
+
+        <div class="course-meta">
+          <span class="meta-pill">⏱ 4–5 hours</span>
+          <span class="meta-pill">12 modules</span>
+          <span class="meta-pill">Self-paced</span>
+          <span class="meta-pill">150 CII indicators</span>
+          <span class="meta-pill">Certificate included</span>
+        </div>
+
+        <div class="modules-section">
+          <div class="modules-label">Twelve modules</div>
+          <div class="modules-list">
+            <div class="module-row"><span class="module-dot"></span><span class="module-name">00 · Welcome &amp; Course Orientation</span></div>
+            <div class="module-row"><span class="module-dot"></span><span class="module-name">02 · Why Cities Fail Despite Good Data</span></div>
+            <div class="module-row"><span class="module-dot"></span><span class="module-name">03 · What City Intelligence Actually Is</span></div>
+            <div class="module-row"><span class="module-dot"></span><span class="module-name">04 · Inside the City Intelligence Index</span></div>
+            <div class="module-row"><span class="module-dot"></span><span class="module-name">05 · Diagnosing Your City</span></div>
+            <div class="module-row"><span class="module-dot"></span><span class="module-name">06 · From Insight to Intervention</span></div>
+          </div>
+          <p class="modules-more">+ 6 further modules including Ethics, Strategy, Leadership &amp; Certification</p>
+        </div>
+      </div>
+
+      <div class="course-footer">
+        <a href="#" class="cta-btn cta-b">Enrol in the Mastercourse →</a>
+        <div class="price-tag">
+          <span class="price-now-paid">Join now</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- DISTINCTION STRIP — what makes each different -->
+  <div class="distinction-strip fi">
+    <div class="dist-item dist-a">
+      <span class="dist-icon">🌱</span>
+      <div class="dist-text">
+        <div class="dist-title">Cities Are Alive is the entry point</div>
+        <div class="dist-sub">Free, under one hour, no background needed. The lens shift that makes everything else possible.</div>
+      </div>
+    </div>
+    <div class="dist-item dist-b">
+      <span class="dist-icon">🔬</span>
+      <div class="dist-text">
+        <div class="dist-title">The Mastercourse is where the work begins</div>
+        <div class="dist-sub">12 modules. Real data. A City Intelligence Blueprint you can use on Monday morning.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DIVIDER -->
+  <div class="section-gap"></div>
+
+  <!-- UPCOMING -->
+  <div class="upcoming-header fi">
     <div>
-      <p class="section-eyebrow">Available now</p>
-      <h2 class="section-heading">Start <em>learning today</em></h2>
+      <p class="sec-label">On the horizon</p>
+      <h2 class="sec-heading">Upcoming <em>programmes</em></h2>
     </div>
+    <p class="upcoming-note">In active development — all grounded in the same research base and the City Intelligence Index.</p>
   </div>
 
-  <div class="courses-grid">
+  <div class="upcoming-grid">
 
-    <!-- CITIES ARE ALIVE — FEATURED -->
-    <div class="course-card featured fade-in">
-      <div class="card-visual vis-caa">
-        <div class="card-course-num">01</div>
-        <div class="card-visual-inner">
-          <div class="card-tag tag-free">🆓 Free</div>
-          <div class="card-title-small">
-            Cities Are Alive<br>
-            <em>A New Lens for the Future of Cities</em>
-          </div>
+    <div class="up-card fi">
+      <div class="up-accent acc-blue"></div>
+      <div class="up-body">
+        <div class="up-status s-dev">🔧 In development</div>
+        <div class="up-title">Reading the CII<br><em>An interactive data course</em></div>
+        <div class="up-desc">Hands-on exploration of 150 indicators across 10 European cities. Learn to read a city profile, identify structural gaps, and generate a diagnostic brief.</div>
+        <div class="up-chips">
+          <span class="up-chip">Analysts</span>
+          <span class="up-chip">Researchers</span>
+          <span class="up-chip">Policy teams</span>
         </div>
       </div>
-      <div class="card-body">
-        <div>
-          <div class="card-description">
-            Most urban decisions are made with good data — and still produce the wrong outcomes. This free course shifts the lens from machine logic to living systems intelligence. In under an hour, you'll learn to read the flows, feedback loops, and patterns that actually drive cities.
-          </div>
-          <div class="card-meta-row" style="margin-top:1rem">
-            <span class="meta-item">⏱ ~1 hour</span>
-            <span class="meta-dot"></span>
-            <span class="meta-item">5 sections</span>
-            <span class="meta-dot"></span>
-            <span class="meta-item">Self-paced</span>
-            <span class="meta-dot"></span>
-            <span class="meta-item">No prerequisites</span>
-          </div>
-          <div class="card-modules" style="margin-top:1.25rem">
-            <div class="modules-label">Five sections</div>
-            <div class="modules-chips">
-              <span class="module-chip">01 · Rethinking Cities: A New Lens</span>
-              <span class="module-chip">02 · Cities as Living Systems</span>
-              <span class="module-chip">03 · The Three Shifts</span>
-              <span class="module-chip">04 · The Future of Cities Mindset</span>
-              <span class="module-chip">05 · From Insight to Action</span>
-            </div>
-          </div>
-        </div>
-        <div class="card-cta-row">
-          <a href="#" class="card-cta">Start the course — it's free →</a>
-          <div class="price-display">
-            <span class="price-was">€99</span>
-            <span class="price-now">€0</span>
-          </div>
-        </div>
+      <div class="up-footer">
+        <button class="notify-btn" onclick="notify(this)">Notify me when live →</button>
+        <span class="up-timeline">Est. 2025</span>
       </div>
     </div>
 
-    <!-- CITY INTELLIGENCE MASTERCOURSE -->
-    <div class="course-card fade-in" style="grid-column:1/-1">
-      <div class="card-visual vis-mastercourse" style="flex:0 0 360px;min-height:auto">
-        <div class="card-course-num">02</div>
-        <div class="card-visual-inner">
-          <div class="card-tag tag-paid">⭐ Mastercourse</div>
-          <div class="card-title-small">
-            City Intelligence for<br>
-            <em>Policymakers & Researchers</em>
-          </div>
+    <div class="up-card fi">
+      <div class="up-accent acc-purple"></div>
+      <div class="up-body">
+        <div class="up-status s-dev">🔧 In development</div>
+        <div class="up-title">Ethics of Urban<br><em>Intelligence</em></div>
+        <div class="up-desc">Who gets measured. Who gets left out. What responsible urban intelligence demands from practitioners. A standalone module expanding the Ethics chapter.</div>
+        <div class="up-chips">
+          <span class="up-chip">Urban leaders</span>
+          <span class="up-chip">Data teams</span>
+          <span class="up-chip">Researchers</span>
         </div>
       </div>
-      <div class="card-body">
-        <div>
-          <div class="card-description">
-            The deep companion course. Twelve modules built on the City Intelligence Index — 150 indicators across 10 European cities. Moves from diagnosis to intervention design to strategy to ethics. Built for both policymakers and researchers simultaneously, because the gap between evidence and action is where cities fail.
-          </div>
-          <div class="card-meta-row" style="margin-top:1rem">
-            <span class="meta-item">⏱ 4–5 hours</span>
-            <span class="meta-dot"></span>
-            <span class="meta-item">12 modules</span>
-            <span class="meta-dot"></span>
-            <span class="meta-item">Self-paced</span>
-            <span class="meta-dot"></span>
-            <span class="meta-item">Certificate included</span>
-          </div>
-          <div class="card-modules" style="margin-top:1.25rem">
-            <div class="modules-label">Twelve modules</div>
-            <div class="modules-chips">
-              <span class="module-chip">00 · Welcome & Orientation</span>
-              <span class="module-chip">02 · Why Cities Fail Despite Good Data</span>
-              <span class="module-chip">03 · What City Intelligence Actually Is</span>
-              <span class="module-chip">04 · Inside the City Intelligence Index</span>
-              <span class="module-chip">05 · Diagnosing Your City</span>
-              <span class="module-chip">06 · From Insight to Intervention</span>
-              <span class="module-chip">07 · From One Intervention to a Strategy</span>
-              <span class="module-chip">08 · Why Strategies Fail in Practice</span>
-              <span class="module-chip">09 · Building City Intelligence Systems</span>
-              <span class="module-chip">10 · Ethics, Power and Data</span>
-              <span class="module-chip">11 · The City Intelligence Mindset in Leadership</span>
-              <span class="module-chip">12 · Application & Certification</span>
-            </div>
-          </div>
+      <div class="up-footer">
+        <button class="notify-btn" onclick="notify(this)">Notify me when live →</button>
+        <span class="up-timeline">Est. 2025</span>
+      </div>
+    </div>
+
+    <div class="up-card fi">
+      <div class="up-accent acc-amber"></div>
+      <div class="up-body">
+        <div class="up-status s-plan">📋 Planned</div>
+        <div class="up-title">City Intelligence<br><em>for Corporate Leaders</em></div>
+        <div class="up-desc">For corporate strategy teams operating in urban contexts. How to read city intelligence signals and build responsible long-term urban presence.</div>
+        <div class="up-chips">
+          <span class="up-chip">Corporate strategy</span>
+          <span class="up-chip">ESG teams</span>
+          <span class="up-chip">Real estate</span>
         </div>
-        <div class="card-cta-row">
-          <a href="#" class="card-cta">Enrol in the Mastercourse →</a>
-          <a href="#" class="card-cta secondary">View curriculum</a>
+      </div>
+      <div class="up-footer">
+        <button class="notify-btn" onclick="notify(this)">Notify me when live →</button>
+        <span class="up-timeline">Est. 2026</span>
+      </div>
+    </div>
+
+    <div class="up-card fi">
+      <div class="up-accent acc-coral"></div>
+      <div class="up-body">
+        <div class="up-status s-plan">📋 Planned</div>
+        <div class="up-title">City Intelligence<br><em>University Programme</em></div>
+        <div class="up-desc">A semester-length programme for urban studies, public policy, and architecture students. CII framework, applied diagnostics, and a city brief capstone.</div>
+        <div class="up-chips">
+          <span class="up-chip">Students</span>
+          <span class="up-chip">Universities</span>
+          <span class="up-chip">Lecturers</span>
         </div>
+      </div>
+      <div class="up-footer">
+        <button class="notify-btn" onclick="notify(this)">Notify me when live →</button>
+        <span class="up-timeline">Est. 2026</span>
+      </div>
+    </div>
+
+    <div class="up-card fi">
+      <div class="up-accent acc-pink"></div>
+      <div class="up-body">
+        <div class="up-status s-res">🔬 Research phase</div>
+        <div class="up-title">My City, My Voice<br><em>A citizens' course</em></div>
+        <div class="up-desc">City intelligence for everyone. Tools for curious residents to read their city, understand what the data does and doesn't say, and participate more meaningfully in urban decisions.</div>
+        <div class="up-chips">
+          <span class="up-chip">Citizens</span>
+          <span class="up-chip">Community leaders</span>
+          <span class="up-chip">Free</span>
+        </div>
+      </div>
+      <div class="up-footer">
+        <button class="notify-btn" onclick="notify(this)">Notify me when live →</button>
+        <span class="up-timeline">Est. 2026</span>
       </div>
     </div>
 
   </div>
 
-  <!-- UPCOMING COURSES -->
-  <div class="upcoming-section">
-    <div class="section-header fade-in">
-      <div>
-        <p class="section-eyebrow">On the horizon</p>
-        <h2 class="section-heading">Upcoming <em>programmes</em></h2>
-      </div>
-      <p style="font-size:.9rem;color:var(--ink-faint);font-weight:300;max-width:320px;text-align:right">These courses are in active development, grounded in the same research base and the City Intelligence Index.</p>
-    </div>
-
-    <div class="upcoming-grid">
-
-      <!-- 1. CII Interactive Tool Course -->
-      <div class="upcoming-card fade-in">
-        <div class="upcoming-accent acc-blue"></div>
-        <div class="upcoming-body">
-          <div class="upcoming-status status-dev">🔧 In development</div>
-          <div class="upcoming-title">Reading the CII<br><em>An interactive data course</em></div>
-          <div class="upcoming-desc">A hands-on course built around the CII interactive platform — 150 indicators, 10 European cities, six pillars. Learn to read a city profile, identify structural gaps, and generate a diagnostic brief.</div>
-          <div class="upcoming-target">
-            <span class="target-chip">Analysts</span>
-            <span class="target-chip">Researchers</span>
-            <span class="target-chip">Policy teams</span>
-          </div>
-        </div>
-        <div class="upcoming-footer">
-          <button class="notify-btn" onclick="notify(this, 'CII Interactive')">Notify me when live →</button>
-          <span class="upcoming-timeline">Est. 2025</span>
-        </div>
-      </div>
-
-      <!-- 2. Urban Ethics -->
-      <div class="upcoming-card fade-in">
-        <div class="upcoming-accent acc-purple"></div>
-        <div class="upcoming-body">
-          <div class="upcoming-status status-dev">🔧 In development</div>
-          <div class="upcoming-title">Ethics of Urban<br><em>Intelligence</em></div>
-          <div class="upcoming-desc">Who gets measured. Who gets left out. What responsible urban intelligence demands from its practitioners. A standalone module expanding Chapter 10 of the Mastercourse into a full course.</div>
-          <div class="upcoming-target">
-            <span class="target-chip">Urban leaders</span>
-            <span class="target-chip">Data teams</span>
-            <span class="target-chip">Researchers</span>
-          </div>
-        </div>
-        <div class="upcoming-footer">
-          <button class="notify-btn" onclick="notify(this, 'Ethics of Urban Intelligence')">Notify me when live →</button>
-          <span class="upcoming-timeline">Est. 2025</span>
-        </div>
-      </div>
-
-      <!-- 3. Corporate City Intelligence -->
-      <div class="upcoming-card fade-in">
-        <div class="upcoming-accent acc-amber"></div>
-        <div class="upcoming-body">
-          <div class="upcoming-status status-plan">📋 Planned</div>
-          <div class="upcoming-title">City Intelligence<br><em>for Corporate Leaders</em></div>
-          <div class="upcoming-desc">For corporate strategy teams operating in urban contexts. How to read city intelligence signals, engage with urban governance, and build responsible long-term presence in the cities you operate in.</div>
-          <div class="upcoming-target">
-            <span class="target-chip">Corporate strategy</span>
-            <span class="target-chip">ESG teams</span>
-            <span class="target-chip">Real estate</span>
-          </div>
-        </div>
-        <div class="upcoming-footer">
-          <button class="notify-btn" onclick="notify(this, 'Corporate City Intelligence')">Notify me when live →</button>
-          <span class="upcoming-timeline">Est. 2026</span>
-        </div>
-      </div>
-
-      <!-- 4. University Programme -->
-      <div class="upcoming-card fade-in">
-        <div class="upcoming-accent acc-coral"></div>
-        <div class="upcoming-body">
-          <div class="upcoming-status status-plan">📋 Planned</div>
-          <div class="upcoming-title">City Intelligence<br><em>University Programme</em></div>
-          <div class="upcoming-desc">A semester-length programme for urban studies, public policy, and architecture students. Combines the full CII framework with applied city diagnostics, studio sessions, and a city brief capstone.</div>
-          <div class="upcoming-target">
-            <span class="target-chip">Students</span>
-            <span class="target-chip">Universities</span>
-            <span class="target-chip">Lecturers</span>
-          </div>
-        </div>
-        <div class="upcoming-footer">
-          <button class="notify-btn" onclick="notify(this, 'University Programme')">Notify me when live →</button>
-          <span class="upcoming-timeline">Est. 2026</span>
-        </div>
-      </div>
-
-      <!-- 5. Citizens Course -->
-      <div class="upcoming-card fade-in">
-        <div class="upcoming-accent acc-pink"></div>
-        <div class="upcoming-body">
-          <div class="upcoming-status status-research">🔬 Research phase</div>
-          <div class="upcoming-title">My City, My Voice<br><em>A citizens' course</em></div>
-          <div class="upcoming-desc">City intelligence for everyone. A short, accessible course that gives curious residents the tools to read their city, understand what the data does and doesn't say, and participate more meaningfully in urban decisions that affect them.</div>
-          <div class="upcoming-target">
-            <span class="target-chip">Citizens</span>
-            <span class="target-chip">Community leaders</span>
-            <span class="target-chip">Free</span>
-          </div>
-        </div>
-        <div class="upcoming-footer">
-          <button class="notify-btn" onclick="notify(this, 'Citizens Course')">Notify me when live →</button>
-          <span class="upcoming-timeline">Est. 2026</span>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- PHILOSOPHY STRIP -->
-  <div class="philosophy-strip fade-in">
-    <div class="philosophy-inner">
-      <p class="philosophy-quote">"The future of cities will be shaped by those willing to hold complexity with care and curiosity."</p>
-      <p class="philosophy-attr">Dr. Fatime Barbara Hegyi · Future of Cities Academy</p>
+  <!-- CLOSING -->
+  <div class="closing fi">
+    <div class="closing-inner">
+      <p class="closing-q">"The future of cities will be shaped by those willing to hold complexity with care and curiosity."</p>
+      <p class="closing-attr">Dr. Fatime Barbara Hegyi · Future of Cities Academy</p>
     </div>
   </div>
 
 </main>
 
 <script>
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add('visible');
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('v'), 0);
     }
   });
-}, { threshold: 0.06 });
+}, { threshold: 0.05 });
 
-document.querySelectorAll('.fade-in').forEach((el, i) => {
-  el.style.transitionDelay = (i * 0.06) + 's';
-  observer.observe(el);
+document.querySelectorAll('.fi').forEach((el, i) => {
+  el.style.transitionDelay = (i * 0.05) + 's';
+  obs.observe(el);
 });
 
-function notify(btn, courseName) {
+function notify(btn) {
   btn.textContent = '✓ We\'ll let you know';
-  btn.style.color = 'var(--green-mid)';
+  btn.classList.add('done');
   btn.disabled = true;
 }
 </script>
