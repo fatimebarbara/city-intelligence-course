@@ -92,7 +92,7 @@ body{font-family:'Outfit',sans-serif;background:var(--paper);color:var(--ink);li
 }
 
 /* ── MAIN ── */
-main{max-width:1160px;margin:0 auto;padding:0 2rem 5rem}
+main{max-width:1160px;margin:0 auto;padding:0 2rem 0}
 
 /* ── SECTION LABEL ── */
 .sec-label{
@@ -437,8 +437,8 @@ main{max-width:1160px;margin:0 auto;padding:0 2rem 5rem}
 /* ── CLOSING ── */
 .closing{
   background:var(--green-deep);
-  margin:4rem -2rem -5rem;
-  padding:3.5rem 2rem;
+  margin:4rem -2rem 0;
+  padding:3.5rem 2rem 4.5rem;
   text-align:center;position:relative;overflow:hidden;
 }
 
@@ -740,6 +740,15 @@ function notify(btn) {
   btn.classList.add('done');
   btn.disabled = true;
 }
+
+// Auto-report height to parent so iframe can resize
+function reportHeight() {
+  const h = document.documentElement.scrollHeight;
+  window.parent.postMessage({ iframeHeight: h }, '*');
+}
+window.addEventListener('load', reportHeight);
+window.addEventListener('resize', reportHeight);
+setTimeout(reportHeight, 500);
 </script>
 </body>
 </html>
